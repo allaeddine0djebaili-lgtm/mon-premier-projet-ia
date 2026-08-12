@@ -3,143 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Anti-cache pour toujours avoir la derniere version -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <title>Gestionnaire de Tâches</title>
 
-  <!-- CDN officiel de Supabase (bibliothèque @supabase/supabase-js) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- CDN officiel de Supabase — version UMD explicite (expose window.supabase) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
   <style>
     :root {
-      --bg: #0f1115;
-      --card: #1a1d24;
-      --card-2: #22262f;
-      --text: #e6e8eb;
-      --muted: #9aa0a8;
-      --accent: #6c8cff;
-      --accent-2: #4f6ef0;
-      --danger: #ff6b6b;
-      --ok: #4ade80;
-      --border: #2c313a;
+      --bg: #0f1115; --card: #1a1d24; --card-2: #22262f; --text: #e6e8eb;
+      --muted: #9aa0a8; --accent: #6c8cff; --accent-2: #4f6ef0;
+      --danger: #ff6b6b; --ok: #4ade80; --border: #2c313a;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 60px 20px;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+      display: flex; justify-content: center; align-items: flex-start; padding: 60px 20px;
     }
-
     .app { width: 100%; max-width: 560px; }
-
     h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 6px; }
-
     .subtitle { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 28px; }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
     .add-form { display: flex; gap: 10px; }
-
     input[type="text"] {
-      flex: 1;
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      color: var(--text);
-      font-size: 15px;
-      outline: none;
+      flex: 1; background: var(--card-2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 14px; color: var(--text); font-size: 15px; outline: none;
       transition: border-color 0.15s;
     }
     input[type="text"]:focus { border-color: var(--accent); }
-
     button {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
+      background: var(--accent); color: white; border: none; border-radius: 10px;
+      padding: 12px 18px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s;
     }
     button:hover { background: var(--accent-2); }
     button:active { transform: translateY(1px); }
-
     .list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-
     .task {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px; background: var(--card-2);
+      border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
     }
     .task .title { flex: 1; font-size: 15px; }
-
     .badge {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(108, 140, 255, 0.15);
-      color: var(--accent);
-      white-space: nowrap;
+      font-size: 12px; padding: 4px 10px; border-radius: 999px;
+      background: rgba(108, 140, 255, 0.15); color: var(--accent); white-space: nowrap;
     }
     .badge.done { background: rgba(74, 222, 128, 0.15); color: var(--ok); }
-
     .actions { display: flex; gap: 6px; }
     .icon-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 6px 10px;
-      font-size: 13px;
-      border-radius: 8px;
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      padding: 6px 10px; font-size: 13px; border-radius: 8px;
     }
     .icon-btn:hover { color: var(--text); border-color: var(--accent); }
     .icon-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
-
     .empty { text-align: center; color: var(--muted); padding: 24px; font-size: 14px; }
-
-    .status {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 14px;
-      text-align: center;
-      min-height: 18px;
-    }
-
-    /* Zone de debug visible (pour aider l'etudiant) */
+    .status { font-size: 13px; color: var(--muted); margin-top: 14px; text-align: center; min-height: 18px; }
     #debug {
-      margin-top: 20px;
-      padding: 12px;
-      background: #000;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 12px;
-      color: #7ee787;
-      white-space: pre-wrap;
-      min-height: 24px;
-      max-height: 180px;
-      overflow: auto;
+      margin-top: 20px; padding: 12px; background: #000; border: 1px solid var(--border);
+      border-radius: 8px; font-family: monospace; font-size: 12px; color: #7ee787;
+      white-space: pre-wrap; min-height: 24px; max-height: 180px; overflow: auto;
     }
   </style>
 </head>
@@ -161,7 +84,6 @@
     </div>
 
     <div class="status" id="status"></div>
-    <!-- Zone de debug : affiche ce qui se passe en direct -->
     <div id="debug">[en attente...]</div>
   </div>
 
@@ -172,7 +94,6 @@
     const SUPABASE_URL = "https://riaciunpvhfiucvqnfhv.supabase.co";
     const SUPABASE_KEY = "sb_publishable_5NuvJ_DAMRuMgD_dnUf8gg_y0k-qysw";
 
-    // Petite fonction de debug qui affiche dans la zone noire
     const debugEl = document.getElementById("debug");
     function debug(msg) {
       console.log(msg);
@@ -181,162 +102,88 @@
     }
 
     debug("Initialisation...");
-    debug("URL = " + SUPABASE_URL);
 
-    // Vérifie que la librairie Supabase est bien chargée
-    if (!window.supabase || !window.supabase.createClient) {
-      debug("ERREUR: la librairie Supabase n'est pas chargée (CDN bloqué ?)");
+    // Vérifie que la librairie est chargée (window.supabase avec createClient)
+    if (!window.supabase || typeof window.supabase.createClient !== "function") {
+      debug("ERREUR: window.supabase introuvable. La librairie CDN ne s'est pas chargée.");
+      debug("Vérifie ta connexion internet ou le blocage du CDN.");
     } else {
-      debug("Librairie Supabase OK");
-    }
+      debug("Librairie Supabase OK ✅");
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      debug("Client Supabase créé");
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    debug("Client Supabase créé");
+      const taskList  = document.getElementById("task-list");
+      const emptyMsg  = document.getElementById("empty");
+      const addForm   = document.getElementById("add-form");
+      const taskInput = document.getElementById("task-input");
+      const statusEl  = document.getElementById("status");
 
-    // =========================================================
-    //  Sélection des éléments de la page
-    // =========================================================
-    const taskList  = document.getElementById("task-list");
-    const emptyMsg  = document.getElementById("empty");
-    const addForm   = document.getElementById("add-form");
-    const taskInput = document.getElementById("task-input");
-    const statusEl  = document.getElementById("status");
-
-    function setStatus(msg) {
-      statusEl.textContent = msg;
-      if (msg) setTimeout(() => { if (statusEl.textContent === msg) statusEl.textContent = ""; }, 3000);
-    }
-
-    // =========================================================
-    //  1. Afficher la liste des tâches
-    // =========================================================
-    async function loadTasks() {
-      debug("Chargement des tâches...");
-      try {
-        const { data, error } = await supabase
-          .from("tasks")
-          .select("*")
-          .order("title", { ascending: true });
-
-        if (error) {
-          debug("ERREUR chargement: " + JSON.stringify(error));
-          setStatus("Erreur : " + error.message);
-          return;
-        }
-
-        debug("Tâches reçues: " + (data ? data.length : 0));
-        taskList.innerHTML = "";
-
-        if (!data || data.length === 0) {
-          emptyMsg.style.display = "block";
-          return;
-        }
-        emptyMsg.style.display = "none";
-
-        data.forEach(task => {
-          const li = document.createElement("li");
-          li.className = "task";
-
-          const title = document.createElement("span");
-          title.className = "title";
-          title.textContent = task.title;
-
-          const badge = document.createElement("span");
-          badge.className = "badge" + (task.status === "Fait" ? " done" : "");
-          badge.textContent = task.status;
-
-          const actions = document.createElement("div");
-          actions.className = "actions";
-
-          const toggleBtn = document.createElement("button");
-          toggleBtn.className = "icon-btn";
-          toggleBtn.textContent = task.status === "Fait" ? "↩ Refaire" : "✓ Fait";
-          toggleBtn.onclick = () => toggleTask(task);
-          actions.appendChild(toggleBtn);
-
-          const delBtn = document.createElement("button");
-          delBtn.className = "icon-btn danger";
-          delBtn.textContent = "✕";
-          delBtn.onclick = () => deleteTask(task);
-          actions.appendChild(delBtn);
-
-          li.appendChild(title);
-          li.appendChild(badge);
-          li.appendChild(actions);
-          taskList.appendChild(li);
-        });
-      } catch (err) {
-        debug("EXCEPTION chargement: " + err);
-        setStatus("Erreur réseau");
+      function setStatus(msg) {
+        statusEl.textContent = msg;
+        if (msg) setTimeout(() => { if (statusEl.textContent === msg) statusEl.textContent = ""; }, 3000);
       }
-    }
 
-    // =========================================================
-    //  2. Ajouter une nouvelle tâche
-    // =========================================================
-    addForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = taskInput.value.trim();
-      if (!title) {
-        debug("Champ vide, rien à ajouter");
-        return;
+      // 1. Afficher la liste des tâches
+      async function loadTasks() {
+        debug("Chargement des tâches...");
+        try {
+          const { data, error } = await supabase
+            .from("tasks")
+            .select("*")
+            .order("title", { ascending: true });
+          if (error) { debug("ERREUR chargement: " + JSON.stringify(error)); setStatus("Erreur : " + error.message); return; }
+          debug("Tâches reçues: " + (data ? data.length : 0));
+          taskList.innerHTML = "";
+          if (!data || data.length === 0) { emptyMsg.style.display = "block"; return; }
+          emptyMsg.style.display = "none";
+          data.forEach(task => {
+            const li = document.createElement("li"); li.className = "task";
+            const title = document.createElement("span"); title.className = "title"; title.textContent = task.title;
+            const badge = document.createElement("span"); badge.className = "badge" + (task.status === "Fait" ? " done" : ""); badge.textContent = task.status;
+            const actions = document.createElement("div"); actions.className = "actions";
+            const toggleBtn = document.createElement("button"); toggleBtn.className = "icon-btn";
+            toggleBtn.textContent = task.status === "Fait" ? "↩ Refaire" : "✓ Fait";
+            toggleBtn.onclick = () => toggleTask(task); actions.appendChild(toggleBtn);
+            const delBtn = document.createElement("button"); delBtn.className = "icon-btn danger"; delBtn.textContent = "✕";
+            delBtn.onclick = () => deleteTask(task); actions.appendChild(delBtn);
+            li.appendChild(title); li.appendChild(badge); li.appendChild(actions);
+            taskList.appendChild(li);
+          });
+        } catch (err) { debug("EXCEPTION chargement: " + err); setStatus("Erreur réseau"); }
       }
-      debug("Tentative d'ajout: \"" + title + "\"");
 
-      try {
-        const { data, error } = await supabase
-          .from("tasks")
-          .insert([{ title: title }])
-          .select();   // <-- .select() pour récupérer la ligne créée
+      // 2. Ajouter une nouvelle tâche
+      addForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const title = taskInput.value.trim();
+        if (!title) { debug("Champ vide"); return; }
+        debug("Tentative d'ajout: \"" + title + "\"");
+        try {
+          const { data, error } = await supabase.from("tasks").insert([{ title: title }]).select();
+          if (error) { debug("ERREUR ajout: " + JSON.stringify(error)); setStatus("Erreur : " + error.message); return; }
+          debug("Ajout OK: " + JSON.stringify(data));
+          taskInput.value = "";
+          setStatus("Tâche ajoutée ✅");
+          loadTasks();
+        } catch (err) { debug("EXCEPTION ajout: " + err); setStatus("Erreur réseau"); }
+      });
 
-        if (error) {
-          debug("ERREUR ajout: " + JSON.stringify(error));
-          setStatus("Erreur : " + error.message);
-          return;
-        }
-
-        debug("Ajout OK: " + JSON.stringify(data));
-        taskInput.value = "";
-        setStatus("Tâche ajoutée ✅");
+      async function toggleTask(task) {
+        const newStatus = task.status === "Fait" ? "À faire" : "Fait";
+        const { error } = await supabase.from("tasks").update({ status: newStatus }).eq("id", task.id);
+        if (error) { setStatus("Erreur : " + error.message); return; }
         loadTasks();
-      } catch (err) {
-        debug("EXCEPTION ajout: " + err);
-        setStatus("Erreur réseau");
       }
-    });
 
-    // =========================================================
-    //  Bonus : marquer fait / à refaire
-    // =========================================================
-    async function toggleTask(task) {
-      const newStatus = task.status === "Fait" ? "À faire" : "Fait";
-      debug("Toggle " + task.title + " -> " + newStatus);
-      const { error } = await supabase
-        .from("tasks")
-        .update({ status: newStatus })
-        .eq("id", task.id);
-      if (error) { debug("ERREUR toggle: " + JSON.stringify(error)); setStatus("Erreur : " + error.message); return; }
+      async function deleteTask(task) {
+        const { error } = await supabase.from("tasks").delete().eq("id", task.id);
+        if (error) { setStatus("Erreur : " + error.message); return; }
+        setStatus("Tâche supprimée 🗑");
+        loadTasks();
+      }
+
       loadTasks();
     }
-
-    // =========================================================
-    //  Bonus : supprimer
-    // =========================================================
-    async function deleteTask(task) {
-      debug("Suppression: " + task.title);
-      const { error } = await supabase
-        .from("tasks")
-        .delete()
-        .eq("id", task.id);
-      if (error) { debug("ERREUR delete: " + JSON.stringify(error)); setStatus("Erreur : " + error.message); return; }
-      setStatus("Tâche supprimée 🗑");
-      loadTasks();
-    }
-
-    // =========================================================
-    //  Démarrage
-    // =========================================================
-    loadTasks();
   </script>
 </body>
 </html>
