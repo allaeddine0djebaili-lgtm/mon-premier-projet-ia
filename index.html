@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestionnaire de Tâches</title>
+
+  <!-- CDN officiel de Supabase (bibliothèque @supabase/supabase-js) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #1a1d24;
+      --card-2: #22262f;
+      --text: #e6e8eb;
+      --muted: #9aa0a8;
+      --accent: #6c8cff;
+      --accent-2: #4f6ef0;
+      --danger: #ff6b6b;
+      --ok: #4ade80;
+      --border: #2c313a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .add-form {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover { background: var(--accent-2); }
+    button:active { transform: translateY(1px); }
+
+    .list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .task .title {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(108, 140, 255, 0.15);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .badge.done {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--ok);
+    }
+
+    .actions { display: flex; gap: 6px; }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 10px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    .icon-btn:hover { color: var(--text); border-color: var(--accent); }
+    .icon-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      font-size: 14px;
+    }
+
+    .status {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 14px;
+      text-align: center;
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Gestionnaire de Tâches</h1>
+    <p class="subtitle">Une petite démo avec Supabase — pour débutants</p>
+
+    <!-- Ajout d'une tâche -->
+    <div class="card">
+      <form class="add-form" id="add-form">
+        <input type="text" id="task-input" placeholder="Nouvelle tâche..." autocomplete="off" />
+        <button type="submit">Ajouter</button>
+      </form>
+    </div>
+
+    <!-- Liste des tâches -->
+    <div class="card">
+      <ul class="list" id="task-list"></ul>
+      <div class="empty" id="empty">Aucune tâche pour l'instant 🎉</div>
+    </div>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    // =========================================================
+    //  Connexion à Supabase
+    //  On utilise l'URL du Data API et la Publishable Key.
+    // =========================================================
+    const SUPABASE_URL = "https://riaciunpvhfiucvqnfhv.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_5NuvJ_DAMRuMgD_dnUf8gg_y0k-qysw";
+
+    // createClient est mis à disposition par le CDN @supabase/supabase-js
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // =========================================================
+    //  Sélection des éléments de la page
+    // =========================================================
+    const taskList  = document.getElementById("task-list");
+    const emptyMsg  = document.getElementById("empty");
+    const addForm   = document.getElementById("add-form");
+    const taskInput = document.getElementById("task-input");
+    const statusEl  = document.getElementById("status");
+
+    function setStatus(msg) {
+      statusEl.textContent = msg;
+      // efface le message après 2.5s
+      if (msg) setTimeout(() => { if (statusEl.textContent === msg) statusEl.textContent = ""; }, 2500);
+    }
+
+    // =========================================================
+    //  1. Afficher la liste des tâches depuis la table "tasks"
+    // =========================================================
+    async function loadTasks() {
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .order("title", { ascending: true });
+
+      if (error) {
+        setStatus("Erreur lors du chargement : " + error.message);
+        return;
+      }
+
+      taskList.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        emptyMsg.style.display = "block";
+        return;
+      }
+      emptyMsg.style.display = "none";
+
+      data.forEach(task => {
+        const li = document.createElement("li");
+        li.className = "task";
+
+        const title = document.createElement("span");
+        title.className = "title";
+        title.textContent = task.title;
+
+        const badge = document.createElement("span");
+        badge.className = "badge" + (task.status === "Fait" ? " done" : "");
+        badge.textContent = task.status;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        // Bouton "Marquer fait / à refaire"
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "icon-btn";
+        toggleBtn.textContent = task.status === "Fait" ? "↩ Refaire" : "✓ Fait";
+        toggleBtn.onclick = () => toggleTask(task);
+        actions.appendChild(toggleBtn);
+
+        // Bouton supprimer
+        const delBtn = document.createElement("button");
+        delBtn.className = "icon-btn danger";
+        delBtn.textContent = "✕";
+        delBtn.onclick = () => deleteTask(task);
+        actions.appendChild(delBtn);
+
+        li.appendChild(title);
+        li.appendChild(badge);
+        li.appendChild(actions);
+        taskList.appendChild(li);
+      });
+    }
+
+    // =========================================================
+    //  2. Ajouter une nouvelle tâche
+    // =========================================================
+    addForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = taskInput.value.trim();
+      if (!title) return;
+
+      const { error } = await supabase
+        .from("tasks")
+        .insert([{ title: title }]);  // status prend la valeur par défaut 'À faire'
+
+      if (error) {
+        setStatus("Erreur : " + error.message);
+        return;
+      }
+
+      taskInput.value = "";
+      setStatus("Tâche ajoutée ✅");
+      loadTasks();
+    });
+
+    // =========================================================
+    //  Bonus : marquer une tâche comme faite / à refaire
+    // =========================================================
+    async function toggleTask(task) {
+      const newStatus = task.status === "Fait" ? "À faire" : "Fait";
+      const { error } = await supabase
+        .from("tasks")
+        .update({ status: newStatus })
+        .eq("id", task.id);
+
+      if (error) {
+        setStatus("Erreur : " + error.message);
+        return;
+      }
+      loadTasks();
+    }
+
+    // =========================================================
+    //  Bonus : supprimer une tâche
+    // =========================================================
+    async function deleteTask(task) {
+      const { error } = await supabase
+        .from("tasks")
+        .delete()
+        .eq("id", task.id);
+
+      if (error) {
+        setStatus("Erreur : " + error.message);
+        return;
+      }
+      setStatus("Tâche supprimée 🗑");
+      loadTasks();
+    }
+
+    // =========================================================
+    //  Chargement initial au démarrage de la page
+    // =========================================================
+    loadTasks();
+  </script>
+</body>
+</html>
