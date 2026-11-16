@@ -132,6 +132,31 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
 .plan { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 7px; margin-bottom: 4px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: var(--accent-soft); color: var(--accent); word-break: break-word; }
 .plan button { background: none; border: none; color: inherit; cursor: pointer; opacity: .6; font-size: 13px; line-height: 1; }
 .day input { padding: 6px 8px; font-size: 11.5px; }
+.plan .pt { background: none; border: none; color: inherit; cursor: pointer; text-align: start; font: inherit; opacity: 1; flex: 1; }
+.plan.pdone .pt { text-decoration: line-through; opacity: .55; }
+.strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.strip button { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2); padding: 10px 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: var(--muted); }
+.strip button.sel { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.strip button.now .dn::after { content: ' •'; color: var(--accent); }
+.stat2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.stat2 div { background: var(--surface2); border-radius: var(--r2); padding: 10px; text-align: center; font-size: 11.5px; color: var(--muted); }
+.stat2 b { display: block; font-size: 22px; color: var(--text); }
+.slider { display: flex; align-items: center; gap: 12px; padding: 9px 0; }
+.slider label { width: 84px; font-size: 13px; font-weight: 600; }
+.slider input[type=range] { flex: 1; accent-color: var(--accent); min-width: 0; }
+.slider output { width: 26px; text-align: center; font-weight: 800; }
+.addline { display: flex; gap: 8px; margin-top: 12px; }
+.mbars { display: flex; align-items: flex-end; gap: 10px; height: 120px; }
+.mbars > div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; font-size: 11px; color: var(--muted); }
+.mbars .g { flex: 1; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px; }
+.mbars .g i { width: 22%; max-width: 12px; border-radius: 3px 3px 0 0; display: block; }
+.check.sm { width: 19px; height: 19px; border-radius: 5px; font-size: 10px; border-width: 1.5px; margin: auto; }
+table.mg { border-collapse: collapse; font-size: 11px; }
+table.mg th { padding: 3px 2px; color: var(--faint); font-weight: 600; min-width: 25px; }
+table.mg th.now { color: var(--accent); }
+table.mg td { padding: 3px 2px; text-align: center; }
+table.mg tr > :first-child { position: sticky; inset-inline-start: 0; background: var(--surface); text-align: start; white-space: nowrap; padding-inline-end: 12px; font-size: 12.5px; font-weight: 600; z-index: 1; color: var(--text); }
+table.mg tfoot td { color: var(--muted); border-top: 1px solid var(--border); padding-top: 8px; font-size: 9.5px; }
 .kanban { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .kcol { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; min-height: 160px; }
 .kcol.over { border-color: var(--accent); }
@@ -177,6 +202,8 @@ table.wk td:first-child, table.wk th:first-child { text-align: start; font-size:
   .main { margin-inline-start: 0; padding: 18px 16px 80px; }
   .g3, .g2, .g21, .kanban { grid-template-columns: 1fr; }
   .menu-toggle { display: grid; }
+  .strip { grid-template-columns: repeat(7, 70px); overflow-x: auto; padding-bottom: 4px; }
+  .slider label { width: 96px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
@@ -201,6 +228,7 @@ const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE
 const LANGS = { ar: { name: 'العربية', dir: 'rtl', locale: 'ar-DZ' }, fr: { name: 'Français', dir: 'ltr', locale: 'fr-FR' }, en: { name: 'English', dir: 'ltr', locale: 'en-GB' } };
 const T = {
 ar: {
+  prevDay: 'اليوم السابق', nextDay: 'اليوم التالي', todayBtn: 'اليوم', weekStrip: 'أيام الأسبوع', dayProgress: 'تقدم اليوم', completed: 'مكتمل', notCompleted: 'غير مكتمل', dayTasks: 'مهام اليوم', dayTaskPh: 'أضف مهمة لهذا اليوم…', noDayTasks: 'لا توجد مهام لهذا اليوم.', mindset: 'الحالة الذهنية', energy: 'الطاقة', focus: 'التركيز', motivation: 'الحماس', mindScore: 'المؤشر', mindWeek: 'الحالة الذهنية خلال الأسبوع', edit: 'تعديل', monthGrid: 'متتبع الشهر', progress: 'التقدم', completedHabits: 'عادات مكتملة',
   app: 'إنتاجيتي', tagline: 'نظام الإنتاجية المتكامل',
   signin: 'تسجيل الدخول', signup: 'إنشاء حساب', signinSub: 'مرحباً بعودتك. ادخل إلى حسابك للمتابعة.', signupSub: 'أنشئ حسابك وابدأ بتنظيم يومك.',
   email: 'البريد الإلكتروني', password: 'كلمة المرور', newPassword: 'كلمة المرور الجديدة', forgot: 'نسيت كلمة المرور؟', noAccount: 'ليس لديك حساب؟ أنشئ واحداً', haveAccount: 'لديك حساب؟ سجّل الدخول',
@@ -215,7 +243,7 @@ ar: {
   noHabits: 'لا توجد عادات بعد. أضف أول عادة.', noProjects: 'لا توجد مشاريع بعد.', noTasks: 'لا توجد مهام', noNotes: 'لا توجد ملاحظات بعد.', noRoutine: 'لا توجد عناصر.',
   prevWeek: 'الأسبوع السابق', nextWeek: 'الأسبوع التالي', thisWeek: 'هذا الأسبوع', goals: 'أهداف الأسبوع', goalsPh: 'اكتب أهداف الأسبوع هنا…', priorities: 'أهم 3 أولويات', schedule: 'الجدول الأسبوعي', addPlan: '+ إضافة', worked: 'ما الذي نجح؟', improve: 'ما يحتاج تحسيناً؟', score: 'تقييم الأسبوع', outOf: 'من 10', habitsShort: 'عادات',
   morning: 'روتين الصباح', evening: 'روتين المساء', completion: 'نسبة الإنجاز', done: 'مكتمل', addItem: 'إضافة عنصر', time: 'الوقت', task: 'المهمة',
-  vDay: 'اليوم', vWeek: 'الأسبوع', vMonth: '30 يوماً', addHabit: 'عادة جديدة', habitName: 'اسم العادة', emoji: 'رمز تعبيري', doneToday: 'مكتملة اليوم', total: 'إجمالي العادات', bestStreak: 'أعلى سلسلة', rateToday: 'معدل اليوم', habit: 'العادة',
+  vDay: 'اليوم', vWeek: 'الأسبوع', vMonth: 'الشهر', addHabit: 'عادة جديدة', habitName: 'اسم العادة', emoji: 'رمز تعبيري', doneToday: 'مكتملة اليوم', total: 'إجمالي العادات', bestStreak: 'أعلى سلسلة', rateToday: 'معدل اليوم', habit: 'العادة',
   addProject: 'مشروع جديد', projectName: 'اسم المشروع', addTask: 'مهمة جديدة', taskTitle: 'عنوان المهمة', project: 'المشروع', none: 'بدون مشروع', priority: 'الأولوية', high: 'عالية', med: 'متوسطة', low: 'منخفضة', todo: 'للعمل عليه', doing: 'جارٍ العمل', doneCol: 'مكتمل', board: 'لوحة المهام', activeProjects: 'مشاريع نشطة', tasksDone: 'مهام منجزة', move: 'نقل',
   addNote: 'ملاحظة جديدة', all: 'الكل', book: 'كتب', podcast: 'بودكاست', idea: 'أفكار', review: 'مراجعات', editNote: 'تحرير الملاحظة', noteTitle: 'عنوان الملاحظة…', noteBody: 'اكتب ملاحظاتك هنا…', category: 'التصنيف', untitled: 'بدون عنوان',
   aRate: 'معدل 30 يوماً', aRateSub: 'متوسط الالتزام', aBestDay: 'أفضل يوم', aBestDaySub: 'أعلى التزام', aBest: 'أفضل عادة', aWorst: 'أضعف عادة', aHabits: 'أداء العادات (30 يوماً)', aWeeks: 'مقارنة آخر 4 أسابيع', aAch: 'الإنجازات', wk: 'أسبوع',
@@ -224,6 +252,7 @@ ar: {
   save: 'حفظ', cancel: 'إلغاء', add: 'إضافة', delete: 'حذف', confirmDel: 'هل تريد حذف هذا العنصر؟ لا يمكن التراجع.', confirm: 'تأكيد', loading: 'جارٍ التحميل…', libMissing: 'تعذّر تحميل مكتبة الاتصال. تحقق من الإنترنت وأعد تحميل الصفحة.',
 },
 fr: {
+  prevDay: 'Jour précédent', nextDay: 'Jour suivant', todayBtn: 'Aujourd’hui', weekStrip: 'Jours de la semaine', dayProgress: 'Progression du jour', completed: 'Terminé', notCompleted: 'Restant', dayTasks: 'Tâches du jour', dayTaskPh: 'Ajouter une tâche pour ce jour…', noDayTasks: 'Aucune tâche pour ce jour.', mindset: 'État d’esprit', energy: 'Énergie', focus: 'Concentration', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'État d’esprit sur la semaine', edit: 'Modifier', monthGrid: 'Suivi du mois', progress: 'Progression', completedHabits: 'habitudes cochées',
   app: 'Intajiyati', tagline: 'Système de productivité complet',
   signin: 'Se connecter', signup: 'Créer un compte', signinSub: 'Bon retour. Connectez-vous pour continuer.', signupSub: 'Créez votre compte et organisez vos journées.',
   email: 'Adresse e-mail', password: 'Mot de passe', newPassword: 'Nouveau mot de passe', forgot: 'Mot de passe oublié ?', noAccount: 'Pas de compte ? Créez-en un', haveAccount: 'Déjà inscrit ? Connectez-vous',
@@ -238,7 +267,7 @@ fr: {
   noHabits: 'Aucune habitude. Ajoutez la première.', noProjects: 'Aucun projet pour le moment.', noTasks: 'Aucune tâche', noNotes: 'Aucune note pour le moment.', noRoutine: 'Aucun élément.',
   prevWeek: 'Semaine précédente', nextWeek: 'Semaine suivante', thisWeek: 'Cette semaine', goals: 'Objectifs de la semaine', goalsPh: 'Écrivez vos objectifs ici…', priorities: 'Top 3 des priorités', schedule: 'Planning de la semaine', addPlan: '+ Ajouter', worked: 'Ce qui a marché', improve: 'À améliorer', score: 'Note de la semaine', outOf: 'sur 10', habitsShort: 'habitudes',
   morning: 'Routine du matin', evening: 'Routine du soir', completion: 'Taux de réalisation', done: 'terminé', addItem: 'Ajouter un élément', time: 'Heure', task: 'Tâche',
-  vDay: 'Jour', vWeek: 'Semaine', vMonth: '30 jours', addHabit: 'Nouvelle habitude', habitName: 'Nom de l’habitude', emoji: 'Emoji', doneToday: 'Terminées aujourd’hui', total: 'Total des habitudes', bestStreak: 'Plus longue série', rateToday: 'Taux du jour', habit: 'Habitude',
+  vDay: 'Jour', vWeek: 'Semaine', vMonth: 'Mois', addHabit: 'Nouvelle habitude', habitName: 'Nom de l’habitude', emoji: 'Emoji', doneToday: 'Terminées aujourd’hui', total: 'Total des habitudes', bestStreak: 'Plus longue série', rateToday: 'Taux du jour', habit: 'Habitude',
   addProject: 'Nouveau projet', projectName: 'Nom du projet', addTask: 'Nouvelle tâche', taskTitle: 'Titre de la tâche', project: 'Projet', none: 'Sans projet', priority: 'Priorité', high: 'Haute', med: 'Moyenne', low: 'Basse', todo: 'À faire', doing: 'En cours', doneCol: 'Terminé', board: 'Tableau des tâches', activeProjects: 'projets actifs', tasksDone: 'tâches terminées', move: 'Déplacer',
   addNote: 'Nouvelle note', all: 'Tout', book: 'Livres', podcast: 'Podcasts', idea: 'Idées', review: 'Bilans', editNote: 'Modifier la note', noteTitle: 'Titre de la note…', noteBody: 'Écrivez vos notes ici…', category: 'Catégorie', untitled: 'Sans titre',
   aRate: 'Taux sur 30 jours', aRateSub: 'régularité moyenne', aBestDay: 'Meilleur jour', aBestDaySub: 'régularité la plus haute', aBest: 'Meilleure habitude', aWorst: 'Habitude la plus faible', aHabits: 'Habitudes (30 jours)', aWeeks: 'Les 4 dernières semaines', aAch: 'Succès', wk: 'Sem.',
@@ -247,6 +276,7 @@ fr: {
   save: 'Enregistrer', cancel: 'Annuler', add: 'Ajouter', delete: 'Supprimer', confirmDel: 'Supprimer cet élément ? Cette action est irréversible.', confirm: 'Confirmer', loading: 'Chargement…', libMissing: 'Impossible de charger la bibliothèque de connexion. Vérifiez votre réseau et rechargez la page.',
 },
 en: {
+  prevDay: 'Previous day', nextDay: 'Next day', todayBtn: 'Today', weekStrip: 'Days of the week', dayProgress: 'Day progress', completed: 'Completed', notCompleted: 'Not completed', dayTasks: 'Tasks for the day', dayTaskPh: 'Add a task for this day…', noDayTasks: 'No tasks for this day.', mindset: 'Mindset check-in', energy: 'Energy', focus: 'Focus', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'Mindset across the week', edit: 'Edit', monthGrid: 'Month tracker', progress: 'Progress', completedHabits: 'habits completed',
   app: 'Intajiyati', tagline: 'All-in-one productivity system',
   signin: 'Sign in', signup: 'Create account', signinSub: 'Welcome back. Sign in to continue.', signupSub: 'Create your account and start organising your day.',
   email: 'Email address', password: 'Password', newPassword: 'New password', forgot: 'Forgot password?', noAccount: 'No account? Create one', haveAccount: 'Have an account? Sign in',
@@ -261,7 +291,7 @@ en: {
   noHabits: 'No habits yet. Add your first one.', noProjects: 'No projects yet.', noTasks: 'No tasks', noNotes: 'No notes yet.', noRoutine: 'No items.',
   prevWeek: 'Previous week', nextWeek: 'Next week', thisWeek: 'This week', goals: 'Weekly goals', goalsPh: 'Write this week’s goals here…', priorities: 'Top 3 priorities', schedule: 'Weekly schedule', addPlan: '+ Add', worked: 'What worked?', improve: 'What to improve?', score: 'Week rating', outOf: 'out of 10', habitsShort: 'habits',
   morning: 'Morning routine', evening: 'Evening routine', completion: 'Completion', done: 'complete', addItem: 'Add item', time: 'Time', task: 'Task',
-  vDay: 'Day', vWeek: 'Week', vMonth: '30 days', addHabit: 'New habit', habitName: 'Habit name', emoji: 'Emoji', doneToday: 'Done today', total: 'Total habits', bestStreak: 'Longest streak', rateToday: 'Today’s rate', habit: 'Habit',
+  vDay: 'Day', vWeek: 'Week', vMonth: 'Month', addHabit: 'New habit', habitName: 'Habit name', emoji: 'Emoji', doneToday: 'Done today', total: 'Total habits', bestStreak: 'Longest streak', rateToday: 'Today’s rate', habit: 'Habit',
   addProject: 'New project', projectName: 'Project name', addTask: 'New task', taskTitle: 'Task title', project: 'Project', none: 'No project', priority: 'Priority', high: 'High', med: 'Medium', low: 'Low', todo: 'To do', doing: 'In progress', doneCol: 'Done', board: 'Task board', activeProjects: 'active projects', tasksDone: 'tasks done', move: 'Move',
   addNote: 'New note', all: 'All', book: 'Books', podcast: 'Podcasts', idea: 'Ideas', review: 'Reviews', editNote: 'Edit note', noteTitle: 'Note title…', noteBody: 'Write your notes here…', category: 'Category', untitled: 'Untitled',
   aRate: '30-day rate', aRateSub: 'average consistency', aBestDay: 'Best day', aBestDaySub: 'highest consistency', aBest: 'Strongest habit', aWorst: 'Weakest habit', aHabits: 'Habits (30 days)', aWeeks: 'Last 4 weeks', aAch: 'Achievements', wk: 'Wk',
@@ -304,25 +334,26 @@ const ICONS = {
   habits: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>', projects: '<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="13" rx="1.5"/>',
   notes: '<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M9 8h3"/>', analytics: '<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',
   settings: '<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/>',
-  logout: '<path d="M9 4H5v16h4M15 8l4 4-4 4M19 12H9"/>', plus: '<path d="M12 5v14M5 12h14"/>', trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', prev: '<path d="M15 6l-6 6 6 6"/>', next: '<path d="M9 6l6 6-6 6"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  logout: '<path d="M9 4H5v16h4M15 8l4 4-4 4M19 12H9"/>', plus: '<path d="M12 5v14M5 12h14"/>', trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', prev: '<path d="M15 6l-6 6 6 6"/>', next: '<path d="M9 6l6 6-6 6"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', edit: '<path d="M4 20h4l10-10-4-4L4 16z"/><path d="M13 7l4 4"/>',
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 const donut = (p, color, size = 72, fs = 13, label = null) => `<div class="donut" style="width:${size}px;height:${size}px"><svg viewBox="0 0 36 36" width="${size}" height="${size}"><circle cx="18" cy="18" r="15.9155" fill="none" stroke="var(--surface3)" stroke-width="3.6"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="${color}" stroke-width="3.6" stroke-linecap="round" stroke-dasharray="${p} ${100 - p}"/></svg><span class="num" style="font-size:${fs}px;color:${color}">${label ?? p + '%'}</span></div>`;
 
 /* ───────── State ───────── */
-let user = null, S = null, page = 'dashboard', habitView = 'day', weekOffset = 0, noteFilter = 'all', noteSel = null, saveTimer = null, syncState = 'saved';
+let user = null, S = null, page = 'dashboard', habitView = 'day', weekOffset = 0, noteFilter = 'all', noteSel = null, saveTimer = null, syncState = 'saved', selDay = null, monthOffset = 0;
 function seedState() {
   const s = SEED[lang], mk = a => a.map(([time, emoji, task]) => ({ id: uid(), time, emoji, task }));
   return { v: 1, start: today(), ts: Date.now(),
     habits: s.habits.map(([emoji, name], i) => ({ id: uid(), emoji, name, color: PALETTE[i % PALETTE.length] })),
     habitLog: {}, routine: { morning: mk(s.morning), evening: mk(s.evening) }, routineLog: {},
-    projects: [], tasks: [], notes: [], weeks: {}, mood: {} };
+    projects: [], tasks: [], notes: [], weeks: {}, mood: {}, dayTasks: {}, mind: {} };
 }
 function normalize(s) {
   const d = seedState();
   if (!s || typeof s !== 'object') return d;
   for (const k of ['habits', 'projects', 'tasks', 'notes']) if (!Array.isArray(s[k])) s[k] = k === 'habits' ? d.habits : [];
-  for (const k of ['habitLog', 'routineLog', 'weeks', 'mood']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
+  for (const k of ['habitLog', 'routineLog', 'weeks', 'mood', 'dayTasks', 'mind']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
+  for (const w of Object.values(s.weeks)) if (w && w.plans) { for (const [dk, arr] of Object.entries(w.plans)) (arr || []).forEach(p => (s.dayTasks[dk] || (s.dayTasks[dk] = [])).push({ id: uid(), title: String(p), done: false })); delete w.plans; }
   if (!s.routine || !Array.isArray(s.routine.morning) || !Array.isArray(s.routine.evening)) s.routine = d.routine;
   if (!s.start) s.start = today();
   return s;
@@ -353,6 +384,9 @@ const habitDone = (k, id) => (S.habitLog[k] || []).includes(id);
 const habitsDoneCount = k => S.habits.filter(h => habitDone(k, h.id)).length;
 const habitPct = k => pct(habitsDoneCount(k), S.habits.length);
 const routineItems = () => [...S.routine.morning, ...S.routine.evening];
+const dayTasks = k => S.dayTasks[k] || [];
+function dayStats(k) { const r = routineItems(), log = S.routineLog[k] || [], dt = dayTasks(k), done = r.filter(i => log.includes(i.id)).length + dt.filter(x => x.done).length, total = r.length + dt.length; return { done, total, left: total - done, p: pct(done, total) }; }
+const mindScore = k => { const m = S.mind[k]; return m ? Math.round(((m.e || 0) + (m.f || 0) + (m.m || 0)) / 3 * 10) : 0; };
 const routinePct = k => { const it = routineItems(); return pct(it.filter(i => (S.routineLog[k] || []).includes(i.id)).length, it.length); };
 function lastDays(n) { const out = []; for (let i = n - 1; i >= 0; i--) { const k = dkey(addDays(new Date(), -i)); if (k >= S.start) out.push(k); } return out; }
 function streak(id) { let d = new Date(), n = 0; if (!habitDone(dkey(d), id)) d = addDays(d, -1); while (habitDone(dkey(d), id)) { n++; d = addDays(d, -1); } return n; }
@@ -361,7 +395,7 @@ const avgPct = ds => ds.length ? Math.round(ds.reduce((a, k) => a + habitPct(k),
 const bestStreak = () => S.habits.reduce((m, h) => Math.max(m, streak(h.id)), 0);
 const projStats = id => { const ts = S.tasks.filter(x => x.projectId === id), done = ts.filter(x => x.status === 'done').length; return { total: ts.length, done, p: pct(done, ts.length) }; };
 const weekKeyOf = off => dkey(addDays(weekStart(new Date()), off * 7));
-function weekData(off = weekOffset) { const k = weekKeyOf(off); if (!S.weeks[k]) S.weeks[k] = { goals: '', p: ['', '', ''], good: '', improve: '', score: 0, plans: {} }; const w = S.weeks[k]; if (!w.plans) w.plans = {}; if (!Array.isArray(w.p)) w.p = ['', '', '']; return w; }
+function weekData(off = weekOffset) { const k = weekKeyOf(off); if (!S.weeks[k]) S.weeks[k] = { goals: '', p: ['', '', ''], good: '', improve: '', score: 0 }; const w = S.weeks[k]; if (!Array.isArray(w.p)) w.p = ['', '', '']; return w; }
 
 /* ───────── Modal ───────── */
 function closeModal() { $('modalRoot').innerHTML = ''; }
@@ -440,7 +474,7 @@ const header = (title, sub, actions = '') => `<div class="page-header"><div><h1 
 const card = (title, body, extra = '', style = '') => `<section class="card" style="${style}"><div class="card-head"><span class="card-title">${title}</span>${extra}</div>${body}</section>`;
 const kpiCard = (title, value, label, color, p = null) => `<section class="card"><div class="card-head"><span class="card-title">${title}</span></div><div class="kpi num" style="color:${color}">${value}</div><div class="kpi-label">${label}</div>${p === null ? '' : `<div class="bar" style="margin-top:10px"><div style="width:${p}%;background:${color}"></div></div>`}</section>`;
 const habitRow = (h, k, full) => `<div class="row"><span class="emoji">${esc(h.emoji)}</span><div class="row-main"><div class="row-title">${esc(h.name)}</div><div style="display:flex;gap:8px;align-items:center;margin-top:5px"><div class="bar" style="flex:1"><div style="width:${rate(h.id)}%;background:${h.color}"></div></div><span class="num" style="font-size:11px;color:var(--muted);min-width:34px">${rate(h.id)}%</span>${full ? `<span class="badge num">🔥 ${streak(h.id)}</span>` : ''}</div></div>
-  ${full ? `<button class="icon-btn danger" onclick="delHabit('${h.id}')" aria-label="${t('delete')}">${ic('trash')}</button>` : ''}<button class="check ${habitDone(k, h.id) ? 'on' : ''}" onclick="toggleHabit('${h.id}','${k}')" role="checkbox" aria-checked="${habitDone(k, h.id)}" aria-label="${esc(h.name)}">${habitDone(k, h.id) ? '✓' : ''}</button></div>`;
+  ${full ? `<button class="icon-btn" onclick="editHabit('${h.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delHabit('${h.id}')" aria-label="${t('delete')}">${ic('trash')}</button>` : ''}<button class="check ${habitDone(k, h.id) ? 'on' : ''}" onclick="toggleHabit('${h.id}','${k}')" role="checkbox" aria-checked="${habitDone(k, h.id)}" aria-label="${esc(h.name)}">${habitDone(k, h.id) ? '✓' : ''}</button></div>`;
 
 /* ───────── Pages ───────── */
 const PAGES = {
@@ -448,7 +482,7 @@ dashboard() {
   const k = today(), ws = weekStart(new Date()), wdays = [...Array(7)].map((_, i) => addDays(ws, i)), past = wdays.filter(d => dkey(d) <= k && dkey(d) >= S.start).map(dkey);
   const heat = [...Array(35)].map((_, i) => { const d = addDays(new Date(), i - 34), p = habitPct(dkey(d)); return `<div class="${p ? 'l' + Math.ceil(p / 25) : ''}" title="${fmt(d, { day: 'numeric', month: 'short' })} · ${p}%"></div>`; }).join('');
   return header(t('dashboard'), `${t('hello')} · ${fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`, `<button class="btn btn-primary" onclick="addTask()">${ic('plus')}${t('addTask')}</button>`) +
-  `<div class="grid g4">${kpiCard(t('kToday'), routinePct(k) + '%', t('kTodaySub'), 'var(--accent)', routinePct(k))}${kpiCard(t('kHabits'), `${habitsDoneCount(k)}/${S.habits.length}`, t('kHabitsSub'), 'var(--green)', habitPct(k))}${kpiCard(t('kStreak'), bestStreak(), t('days'), 'var(--yellow)')}${kpiCard(t('kWeek'), avgPct(past) + '%', t('kWeekSub'), 'var(--blue)', avgPct(past))}</div>
+  `<div class="grid g4">${kpiCard(t('kToday'), dayStats(k).p + '%', t('kTodaySub'), 'var(--accent)', dayStats(k).p)}${kpiCard(t('kHabits'), `${habitsDoneCount(k)}/${S.habits.length}`, t('kHabitsSub'), 'var(--green)', habitPct(k))}${kpiCard(t('kStreak'), bestStreak(), t('days'), 'var(--yellow)')}${kpiCard(t('kWeek'), avgPct(past) + '%', t('kWeekSub'), 'var(--blue)', avgPct(past))}</div>
   <div class="grid g21">${card(t('weekDays'), `<div class="donuts">${wdays.map((d, i) => { const dk = dkey(d), fut = dk > k; return `<div style="text-align:center">${donut(fut ? 0 : habitPct(dk), PALETTE[i], 72, 13, fut ? '—' : null)}<div style="font-size:11px;font-weight:700;margin-top:6px;color:${dk === k ? 'var(--accent)' : 'var(--muted)'}">${fmt(d, { weekday: 'short' })}</div></div>`; }).join('')}</div>`)}
   ${card(t('todayHabits'), S.habits.length ? S.habits.slice(0, 6).map(h => habitRow(h, k, false)).join('') : `<div class="empty">${t('noHabits')}</div>`, `<button class="link" onclick="go('habits')">${t('all')}</button>`)}</div>
   <div class="grid g3">${card(t('heat'), `<div class="legend">${t('less')} <i style="background:var(--surface3)"></i><i style="background:var(--hm1)"></i><i style="background:var(--hm2)"></i><i style="background:var(--hm3)"></i><i style="background:var(--hm4)"></i> ${t('more')}</div><div class="heat">${heat}</div>`)}
@@ -461,16 +495,30 @@ weekly() {
   return header(t('weekly'), `${fmt(ws, { day: 'numeric', month: 'long' })} — ${fmt(addDays(ws, 6), { day: 'numeric', month: 'long', year: 'numeric' })}`,
     `<button class="btn btn-ghost" onclick="shiftWeek(-1)" aria-label="${t('prevWeek')}">${ic(LANGS[lang].dir === 'rtl' ? 'next' : 'prev')}</button><button class="btn btn-ghost" onclick="shiftWeek(0)">${t('thisWeek')}</button><button class="btn btn-ghost" onclick="shiftWeek(1)" aria-label="${t('nextWeek')}">${ic(LANGS[lang].dir === 'rtl' ? 'prev' : 'next')}</button>`) +
   `<div class="grid g2">${card(t('goals'), ta('goals', t('goalsPh')))}${card(t('priorities'), [0, 1, 2].map(i => `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="num" style="background:${PALETTE[i]};color:#fff;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0">${i + 1}</span><input type="text" value="${esc(w.p[i])}" oninput="setPriority(${i},this.value)" aria-label="${t('priorities')} ${i + 1}"></div>`).join(''))}</div>
-  ${card(t('schedule'), `<div class="week">${[...Array(7)].map((_, i) => { const d = addDays(ws, i), dk = dkey(d), plans = w.plans[dk] || []; return `<div class="day ${dk === k ? 'today' : ''}"><div class="day-head"><div class="day-name" style="color:${PALETTE[i]}">${fmt(d, { weekday: 'long' })}</div><div class="day-date num">${fmt(d, { day: 'numeric', month: 'short' })} · ${dk > k ? '—' : habitPct(dk) + '%'}</div></div><div class="day-body">${plans.map((p, j) => `<div class="plan"><span>${esc(p)}</span><button onclick="delPlan('${dk}',${j})" aria-label="${t('delete')}">×</button></div>`).join('')}<input type="text" placeholder="${t('addPlan')}" maxlength="80" aria-label="${t('addPlan')}" onkeydown="if(event.key==='Enter'){addPlan('${dk}',this.value)}"></div></div>`; }).join('')}</div>`, '', 'margin-bottom:16px')}
+  ${card(t('schedule'), `<div class="week">${[...Array(7)].map((_, i) => { const d = addDays(ws, i), dk = dkey(d), plans = dayTasks(dk); return `<div class="day ${dk === k ? 'today' : ''}"><div class="day-head"><div class="day-name" style="color:${PALETTE[i]}">${fmt(d, { weekday: 'long' })}</div><div class="day-date num">${fmt(d, { day: 'numeric', month: 'short' })} · ${dk > k ? '—' : habitPct(dk) + '%'}</div></div><div class="day-body">${plans.map(x => `<div class="plan ${x.done ? 'pdone' : ''}"><button class="pt" onclick="toggleDayTask('${dk}','${x.id}')" aria-pressed="${!!x.done}">${x.done ? '✓ ' : ''}${esc(x.title)}</button><button onclick="delDayTask('${dk}','${x.id}')" aria-label="${t('delete')}">×</button></div>`).join('')}<input type="text" placeholder="${t('addPlan')}" maxlength="80" aria-label="${t('addPlan')}" onkeydown="if(event.key==='Enter'){addDayTask('${dk}',this.value)}"></div></div>`; }).join('')}</div>`, '', 'margin-bottom:16px')}
   <div class="grid g3">${card(t('worked'), ta('good'))}${card(t('improve'), ta('improve'))}${card(t('score'), `<div style="text-align:center"><div class="kpi num" style="font-size:46px;color:var(--yellow)">${w.score || '—'}</div><div style="color:var(--muted);font-size:13px">${t('outOf')}</div><div style="display:flex;justify-content:center;gap:2px;margin-top:12px;flex-wrap:wrap">${[...Array(10)].map((_, i) => `<button class="icon-btn" style="font-size:17px;color:${i < w.score ? 'var(--yellow)' : 'var(--faint)'}" onclick="setScore(${i + 1})" aria-label="${i + 1}">${i < w.score ? '★' : '☆'}</button>`).join('')}</div></div>`)}</div>`;
 },
 daily() {
-  const k = today(), log = S.routineLog[k] || [], p = routinePct(k);
-  const list = part => S.routine[part].length ? S.routine[part].map(i => { const on = log.includes(i.id); return `<div class="row"><button class="check ${on ? 'on' : ''}" onclick="toggleRoutine('${i.id}')" role="checkbox" aria-checked="${on}" aria-label="${esc(i.task)}">${on ? '✓' : ''}</button><span class="time num">${esc(i.time)}</span><span class="row-main row-title ${on ? 'done' : ''}">${esc(i.emoji)} ${esc(i.task)}</span><button class="icon-btn danger" onclick="delRoutine('${part}','${i.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div>`; }).join('') : `<div class="empty">${t('noRoutine')}</div>`;
-  const add = part => `<button class="icon-btn" onclick="addRoutine('${part}')" aria-label="${t('addItem')}">${ic('plus')}</button>`;
-  return header(t('daily'), fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }), `<div class="badge num" style="font-size:14px;padding:8px 14px;color:var(--green)">${p}% ${t('done')}</div>`) +
-  `<div class="grid g2">${card(t('morning'), list('morning'), add('morning'))}${card(t('evening'), list('evening'), add('evening'))}</div>
-  ${card(t('completion'), `<div class="bar" style="height:10px"><div style="width:${p}%;background:linear-gradient(90deg,var(--green),var(--teal))"></div></div>`, `<span class="num" style="color:var(--green);font-weight:700">${p}%</span>`)}`;
+  const k = selDay || today(), d = pdate(k), tk = today(), log = S.routineLog[k] || [], st = dayStats(k), ws = weekStart(d), rtl = LANGS[lang].dir === 'rtl', m = S.mind[k] || {};
+  const list = part => S.routine[part].length ? S.routine[part].map(i => { const on = log.includes(i.id); return `<div class="row"><button class="check ${on ? 'on' : ''}" onclick="toggleRoutine('${i.id}')" role="checkbox" aria-checked="${on}" aria-label="${esc(i.task)}">${on ? '✓' : ''}</button><span class="time num">${esc(i.time)}</span><span class="row-main row-title ${on ? 'done' : ''}">${esc(i.emoji)} ${esc(i.task)}</span><button class="icon-btn" onclick="editRoutine('${part}','${i.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delRoutine('${part}','${i.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div>`; }).join('') : `<div class="empty">${t('noRoutine')}</div>`;
+  const partPct = part => pct(S.routine[part].filter(i => log.includes(i.id)).length, S.routine[part].length);
+  const head = part => `<span class="badge num">${partPct(part)}%</span><button class="icon-btn" onclick="addRoutine('${part}')" aria-label="${t('addItem')}">${ic('plus')}</button>`;
+  const strip = [...Array(7)].map((_, i) => { const x = addDays(ws, i), dk = dkey(x); return `<button class="${dk === k ? 'sel' : ''} ${dk === tk ? 'now' : ''}" onclick="setDay('${dk}')" aria-pressed="${dk === k}"><span class="dn">${fmt(x, { weekday: 'short' })}</span>${donut(dayStats(dk).p, PALETTE[i], 54, 11)}<span class="num" style="font-weight:500">${fmt(x, { day: 'numeric', month: 'short' })}</span></button>`; }).join('');
+  const dt = dayTasks(k);
+  const tasks = (dt.length ? dt.map(x => `<div class="row"><button class="check ${x.done ? 'on' : ''}" onclick="toggleDayTask('${k}','${x.id}')" role="checkbox" aria-checked="${!!x.done}" aria-label="${esc(x.title)}">${x.done ? '✓' : ''}</button><span class="row-main row-title ${x.done ? 'done' : ''}">${esc(x.title)}</span><button class="icon-btn danger" onclick="delDayTask('${k}','${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div>`).join('') : `<div class="empty" style="padding:18px">${t('noDayTasks')}</div>`) +
+    `<form class="addline" onsubmit="event.preventDefault();addDayTask('${k}',this.firstElementChild.value)"><input type="text" maxlength="120" placeholder="${t('dayTaskPh')}" aria-label="${t('dayTaskPh')}"><button class="btn btn-primary" aria-label="${t('add')}">${ic('plus')}</button></form>`;
+  const sliders = [['e', 'energy', 'var(--accent)'], ['f', 'focus', 'var(--blue)'], ['m', 'motivation', 'var(--green)']];
+  const mind = sliders.map(([f, l, c]) => `<div class="slider"><label for="mind_${f}">${t(l)}</label><input id="mind_${f}" type="range" min="1" max="10" step="1" value="${m[f] || 5}" style="accent-color:${c}" oninput="setMind('${f}',this.value,this)" onchange="render()"><output class="num" style="color:${c}">${m[f] || '—'}</output></div>`).join('') +
+    `<div class="set-row" style="padding-bottom:0"><b>${t('mindScore')}</b><span class="kpi num" style="font-size:24px;color:var(--yellow)">${S.mind[k] ? mindScore(k) + '%' : '—'}</span></div>`;
+  const mweek = `<div class="mbars">${[...Array(7)].map((_, i) => { const x = addDays(ws, i), mm = S.mind[dkey(x)] || {}; return `<div><div class="g">${sliders.map(([f, , c]) => `<i style="height:${(mm[f] || 0) * 10}%;background:${c}" title="${t(sliders.find(q => q[0] === f)[1])}: ${mm[f] || 0}"></i>`).join('')}</div><span>${fmt(x, { weekday: 'short' })}</span></div>`; }).join('')}</div><div class="legend" style="margin:12px 0 0;justify-content:center;gap:12px;font-size:11px">${sliders.map(([, l, c]) => `<span><i style="background:${c}"></i> ${t(l)}</span>`).join('')}</div>`;
+  return header(t('daily'), fmt(d, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+    `<button class="btn btn-ghost" onclick="shiftDay(-1)" aria-label="${t('prevDay')}">${ic(rtl ? 'next' : 'prev')}</button><button class="btn ${k === tk ? 'btn-primary' : 'btn-ghost'}" onclick="setDay('')">${t('todayBtn')}</button><button class="btn btn-ghost" onclick="shiftDay(1)" aria-label="${t('nextDay')}">${ic(rtl ? 'prev' : 'next')}</button>`) +
+  card(t('weekStrip'), `<div class="strip">${strip}</div>`, '', 'margin-bottom:16px') +
+  `<div class="grid g3">${card(t('dayProgress'), `<div style="display:grid;place-items:center">${donut(st.p, 'var(--green)', 128, 24)}</div><div class="stat2"><div><b class="num" style="color:var(--green)">${st.done}</b>${t('completed')}</div><div><b class="num">${st.left}</b>${t('notCompleted')}</div></div>`)}
+  ${card(t('dayTasks'), tasks, `<span class="badge num">${dt.filter(x => x.done).length}/${dt.length}</span>`)}
+  ${card(t('mindset'), mind)}</div>
+  <div class="grid g2" style="align-items:start">${card(t('morning'), list('morning'), `<span style="display:flex;gap:6px;align-items:center">${head('morning')}</span>`)}${card(t('evening'), list('evening'), `<span style="display:flex;gap:6px;align-items:center">${head('evening')}</span>`)}</div>
+  ${card(t('mindWeek'), mweek)}`;
 },
 habits() {
   const k = today(), ws = weekStart(new Date());
@@ -479,7 +527,12 @@ habits() {
   let body;
   if (habitView === 'day') body = `<div class="grid g4">${[[habitsDoneCount(k), 'doneToday', 'var(--green)'], [S.habits.length, 'total', 'var(--accent)'], [bestStreak(), 'bestStreak', 'var(--yellow)'], [habitPct(k) + '%', 'rateToday', 'var(--purple)']].map(([v, l, c]) => `<section class="card" style="text-align:center"><div class="kpi num" style="color:${c}">${v}</div><div class="kpi-label">${t(l)}</div></section>`).join('')}</div>${card(t('todayHabits'), S.habits.length ? S.habits.map(h => habitRow(h, k, true)).join('') : none)}`;
   else if (habitView === 'week') body = card(t('vWeek'), S.habits.length ? `<div style="overflow-x:auto"><table class="wk"><thead><tr><th>${t('habit')}</th>${[...Array(7)].map((_, i) => `<th>${fmt(addDays(ws, i), { weekday: 'short' })}</th>`).join('')}<th>%</th></tr></thead><tbody>${S.habits.map(h => { let n = 0; return `<tr><td>${esc(h.emoji)} ${esc(h.name)}</td>${[...Array(7)].map((_, i) => { const dk = dkey(addDays(ws, i)), on = habitDone(dk, h.id); if (on) n++; return `<td><button class="check ${on ? 'on' : ''}" style="margin:auto;${on ? `background:${h.color};border-color:${h.color};` : ''}${dk > k ? 'opacity:.3;cursor:default' : ''}" ${dk > k ? 'disabled' : `onclick="toggleHabit('${h.id}','${dk}')"`} role="checkbox" aria-checked="${on}" aria-label="${esc(h.name)} ${dk}">${on ? '✓' : ''}</button></td>`; }).join('')}<td class="num" style="font-weight:700;color:${h.color}">${pct(n, 7)}%</td></tr>`; }).join('')}</tbody></table></div>` : none);
-  else body = card(t('vMonth'), S.habits.length ? S.habits.map(h => `<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:170px;max-width:40%;font-size:12.5px;font-weight:600">${esc(h.emoji)} ${esc(h.name)}</div><div class="bar" style="flex:1;height:8px"><div style="width:${rate(h.id)}%;background:${h.color}"></div></div><div class="num" style="font-size:12px;min-width:38px;font-weight:700;color:${h.color}">${rate(h.id)}%</div></div>`).join('') : none);
+  else {
+    const base = new Date(), first = new Date(base.getFullYear(), base.getMonth() + monthOffset, 1), n = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate(), days = [...Array(n)].map((_, i) => new Date(first.getFullYear(), first.getMonth(), i + 1)), rtl = LANGS[lang].dir === 'rtl';
+    const total = days.reduce((a, d) => a + habitsDoneCount(dkey(d)), 0), cells = S.habits.length * n;
+    const nav = `<span style="display:flex;gap:6px;align-items:center"><span class="badge num">${total} ${t('completedHabits')} · ${pct(total, cells)}%</span><button class="icon-btn" onclick="shiftMonth(-1)" aria-label="${t('prevWeek')}">${ic(rtl ? 'next' : 'prev')}</button><button class="icon-btn" onclick="shiftMonth(1)" aria-label="${t('nextWeek')}">${ic(rtl ? 'prev' : 'next')}</button></span>`;
+    body = card(`${t('monthGrid')} · ${fmt(first, { month: 'long', year: 'numeric' })}`, S.habits.length ? `<div style="overflow-x:auto"><table class="mg"><thead><tr><th>${t('habit')}</th>${days.map(d => `<th class="${dkey(d) === k ? 'now' : ''}">${fmt(d, { weekday: 'narrow' })}<br><span class="num">${d.getDate()}</span></th>`).join('')}<th>%</th></tr></thead><tbody>${S.habits.map(h => { let c = 0; return `<tr><td>${esc(h.emoji)} ${esc(h.name)}</td>${days.map(d => { const dk = dkey(d), on = habitDone(dk, h.id), fut = dk > k; if (on) c++; return `<td><button class="check sm ${on ? 'on' : ''}" style="${on ? `background:${h.color};border-color:${h.color};` : ''}${fut ? 'opacity:.3;cursor:default' : ''}" ${fut ? 'disabled' : `onclick="toggleHabit('${h.id}','${dk}')"`} role="checkbox" aria-checked="${on}" aria-label="${esc(h.name)} ${dk}">${on ? '✓' : ''}</button></td>`; }).join('')}<td class="num" style="font-weight:700;color:${h.color};padding-inline-start:10px">${pct(c, n)}%</td></tr>`; }).join('')}</tbody><tfoot><tr><td>${t('progress')}</td>${days.map(d => `<td class="num">${dkey(d) > k ? '' : habitPct(dkey(d)) + '%'}</td>`).join('')}<td></td></tr></tfoot></table></div>` : none, nav);
+  }
   return header(t('habits'), fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long' }), seg + `<button class="btn btn-primary" onclick="addHabit()">${ic('plus')}${t('addHabit')}</button>`) + body;
 },
 projects() {
@@ -487,14 +540,14 @@ projects() {
   const pr = { high: 'var(--pink)', med: 'var(--yellow)', low: 'var(--muted)' };
   return header(t('projects'), `${S.projects.length} ${t('activeProjects')}`, `<button class="btn btn-ghost" onclick="addProject()">${ic('plus')}${t('addProject')}</button><button class="btn btn-primary" onclick="addTask()">${ic('plus')}${t('addTask')}</button>`) +
   (S.projects.length ? `<div class="grid g4">${S.projects.map(p => { const s = projStats(p.id); return `<section class="card" style="border-top:3px solid ${p.color}"><div class="card-head"><span style="font-weight:700">${esc(p.name)}</span><button class="icon-btn danger" onclick="delProject('${p.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div><div style="display:grid;place-items:center;margin:6px 0 10px">${donut(s.p, p.color, 78, 14)}</div><div class="num" style="font-size:12px;color:var(--muted);text-align:center">${s.done}/${s.total} ${t('tasksDone')}</div></section>`; }).join('')}</div>` : '') +
-  card(t('board'), `<div class="kanban">${cols.map(([c, color]) => { const ts = S.tasks.filter(x => x.status === c), i = order.indexOf(c); return `<div class="kcol" data-col="${c}"><div class="kcol-head"><i class="dot" style="background:${color}"></i>${t(c === 'done' ? 'doneCol' : c)}<span class="badge num">${ts.length}</span></div>${ts.length ? ts.map(x => { const p = S.projects.find(q => q.id === x.projectId); return `<div class="kcard" draggable="true" data-id="${x.id}"><div class="kcard-title">${esc(x.title)}</div><div class="kcard-meta">${p ? `<span class="tag" style="background:${p.color}22;color:${p.color}">${esc(p.name)}</span>` : ''}<span class="tag" style="background:var(--surface3);color:${pr[x.priority] || pr.med}">${t(x.priority || 'med')}</span><span class="kcard-actions">${i > 0 ? `<button class="icon-btn" onclick="moveTask('${x.id}','${order[i - 1]}')" aria-label="${t('move')}: ${t(order[i - 1] === 'done' ? 'doneCol' : order[i - 1])}">${ic(rtl ? 'next' : 'prev')}</button>` : ''}${i < 2 ? `<button class="icon-btn" onclick="moveTask('${x.id}','${order[i + 1]}')" aria-label="${t('move')}: ${t(order[i + 1] === 'done' ? 'doneCol' : order[i + 1])}">${ic(rtl ? 'prev' : 'next')}</button>` : ''}<button class="icon-btn danger" onclick="delTask('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div></div>`; }).join('') : `<div class="empty" style="padding:18px">${t('noTasks')}</div>`}</div>`; }).join('')}</div>`);
+  card(t('board'), `<div class="kanban">${cols.map(([c, color]) => { const ts = S.tasks.filter(x => x.status === c), i = order.indexOf(c); return `<div class="kcol" data-col="${c}"><div class="kcol-head"><i class="dot" style="background:${color}"></i>${t(c === 'done' ? 'doneCol' : c)}<span class="badge num">${ts.length}</span></div>${ts.length ? ts.map(x => { const p = S.projects.find(q => q.id === x.projectId); return `<div class="kcard" draggable="true" data-id="${x.id}"><div class="kcard-title">${esc(x.title)}</div><div class="kcard-meta">${p ? `<span class="tag" style="background:${p.color}22;color:${p.color}">${esc(p.name)}</span>` : ''}<span class="tag" style="background:var(--surface3);color:${pr[x.priority] || pr.med}">${t(x.priority || 'med')}</span><span class="kcard-actions">${i > 0 ? `<button class="icon-btn" onclick="moveTask('${x.id}','${order[i - 1]}')" aria-label="${t('move')}: ${t(order[i - 1] === 'done' ? 'doneCol' : order[i - 1])}">${ic(rtl ? 'next' : 'prev')}</button>` : ''}${i < 2 ? `<button class="icon-btn" onclick="moveTask('${x.id}','${order[i + 1]}')" aria-label="${t('move')}: ${t(order[i + 1] === 'done' ? 'doneCol' : order[i + 1])}">${ic(rtl ? 'prev' : 'next')}</button>` : ''}<button class="icon-btn" onclick="editTask('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delTask('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div></div>`; }).join('') : `<div class="empty" style="padding:18px">${t('noTasks')}</div>`}</div>`; }).join('')}</div>`);
 },
 notes() {
   const cats = ['book', 'podcast', 'idea', 'review'], list = S.notes.filter(n => noteFilter === 'all' || n.cat === noteFilter).sort((a, b) => b.ts - a.ts), sel = S.notes.find(n => n.id === noteSel);
   return header(t('notes'), cats.map(c => `${t(c)}: ${S.notes.filter(n => n.cat === c).length}`).join(' · '), `<button class="btn btn-primary" onclick="addNote()">${ic('plus')}${t('addNote')}</button>`) +
   `<div class="grid g2"><div><div class="seg" style="margin-bottom:12px;flex-wrap:wrap">${['all', ...cats].map(c => `<button class="${noteFilter === c ? 'on' : ''}" onclick="setNoteFilter('${c}')">${t(c)}</button>`).join('')}</div>
   ${list.length ? list.map(n => `<button class="note ${n.id === noteSel ? 'sel' : ''}" onclick="selNote('${n.id}')"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span class="row-title">${esc(n.title || t('untitled'))}</span><span class="badge">${t(n.cat)}</span></div><div class="note-prev">${esc(n.body)}</div><div class="num" style="font-size:11px;color:var(--faint);margin-top:8px">${fmt(new Date(n.ts), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</div></button>`).join('') : `<div class="card empty">${t('noNotes')}</div>`}</div>
-  ${sel ? card(t('editNote'), `<div class="field"><input type="text" id="nTitle" placeholder="${t('noteTitle')}" value="${esc(sel.title)}" aria-label="${t('noteTitle')}"></div><div class="field"><select id="nCat" aria-label="${t('category')}">${cats.map(c => `<option value="${c}" ${sel.cat === c ? 'selected' : ''}>${t(c)}</option>`).join('')}</select></div><textarea rows="12" id="nBody" placeholder="${t('noteBody')}" aria-label="${t('noteBody')}">${esc(sel.body)}</textarea><button class="btn btn-primary btn-block" style="margin-top:12px" onclick="saveNote()">${t('save')}</button>`, `<button class="icon-btn danger" onclick="delNote('${sel.id}')" aria-label="${t('delete')}">${ic('trash')}</button>`) : ''}</div>`;
+  ${sel ? card(t('editNote'), `<div class="field"><input type="text" id="nTitle" oninput="noteInput()" placeholder="${t('noteTitle')}" value="${esc(sel.title)}" aria-label="${t('noteTitle')}"></div><div class="field"><select id="nCat" onchange="saveNote()" aria-label="${t('category')}">${cats.map(c => `<option value="${c}" ${sel.cat === c ? 'selected' : ''}>${t(c)}</option>`).join('')}</select></div><textarea rows="12" id="nBody" oninput="noteInput()" placeholder="${t('noteBody')}" aria-label="${t('noteBody')}">${esc(sel.body)}</textarea><button class="btn btn-primary btn-block" style="margin-top:12px" onclick="saveNote()">${t('save')}</button>`, `<button class="icon-btn danger" onclick="delNote('${sel.id}')" aria-label="${t('delete')}">${ic('trash')}</button>`) : ''}</div>`;
 },
 analytics() {
   const d30 = lastDays(30), ranked = S.habits.map(h => ({ h, r: rate(h.id) })).sort((a, b) => b.r - a.r), best = ranked[0], worst = ranked[ranked.length - 1];
@@ -520,7 +573,7 @@ settings() {
 /* ───────── Actions ───────── */
 function toggle(log, k, id) { const a = log[k] || (log[k] = []), i = a.indexOf(id); i < 0 ? a.push(id) : a.splice(i, 1); if (!a.length) delete log[k]; }
 function toggleHabit(id, k) { toggle(S.habitLog, k, id); commit(); }
-function toggleRoutine(id) { toggle(S.routineLog, today(), id); commit(); }
+function toggleRoutine(id) { toggle(S.routineLog, selDay || today(), id); commit(); }
 function setMood(i) { S.mood[today()] = i; commit(); }
 function setHabitView(v) { habitView = v; render(); }
 function addHabit() { openForm({ title: t('addHabit'), submit: t('add'), fields: [{ name: 'name', label: t('habitName'), required: true, max: 60 }, { name: 'emoji', label: t('emoji'), value: '✅', max: 8 }], onSubmit: v => { if (!v.name) return; S.habits.push({ id: uid(), name: v.name, emoji: v.emoji || '✅', color: PALETTE[S.habits.length % PALETTE.length] }); commit(); } }); }
@@ -531,8 +584,17 @@ function shiftWeek(n) { weekOffset = n === 0 ? 0 : weekOffset + n; render(); }
 function setWeek(f, v) { weekData()[f] = v; save(); }
 function setPriority(i, v) { weekData().p[i] = v; save(); }
 function setScore(n) { const w = weekData(); w.score = w.score === n ? 0 : n; commit(); }
-function addPlan(dk, v) { v = v.trim(); if (!v) return; const w = weekData(); (w.plans[dk] || (w.plans[dk] = [])).push(v); commit(); }
-function delPlan(dk, j) { const w = weekData(); w.plans[dk].splice(j, 1); commit(); }
+function addDayTask(dk, v) { v = (v || '').trim(); if (!v) return; (S.dayTasks[dk] || (S.dayTasks[dk] = [])).push({ id: uid(), title: v, done: false }); commit(); }
+function toggleDayTask(dk, id) { const x = dayTasks(dk).find(q => q.id === id); if (x) { x.done = !x.done; commit(); } }
+function delDayTask(dk, id) { S.dayTasks[dk] = dayTasks(dk).filter(q => q.id !== id); if (!S.dayTasks[dk].length) delete S.dayTasks[dk]; commit(); }
+function setDay(k) { selDay = k && k !== today() ? k : null; render(); }
+function shiftDay(n) { setDay(dkey(addDays(pdate(selDay || today()), n))); }
+function shiftMonth(n) { monthOffset += n; render(); }
+function setMind(f, v, el) { const k = selDay || today(), m = S.mind[k] || (S.mind[k] = { e: 5, f: 5, m: 5 }); m[f] = Number(v); if (el) el.nextElementSibling.textContent = v; save(); }
+function editHabit(id) { const h = S.habits.find(q => q.id === id); if (!h) return; openForm({ title: t('edit'), fields: [{ name: 'name', label: t('habitName'), value: h.name, required: true, max: 60 }, { name: 'emoji', label: t('emoji'), value: h.emoji, max: 8 }], onSubmit: v => { if (!v.name) return; h.name = v.name; h.emoji = v.emoji || h.emoji; commit(); } }); }
+function editRoutine(part, id) { const r = S.routine[part].find(q => q.id === id); if (!r) return; openForm({ title: t('edit'), fields: [{ name: 'time', label: t('time'), type: 'time', value: r.time, required: true }, { name: 'task', label: t('task'), value: r.task, required: true, max: 80 }, { name: 'emoji', label: t('emoji'), value: r.emoji, max: 8 }], onSubmit: v => { if (!v.task) return; r.time = v.time || r.time; r.task = v.task; r.emoji = v.emoji || r.emoji; S.routine[part].sort((a, b) => a.time.localeCompare(b.time)); commit(); } }); }
+function editTask(id) { const x = S.tasks.find(q => q.id === id); if (!x) return; openForm({ title: t('edit'), fields: [{ name: 'title', label: t('taskTitle'), value: x.title, required: true, max: 120 }, { name: 'projectId', label: t('project'), type: 'select', value: x.projectId || '', options: [['', t('none')], ...S.projects.map(p => [p.id, p.name])] }, { name: 'priority', label: t('priority'), type: 'select', value: x.priority || 'med', options: [['high', t('high')], ['med', t('med')], ['low', t('low')]] }], onSubmit: v => { if (!v.title) return; x.title = v.title; x.projectId = v.projectId; x.priority = v.priority; commit(); } }); }
+function noteInput() { const n = S.notes.find(x => x.id === noteSel); if (!n) return; n.title = $('nTitle').value.trim(); n.body = $('nBody').value; n.ts = Date.now(); save(); }
 function addProject() { openForm({ title: t('addProject'), submit: t('add'), fields: [{ name: 'name', label: t('projectName'), required: true, max: 60 }], onSubmit: v => { if (!v.name) return; S.projects.push({ id: uid(), name: v.name, color: PALETTE[S.projects.length % PALETTE.length] }); commit(); } }); }
 function delProject(id) { confirmDel(() => { S.projects = S.projects.filter(p => p.id !== id); S.tasks.forEach(x => { if (x.projectId === id) x.projectId = ''; }); }); }
 function addTask() { openForm({ title: t('addTask'), submit: t('add'), fields: [{ name: 'title', label: t('taskTitle'), required: true, max: 120 }, { name: 'projectId', label: t('project'), type: 'select', value: '', options: [['', t('none')], ...S.projects.map(p => [p.id, p.name])] }, { name: 'priority', label: t('priority'), type: 'select', value: 'med', options: [['high', t('high')], ['med', t('med')], ['low', t('low')]] }], onSubmit: v => { if (!v.title) return; S.tasks.push({ id: uid(), title: v.title, projectId: v.projectId, priority: v.priority, status: 'todo' }); page = 'projects'; commit(); } }); }
