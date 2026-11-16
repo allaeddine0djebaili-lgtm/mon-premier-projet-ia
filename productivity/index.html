@@ -53,7 +53,7 @@ svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-wid
 .msg.ok { background: #10d9a01c; color: var(--green); border: 1px solid #10d9a040; }
 
 /* Inputs & buttons */
-input[type=text], input[type=email], input[type=password], input[type=time], select, textarea {
+input[type=text], input[type=email], input[type=password], input[type=time], input[type=date], input[type=number], select, textarea {
   width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--r2);
   padding: 10px 12px; outline: none; transition: border-color .15s, box-shadow .15s; resize: vertical;
 }
@@ -169,6 +169,27 @@ table.mg tfoot td { color: var(--muted); border-top: 1px solid var(--border); pa
 .kadd { width: 100%; padding: 8px; background: transparent; border: 1px dashed var(--border2); border-radius: var(--r2); color: var(--faint); cursor: pointer; font-size: 12px; font-weight: 600; }
 .kadd:hover { color: var(--accent); border-color: var(--accent); }
 .pcard { cursor: pointer; }
+.fkpi { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.fkpi .fi { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+.range { display: flex; gap: 6px; align-items: center; }
+.range input { width: 150px; padding: 8px 10px; font-size: 12.5px; }
+table.ft { width: 100%; border-collapse: collapse; min-width: 640px; }
+table.ft th { text-align: start; padding: 10px 12px; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border2); white-space: nowrap; }
+table.ft td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+table.ft tr:last-child td { border-bottom: none; }
+table.ft .amt { font-weight: 700; white-space: nowrap; }
+table.mx { border-collapse: collapse; width: 100%; min-width: 980px; font-size: 12px; }
+table.mx th { padding: 9px 8px; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border2); text-align: end; white-space: nowrap; }
+table.mx th:nth-child(-n+2), table.mx td:nth-child(-n+2) { text-align: start; }
+table.mx td { padding: 8px; border-bottom: 1px solid var(--border); text-align: end; white-space: nowrap; }
+table.mx td.z { color: var(--faint); }
+table.mx tr.sec td { font-weight: 800; font-size: 11px; letter-spacing: .06em; text-align: start; }
+table.mx tr.sub td { color: var(--muted); background: var(--surface2); font-weight: 600; }
+table.mx tr.tot td { font-weight: 800; border-top: 2px solid var(--border2); border-bottom: none; }
+table.mx td:last-child, table.mx th:last-child { font-weight: 800; }
+.dist { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; font-size: 12.5px; }
+.dist span:first-child { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.chart text { font-size: 10px; fill: var(--muted); font-family: inherit; }
 .pcard.sel { box-shadow: 0 0 0 2px var(--accent); }
 .kcard-meta { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
 .kcard-actions { margin-inline-start: auto; display: flex; }
@@ -236,6 +257,7 @@ const T = {
 ar: {
   prevDay: 'اليوم السابق', nextDay: 'اليوم التالي', todayBtn: 'اليوم', weekStrip: 'أيام الأسبوع', dayProgress: 'تقدم اليوم', completed: 'مكتمل', notCompleted: 'غير مكتمل', dayTasks: 'مهام اليوم', dayTaskPh: 'أضف مهمة لهذا اليوم…', noDayTasks: 'لا توجد مهام لهذا اليوم.', mindset: 'الحالة الذهنية', energy: 'الطاقة', focus: 'التركيز', motivation: 'الحماس', mindScore: 'المؤشر', mindWeek: 'الحالة الذهنية خلال الأسبوع', edit: 'تعديل', monthGrid: 'متتبع الشهر', progress: 'التقدم', completedHabits: 'عادات مكتملة',
   searchNotes: 'بحث في الملاحظات…', noMatch: 'لا توجد نتائج مطابقة.', color: 'اللون', saveClose: 'حفظ وإغلاق', pickNote: 'اختر ملاحظة من القائمة أو أنشئ واحدة جديدة.',
+  nFin: 'المالية', fin: 'النظرة المالية', income: 'المداخيل', expense: 'المصاريف', matrix: 'المصفوفة السنوية', fincats: 'التصنيفات المالية', finSub: 'كل الأرقام للفترة', totalIncome: 'إجمالي المداخيل', totalExpenses: 'إجمالي المصاريف', netBalance: 'الرصيد الصافي', surplus: '▲ فائض', deficit: '▼ عجز', avgExpense: 'متوسط المصروف الشهري', perMonth: 'شهرياً خلال الفترة', monthlyChart: 'المداخيل مقابل المصاريف شهرياً', net: 'الصافي', expDist: 'توزيع المصاريف', byGroup: 'حسب المجموعة الرئيسية', newIncome: 'دخل جديد', newExpense: 'مصروف جديد', exportCsv: 'تصدير CSV', date: 'التاريخ', mainGroup: 'المجموعة الرئيسية', subCat: 'التصنيف الفرعي', amount: 'المبلغ', notesCol: 'ملاحظات', records: 'سجل', totalLbl: 'الإجمالي', searchTx: 'بحث في المجموعة، التصنيف، الملاحظات…', noTx: 'لا توجد معاملات في هذه الفترة.', matrixSub: 'جدول محوري شهري للأرباح والخسائر', allTypes: 'كل الأنواع', grandTotal: 'المجموع الكلي', addCat: 'تصنيف جديد', type: 'النوع', catCount: 'تصنيفات فرعية', groupsCount: 'مجموعات رئيسية', noCats: 'لا توجد تصنيفات. أضف تصنيفاً أولاً.', needCat: 'أضف تصنيفاً من هذا النوع أولاً.', from: 'من', to: 'إلى', errAmount: 'أدخل مبلغاً أكبر من صفر.',
   app: 'إنتاجيتي', tagline: 'نظام الإنتاجية المتكامل',
   signin: 'تسجيل الدخول', signup: 'إنشاء حساب', signinSub: 'مرحباً بعودتك. ادخل إلى حسابك للمتابعة.', signupSub: 'أنشئ حسابك وابدأ بتنظيم يومك.',
   email: 'البريد الإلكتروني', password: 'كلمة المرور', newPassword: 'كلمة المرور الجديدة', forgot: 'نسيت كلمة المرور؟', noAccount: 'ليس لديك حساب؟ أنشئ واحداً', haveAccount: 'لديك حساب؟ سجّل الدخول',
@@ -261,6 +283,7 @@ ar: {
 fr: {
   prevDay: 'Jour précédent', nextDay: 'Jour suivant', todayBtn: 'Aujourd’hui', weekStrip: 'Jours de la semaine', dayProgress: 'Progression du jour', completed: 'Terminé', notCompleted: 'Restant', dayTasks: 'Tâches du jour', dayTaskPh: 'Ajouter une tâche pour ce jour…', noDayTasks: 'Aucune tâche pour ce jour.', mindset: 'État d’esprit', energy: 'Énergie', focus: 'Concentration', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'État d’esprit sur la semaine', edit: 'Modifier', monthGrid: 'Suivi du mois', progress: 'Progression', completedHabits: 'habitudes cochées',
   searchNotes: 'Rechercher dans les notes…', noMatch: 'Aucun résultat.', color: 'Couleur', saveClose: 'Enregistrer et fermer', pickNote: 'Choisissez une note dans la liste ou créez-en une.',
+  nFin: 'Finances', fin: 'Vue financière', income: 'Revenus', expense: 'Dépenses', matrix: 'Matrice annuelle', fincats: 'Catégories', finSub: 'Tous les chiffres pour la période', totalIncome: 'Total des revenus', totalExpenses: 'Total des dépenses', netBalance: 'Solde net', surplus: '▲ Excédent', deficit: '▼ Déficit', avgExpense: 'Dépense mensuelle moyenne', perMonth: 'par mois sur la période', monthlyChart: 'Revenus et dépenses par mois', net: 'Net', expDist: 'Répartition des dépenses', byGroup: 'Par groupe principal', newIncome: 'Nouveau revenu', newExpense: 'Nouvelle dépense', exportCsv: 'Exporter CSV', date: 'Date', mainGroup: 'Groupe principal', subCat: 'Sous-catégorie', amount: 'Montant', notesCol: 'Notes', records: 'lignes', totalLbl: 'Total', searchTx: 'Rechercher groupe, catégorie, notes…', noTx: 'Aucune transaction sur cette période.', matrixSub: 'Tableau croisé mensuel des revenus et dépenses', allTypes: 'Tous les types', grandTotal: 'Total général', addCat: 'Nouvelle catégorie', type: 'Type', catCount: 'sous-catégories', groupsCount: 'groupes principaux', noCats: 'Aucune catégorie. Ajoutez-en une d’abord.', needCat: 'Ajoutez d’abord une catégorie de ce type.', from: 'Du', to: 'Au', errAmount: 'Saisissez un montant supérieur à zéro.',
   app: 'Intajiyati', tagline: 'Système de productivité complet',
   signin: 'Se connecter', signup: 'Créer un compte', signinSub: 'Bon retour. Connectez-vous pour continuer.', signupSub: 'Créez votre compte et organisez vos journées.',
   email: 'Adresse e-mail', password: 'Mot de passe', newPassword: 'Nouveau mot de passe', forgot: 'Mot de passe oublié ?', noAccount: 'Pas de compte ? Créez-en un', haveAccount: 'Déjà inscrit ? Connectez-vous',
@@ -286,6 +309,7 @@ fr: {
 en: {
   prevDay: 'Previous day', nextDay: 'Next day', todayBtn: 'Today', weekStrip: 'Days of the week', dayProgress: 'Day progress', completed: 'Completed', notCompleted: 'Not completed', dayTasks: 'Tasks for the day', dayTaskPh: 'Add a task for this day…', noDayTasks: 'No tasks for this day.', mindset: 'Mindset check-in', energy: 'Energy', focus: 'Focus', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'Mindset across the week', edit: 'Edit', monthGrid: 'Month tracker', progress: 'Progress', completedHabits: 'habits completed',
   searchNotes: 'Search notes…', noMatch: 'No matching notes.', color: 'Colour', saveClose: 'Save and close', pickNote: 'Pick a note from the list or create a new one.',
+  nFin: 'Finance', fin: 'Financial overview', income: 'Incomes', expense: 'Expenses', matrix: 'Annual matrix', fincats: 'Categories', finSub: 'All figures for', totalIncome: 'Total income', totalExpenses: 'Total expenses', netBalance: 'Net balance', surplus: '▲ Surplus', deficit: '▼ Deficit', avgExpense: 'Avg monthly expense', perMonth: 'per month in period', monthlyChart: 'Monthly income vs expenses', net: 'Net', expDist: 'Expense distribution', byGroup: 'By main group', newIncome: 'New income', newExpense: 'New expense', exportCsv: 'Export CSV', date: 'Date', mainGroup: 'Main group', subCat: 'Sub category', amount: 'Amount', notesCol: 'Notes', records: 'records', totalLbl: 'Total', searchTx: 'Search group, category, notes…', noTx: 'No transactions in this period.', matrixSub: 'P&L pivot, monthly breakdown', allTypes: 'All types', grandTotal: 'Grand total', addCat: 'Add category', type: 'Type', catCount: 'sub-categories', groupsCount: 'main groups', noCats: 'No categories yet. Add one first.', needCat: 'Add a category of this type first.', from: 'From', to: 'To', errAmount: 'Enter an amount greater than zero.',
   app: 'Intajiyati', tagline: 'All-in-one productivity system',
   signin: 'Sign in', signup: 'Create account', signinSub: 'Welcome back. Sign in to continue.', signupSub: 'Create your account and start organising your day.',
   email: 'Email address', password: 'Password', newPassword: 'New password', forgot: 'Forgot password?', noAccount: 'No account? Create one', haveAccount: 'Have an account? Sign in',
@@ -344,18 +368,20 @@ const ICONS = {
   notes: '<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M9 8h3"/>', analytics: '<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',
   settings: '<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/>',
   logout: '<path d="M9 4H5v16h4M15 8l4 4-4 4M19 12H9"/>', plus: '<path d="M12 5v14M5 12h14"/>', trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', prev: '<path d="M15 6l-6 6 6 6"/>', next: '<path d="M9 6l6 6-6 6"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', edit: '<path d="M4 20h4l10-10-4-4L4 16z"/><path d="M13 7l4 4"/>',
+  fin: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/>', income: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>', expense: '<path d="M3 7l6 6 4-4 8 8M15 17h6v-6"/>',
+  matrix: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>', fincats: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="8" cy="8" r="1.5"/>', download: '<path d="M12 4v11M7 11l5 5 5-5M4 20h16"/>',
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 const donut = (p, color, size = 72, fs = 13, label = null) => `<div class="donut" style="width:${size}px;height:${size}px"><svg viewBox="0 0 36 36" width="${size}" height="${size}"><circle cx="18" cy="18" r="15.9155" fill="none" stroke="var(--surface3)" stroke-width="3.6"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="${color}" stroke-width="3.6" stroke-linecap="round" stroke-dasharray="${p} ${100 - p}"/></svg><span class="num" style="font-size:${fs}px;color:${color}">${label ?? p + '%'}</span></div>`;
 
 /* ───────── State ───────── */
-let user = null, S = null, page = 'dashboard', habitView = 'day', weekOffset = 0, noteFilter = 'all', noteSel = null, saveTimer = null, syncState = 'saved', selDay = null, monthOffset = 0, noteQuery = '', projFilter = '';
+let user = null, S = null, page = 'dashboard', habitView = 'day', weekOffset = 0, noteFilter = 'all', noteSel = null, saveTimer = null, syncState = 'saved', selDay = null, monthOffset = 0, noteQuery = '', projFilter = '', finQuery = '', matrixType = 'all', catType = 'all', finRange = { from: new Date().getFullYear() + '-01-01', to: new Date().getFullYear() + '-12-31' };
 function seedState() {
   const s = SEED[lang], mk = a => a.map(([time, emoji, task]) => ({ id: uid(), time, emoji, task }));
   return { v: 1, start: today(), ts: Date.now(),
     habits: s.habits.map(([emoji, name], i) => ({ id: uid(), emoji, name, color: PALETTE[i % PALETTE.length] })),
     habitLog: {}, routine: { morning: mk(s.morning), evening: mk(s.evening) }, routineLog: {},
-    projects: [], tasks: [], notes: [], weeks: {}, mood: {}, dayTasks: {}, mind: {} };
+    projects: [], tasks: [], notes: [], weeks: {}, mood: {}, dayTasks: {}, mind: {}, fin: { tx: [], cats: [] } };
 }
 function normalize(s) {
   const d = seedState();
@@ -364,6 +390,7 @@ function normalize(s) {
   for (const k of ['habitLog', 'routineLog', 'weeks', 'mood', 'dayTasks', 'mind']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
   for (const w of Object.values(s.weeks)) if (w && w.plans) { for (const [dk, arr] of Object.entries(w.plans)) (arr || []).forEach(p => (s.dayTasks[dk] || (s.dayTasks[dk] = [])).push({ id: uid(), title: String(p), done: false })); delete w.plans; }
   if (!s.routine || !Array.isArray(s.routine.morning) || !Array.isArray(s.routine.evening)) s.routine = d.routine;
+  if (!s.fin || typeof s.fin !== 'object') s.fin = {}; if (!Array.isArray(s.fin.tx)) s.fin.tx = []; if (!Array.isArray(s.fin.cats)) s.fin.cats = [];
   if (!s.start) s.start = today();
   return s;
 }
@@ -373,6 +400,7 @@ async function loadState() {
   let remote = null, failed = false;
   try { const { data, error } = await sb.from('app_state').select('value').eq('key', 'state').maybeSingle(); if (error) throw error; remote = data ? data.value : null; } catch (e) { failed = true; }
   const pick = remote && local ? ((remote.ts || 0) >= (local.ts || 0) ? remote : local) : (remote || local);
+  if (pick && remote && remote.fin && !(pick.fin && ((pick.fin.tx || []).length || (pick.fin.cats || []).length))) pick.fin = remote.fin;
   S = normalize(pick);
   if (failed) setSync('error'); else if (pick !== remote) save();
 }
@@ -467,7 +495,7 @@ async function onSession(session, event) {
 }
 
 /* ───────── Shell ───────── */
-const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nAccount', ['settings']]];
+const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nFin', ['fin', 'income', 'expense', 'matrix', 'fincats']], ['nAccount', ['settings']]];
 function go(p) { if (page === 'notes' && p !== 'notes' && S) { const n = S.notes.length; S.notes = S.notes.filter(x => x.title || x.body); if (S.notes.length !== n) save(); noteSel = null; } page = p; $('sidebar').classList.remove('open'); render(); window.scrollTo(0, 0); }
 function render() {
   if (!user || !S) return; applyChrome();
@@ -485,8 +513,68 @@ const kpiCard = (title, value, label, color, p = null) => `<section class="card"
 const habitRow = (h, k, full) => `<div class="row"><span class="emoji">${esc(h.emoji)}</span><div class="row-main"><div class="row-title">${esc(h.name)}</div><div style="display:flex;gap:8px;align-items:center;margin-top:5px"><div class="bar" style="flex:1"><div style="width:${rate(h.id)}%;background:${h.color}"></div></div><span class="num" style="font-size:11px;color:var(--muted);min-width:34px">${rate(h.id)}%</span>${full ? `<span class="badge num">🔥 ${streak(h.id)}</span>` : ''}</div></div>
   ${full ? `<button class="icon-btn" onclick="editHabit('${h.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delHabit('${h.id}')" aria-label="${t('delete')}">${ic('trash')}</button>` : ''}<button class="check ${habitDone(k, h.id) ? 'on' : ''}" onclick="toggleHabit('${h.id}','${k}')" role="checkbox" aria-checked="${habitDone(k, h.id)}" aria-label="${esc(h.name)}">${habitDone(k, h.id) ? '✓' : ''}</button></div>`;
 
+/* ───────── Finance ───────── */
+const CUR = 'DZD';
+const money = n => '\u2066' + new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 }).format(n).replace(/[  ]/g, ' ') + ' ' + CUR + '\u2069';
+const compact = n => { const a = Math.abs(n), sg = n < 0 ? '-' : ''; return '\u2066' + sg + (a >= 1e6 ? (a / 1e6).toFixed(1) + 'M' : a >= 1e3 ? Math.round(a / 1e3) + 'K' : String(Math.round(a))) + ' ' + CUR + '\u2069'; };
+const txIn = type => S.fin.tx.filter(x => x.date >= finRange.from && x.date <= finRange.to && (!type || x.type === type));
+const sum = a => a.reduce((n, x) => n + (Number(x.amount) || 0), 0);
+const byKey = (a, f) => { const m = new Map(); a.forEach(x => m.set(f(x), (m.get(f(x)) || 0) + (Number(x.amount) || 0))); return m; };
+const rangeInputs = () => `<div class="range"><input type="date" value="${finRange.from}" aria-label="${t('from')}" onchange="setRange('from',this.value)"><span style="color:var(--faint)">→</span><input type="date" value="${finRange.to}" aria-label="${t('to')}" onchange="setRange('to',this.value)"></div>`;
+const fkpi = (label, value, sub, color, icon) => `<section class="card"><div class="fkpi"><div style="min-width:0"><div class="card-title">${label}</div><div class="kpi num" style="color:${color};font-size:26px;margin-top:8px">${value}</div><div class="kpi-label num">${sub}</div></div><div class="fi" style="background:color-mix(in srgb, ${color} 16%, transparent);color:${color}">${ic(icon)}</div></div></section>`;
+function finChart() {
+  const tx = txIn(); if (!tx.length) return `<div class="empty">${t('noTx')}</div>`;
+  const keys = [...new Set(tx.map(x => x.date.slice(0, 7)))].sort(), months = []; let [y, m] = keys[0].split('-').map(Number); const last = keys[keys.length - 1];
+  for (let i = 0; i < 36; i++) { const k = `${y}-${String(m).padStart(2, '0')}`; months.push(k); if (k >= last) break; if (++m > 12) { m = 1; y++; } }
+  const inc = byKey(tx.filter(x => x.type === 'income'), x => x.date.slice(0, 7)), exp = byKey(tx.filter(x => x.type === 'expense'), x => x.date.slice(0, 7));
+  const d = months.map(k => ({ k, i: inc.get(k) || 0, e: exp.get(k) || 0 })), max = Math.max(1, ...d.map(o => Math.max(o.i, o.e))), min = Math.min(0, ...d.map(o => o.i - o.e));
+  const W = 640, H = 250, L = 58, R = 10, T = 12, B = 28, pw = W - L - R, ph = H - T - B, Y = v => T + ph * (1 - (v - min) / (max - min)), step = pw / d.length, bw = Math.min(26, step * 0.3);
+  const grid = [0, 1, 2, 3, 4].map(i => { const v = min + (max - min) * i / 4; return `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--border)"/><text x="${L - 6}" y="${Y(v) + 3}" text-anchor="end">${compact(v).replace(' ' + CUR, '').replace(/[\u2066\u2069]/g, '')}</text>`; }).join('');
+  const bars = d.map((o, i) => { const cx = L + step * (i + 0.5); return `<rect x="${cx - bw - 1}" y="${Y(o.i)}" width="${bw}" height="${Math.max(0, Y(0) - Y(o.i))}" rx="2" fill="var(--green)"><title>${t('income')}: ${money(o.i)}</title></rect><rect x="${cx + 1}" y="${Y(o.e)}" width="${bw}" height="${Math.max(0, Y(0) - Y(o.e))}" rx="2" fill="var(--pink)"><title>${t('expense')}: ${money(o.e)}</title></rect><text x="${cx}" y="${H - 8}" text-anchor="middle">${fmt(pdate(o.k + '-01'), { month: 'short' })}</text>`; }).join('');
+  const pts = d.map((o, i) => `${L + step * (i + 0.5)},${Y(o.i - o.e)}`);
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;direction:ltr" role="img" aria-label="${t('monthlyChart')}">${grid}${bars}<polyline points="${pts.join(' ')}" fill="none" stroke="var(--purple)" stroke-width="2"/>${pts.map((p, i) => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3" fill="var(--purple)"><title>${t('net')}: ${money(d[i].i - d[i].e)}</title></circle>`).join('')}</svg>
+  <div class="legend" style="justify-content:center;gap:14px;font-size:11px;margin:10px 0 0"><span><i style="background:var(--green)"></i> ${t('income')}</span><span><i style="background:var(--pink)"></i> ${t('expense')}</span><span><i style="background:var(--purple)"></i> ${t('net')}</span></div>`;
+}
+function finDist() {
+  const g = [...byKey(txIn('expense'), x => x.group)].sort((a, b) => b[1] - a[1]), tot = g.reduce((n, x) => n + x[1], 0); if (!tot) return `<div class="empty">${t('noTx')}</div>`;
+  let cum = 0; const segs = g.map(([, v], i) => { const p = v / tot * 100, o = `<circle cx="18" cy="18" r="15.9155" fill="none" stroke="${PALETTE[i % PALETTE.length]}" stroke-width="5" stroke-dasharray="${p} ${100 - p}" stroke-dashoffset="${-cum}"/>`; cum += p; return o; }).join('');
+  return `<div style="display:grid;place-items:center;margin-bottom:14px"><svg viewBox="-1.5 -1.5 39 39" width="170" height="170" style="transform:rotate(-90deg)">${segs}</svg></div>${g.map(([name, v], i) => `<div class="dist"><span><i class="dot" style="background:${PALETTE[i % PALETTE.length]}"></i><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${money(v)}">${esc(name)}</span></span><b class="num">${(v / tot * 100).toFixed(1)}%</b></div>`).join('')}`;
+}
+function finTable(type) {
+  const q = finQuery.trim().toLowerCase(), all = txIn(type), list = all.filter(x => !q || `${x.group} ${x.sub} ${x.notes || ''}`.toLowerCase().includes(q)).sort((a, b) => b.date.localeCompare(a.date)), color = type === 'income' ? 'var(--green)' : 'var(--pink)';
+  return header(t(type), `${all.length} ${t('records')} · ${t('totalLbl')}: <b class="num" style="color:${color}">${money(sum(all))}</b>`, rangeInputs() + `<button class="btn btn-primary" onclick="addTx('${type}')">${ic('plus')}${t(type === 'income' ? 'newIncome' : 'newExpense')}</button>`) +
+  `<section class="card"><div style="display:flex;gap:10px;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap"><input type="text" id="fSearch" style="max-width:320px" value="${esc(finQuery)}" placeholder="${t('searchTx')}" aria-label="${t('searchTx')}" oninput="setFinQuery(this.value)"><button class="btn btn-ghost" onclick="exportTx('${type}')">${ic('download')}${t('exportCsv')}</button></div>
+  ${list.length ? `<div style="overflow-x:auto"><table class="ft"><thead><tr><th>${t('date')}</th><th>${t('mainGroup')}</th><th>${t('subCat')}</th><th>${t('amount')}</th><th>${t('notesCol')}</th><th></th></tr></thead><tbody>${list.map(x => `<tr><td class="num">${fmt(pdate(x.date), { day: '2-digit', month: '2-digit', year: 'numeric' })}</td><td style="color:${color};font-weight:600">${esc(x.group)}</td><td style="font-weight:600">${esc(x.sub)}</td><td class="amt num" style="color:${color}">${money(x.amount)}</td><td style="color:var(--muted)">${esc(x.notes || '—')}</td><td style="white-space:nowrap;text-align:end"><button class="icon-btn" onclick="editTx('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delTx('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></td></tr>`).join('')}</tbody></table></div>` : `<div class="empty">${t('noTx')}</div>`}</section>`;
+}
+
 /* ───────── Pages ───────── */
 const PAGES = {
+fin() {
+  const inc = sum(txIn('income')), exp = sum(txIn('expense')), net = inc - exp, a = pdate(finRange.from), b = pdate(finRange.to), nm = Math.max(1, (b.getFullYear() - a.getFullYear()) * 12 + b.getMonth() - a.getMonth() + 1);
+  return header(t('fin'), `${t('finSub')} ${finRange.from} → ${finRange.to}`, rangeInputs() + `<button class="btn btn-ghost" onclick="addTx('income')">${ic('plus')}${t('newIncome')}</button><button class="btn btn-primary" onclick="addTx('expense')">${ic('plus')}${t('newExpense')}</button>`) +
+  `<div class="grid g4">${fkpi(t('totalIncome'), compact(inc), money(inc), 'var(--green)', 'income')}${fkpi(t('totalExpenses'), compact(exp), money(exp), 'var(--pink)', 'expense')}${fkpi(t('netBalance'), compact(net), t(net >= 0 ? 'surplus' : 'deficit'), net >= 0 ? 'var(--green)' : 'var(--pink)', 'fin')}${fkpi(t('avgExpense'), compact(exp / nm), t('perMonth'), 'var(--yellow)', 'analytics')}</div>
+  <div class="grid g21">${card(t('monthlyChart'), finChart())}${card(`${t('expDist')} · ${t('byGroup')}`, finDist())}</div>`;
+},
+income() { return finTable('income'); },
+expense() { return finTable('expense'); },
+matrix() {
+  const year = finRange.from.slice(0, 4), tx = S.fin.tx.filter(x => x.date.slice(0, 4) === year), mon = [...Array(12)].map((_, i) => fmt(new Date(Number(year), i, 1), { month: 'short' }));
+  const cell = v => v ? `<td class="num">${Math.round(v / 1000)}k</td>` : '<td class="z">—</td>', row12 = a => a.map(cell).join('');
+  const section = (type, label, color) => { const list = tx.filter(x => x.type === type); if (!list.length) return ''; const groups = [...new Set(list.map(x => x.group))].sort((a, b) => a.localeCompare(b));
+    return `<tr class="sec"><td colspan="15" style="color:${color}">${label}</td></tr>` + groups.map(g => { const gl = list.filter(x => x.group === g), subs = [...new Set(gl.map(x => x.sub))].sort((a, b) => a.localeCompare(b)), gm = [...Array(12)].map((_, i) => sum(gl.filter(x => Number(x.date.slice(5, 7)) === i + 1)));
+      return subs.map(sb2 => { const sl = gl.filter(x => x.sub === sb2), sm = [...Array(12)].map((_, i) => sum(sl.filter(x => Number(x.date.slice(5, 7)) === i + 1))); return `<tr><td style="color:var(--muted)">${esc(g)}</td><td style="font-weight:600">${esc(sb2)}</td>${row12(sm)}<td class="num" style="color:${color}">${compact(sum(sl))}</td></tr>`; }).join('') + `<tr class="sub"><td colspan="2">Σ ${esc(g)}</td>${row12(gm)}<td class="num">${compact(sum(gl))}</td></tr>`; }).join(''); };
+  const shown = tx.filter(x => matrixType === 'all' || x.type === matrixType), gm = [...Array(12)].map((_, i) => sum(shown.filter(x => Number(x.date.slice(5, 7)) === i + 1)));
+  const inc = sum(tx.filter(x => x.type === 'income')), exp = sum(tx.filter(x => x.type === 'expense')), chip = (l, v, c) => `<span class="badge" style="font-size:12px;padding:8px 14px">${l} <b class="num" style="color:${c};margin-inline-start:8px">${compact(v)}</b></span>`;
+  return header(`${t('matrix')} · ${year}`, t('matrixSub'), rangeInputs() + `<div class="seg">${[['all', 'allTypes'], ['income', 'income'], ['expense', 'expense']].map(([v, l]) => `<button class="${matrixType === v ? 'on' : ''}" onclick="setMatrixType('${v}')">${t(l)}</button>`).join('')}</div><button class="btn btn-ghost" onclick="exportMatrix()">${ic('download')}${t('exportCsv')}</button>`) +
+  `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">${chip(t('totalIncome'), inc, 'var(--green)')}${chip(t('totalExpenses'), exp, 'var(--pink)')}${chip(t('netBalance'), inc - exp, inc - exp >= 0 ? 'var(--green)' : 'var(--pink)')}</div>
+  <section class="card">${shown.length ? `<div style="overflow-x:auto"><table class="mx"><thead><tr><th>${t('mainGroup')}</th><th>${t('subCat')}</th>${mon.map(m => `<th>${m}</th>`).join('')}<th>${t('totalLbl')}</th></tr></thead><tbody>${matrixType !== 'expense' ? section('income', '▲ ' + t('income'), 'var(--green)') : ''}${matrixType !== 'income' ? section('expense', '▼ ' + t('expense'), 'var(--pink)') : ''}<tr class="tot"><td colspan="2">${t('grandTotal')}</td>${gm.map(v => `<td class="num">${Math.round(v / 1000)}k</td>`).join('')}<td class="num">${compact(sum(shown))}</td></tr></tbody></table></div>` : `<div class="empty">${t('noTx')}</div>`}</section>`;
+},
+fincats() {
+  const c = S.fin.cats, of = ty => c.filter(x => x.type === ty), list = c.filter(x => catType === 'all' || x.type === catType).sort((a, b) => a.type.localeCompare(b.type) * -1 || a.group.localeCompare(b.group) || a.sub.localeCompare(b.sub));
+  const box = (ty, color) => fkpi(`${t(ty)} · ${t('catCount')}`, of(ty).length, `${new Set(of(ty).map(x => x.group)).size} ${t('groupsCount')}`, color, ty);
+  return header(t('fincats'), `${c.length} ${t('records')}`, `<div class="seg">${[['all', 'all'], ['income', 'income'], ['expense', 'expense']].map(([v, l]) => `<button class="${catType === v ? 'on' : ''}" onclick="setCatType('${v}')">${t(l)}</button>`).join('')}</div><button class="btn btn-primary" onclick="addCat()">${ic('plus')}${t('addCat')}</button>`) +
+  `<div class="grid g2">${box('income', 'var(--green)')}${box('expense', 'var(--pink)')}</div><section class="card">${list.length ? `<div style="overflow-x:auto"><table class="ft"><thead><tr><th>${t('type')}</th><th>${t('mainGroup')}</th><th>${t('subCat')}</th><th></th></tr></thead><tbody>${list.map(x => `<tr><td><span class="tag" style="background:color-mix(in srgb, ${x.type === 'income' ? 'var(--green)' : 'var(--pink)'} 16%, transparent);color:${x.type === 'income' ? 'var(--green)' : 'var(--pink)'}">${t(x.type)}</span></td><td style="color:var(--muted)">${esc(x.group)}</td><td style="font-weight:600">${esc(x.sub)}</td><td style="white-space:nowrap;text-align:end"><button class="icon-btn" onclick="editCat('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delCat('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></td></tr>`).join('')}</tbody></table></div>` : `<div class="empty">${t('noCats')}</div>`}</section>`;
+},
 dashboard() {
   const k = today(), ws = weekStart(new Date()), wdays = [...Array(7)].map((_, i) => addDays(ws, i)), past = wdays.filter(d => dkey(d) <= k && dkey(d) >= S.start).map(dkey);
   const heat = [...Array(35)].map((_, i) => { const d = addDays(new Date(), i - 34), p = habitPct(dkey(d)); return `<div class="${p ? 'l' + Math.ceil(p / 25) : ''}" title="${fmt(d, { day: 'numeric', month: 'short' })} · ${p}%"></div>`; }).join('');
@@ -627,6 +715,27 @@ function setNoteQuery(v) { noteQuery = v; render(); const el = $('nSearch'); if 
 function saveNote(keepOpen) { const n = S.notes.find(x => x.id === noteSel); if (!n) return; n.title = $('nTitle').value.trim(); n.body = $('nBody').value; n.cat = $('nCat').value; n.ts = Date.now(); if (!keepOpen) noteSel = null; commit(); }
 function delNote(id) { confirmDel(() => { S.notes = S.notes.filter(n => n.id !== id); noteSel = null; }); }
 function noteInput() { const n = S.notes.find(x => x.id === noteSel); if (!n) return; n.title = $('nTitle').value.trim(); n.body = $('nBody').value; n.ts = Date.now(); save(); const c = document.querySelector('.note.sel'); if (c) { c.querySelector('.row-title').textContent = n.title || t('untitled'); c.querySelector('.note-prev').textContent = n.body; } }
+function setRange(k, v) { if (!v) return; finRange[k] = v; if (finRange.from > finRange.to) finRange[k === 'from' ? 'to' : 'from'] = v; render(); }
+function setFinQuery(v) { finQuery = v; render(); const el = $('fSearch'); if (el) { el.focus(); el.setSelectionRange(v.length, v.length); } }
+function setMatrixType(v) { matrixType = v; render(); }
+function setCatType(v) { catType = v; render(); }
+function txForm(type, x) {
+  const cats = S.fin.cats.filter(c => c.type === type).sort((a, b) => a.group.localeCompare(b.group) || a.sub.localeCompare(b.sub)), key = c => c.group + '␟' + c.sub, opts = cats.map(c => [key(c), `${c.group} › ${c.sub}`]);
+  if (x && !opts.some(o => o[0] === key(x))) opts.unshift([key(x), `${x.group} › ${x.sub}`]);
+  if (!opts.length) { addCat(type, t('needCat')); return; }
+  openForm({ title: t(x ? 'edit' : type === 'income' ? 'newIncome' : 'newExpense'), submit: t(x ? 'save' : 'add'), fields: [{ name: 'date', label: t('date'), type: 'date', value: x ? x.date : today(), required: true }, { name: 'cat', label: `${t('mainGroup')} › ${t('subCat')}`, type: 'select', value: x ? key(x) : opts[0][0], options: opts }, { name: 'amount', label: `${t('amount')} (${CUR})`, type: 'number', value: x ? String(x.amount) : '', required: true }, { name: 'notes', label: t('notesCol'), value: x ? x.notes : '', max: 140 }],
+    onSubmit: v => { const amt = Number(v.amount); if (!(amt > 0) || !v.date) return t('errAmount'); const [group, sub] = v.cat.split('␟'); if (x) Object.assign(x, { date: v.date, group, sub, amount: amt, notes: v.notes }); else S.fin.tx.push({ id: uid(), type, date: v.date, group, sub, amount: amt, notes: v.notes }); commit(); } });
+}
+function addTx(type) { txForm(type); }
+function editTx(id) { const x = S.fin.tx.find(q => q.id === id); if (x) txForm(x.type, x); }
+function delTx(id) { confirmDel(() => { S.fin.tx = S.fin.tx.filter(x => x.id !== id); }); }
+function catForm(c, type, text) { openForm({ title: t(c ? 'edit' : 'addCat'), text: text || '', submit: t(c ? 'save' : 'add'), fields: [{ name: 'type', label: t('type'), type: 'select', value: c ? c.type : (type || (catType === 'income' ? 'income' : 'expense')), options: [['income', t('income')], ['expense', t('expense')]] }, { name: 'group', label: t('mainGroup'), value: c ? c.group : '', required: true, max: 60 }, { name: 'sub', label: t('subCat'), value: c ? c.sub : '', required: true, max: 60 }], onSubmit: v => { if (!v.group || !v.sub) return; if (c) Object.assign(c, v); else S.fin.cats.push({ id: uid(), ...v }); commit(); } }); }
+function addCat(type, text) { catForm(null, type, text); }
+function editCat(id) { const c = S.fin.cats.find(q => q.id === id); if (c) catForm(c); }
+function delCat(id) { confirmDel(() => { S.fin.cats = S.fin.cats.filter(c => c.id !== id); }); }
+function downloadCsv(name, rows) { const csv = '﻿' + rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n'), a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
+function exportTx(type) { downloadCsv(`${type}-${finRange.from}_${finRange.to}.csv`, [[t('date'), t('mainGroup'), t('subCat'), t('amount'), t('notesCol')], ...txIn(type).sort((a, b) => b.date.localeCompare(a.date)).map(x => [x.date, x.group, x.sub, x.amount, x.notes || ''])]); }
+function exportMatrix() { const year = finRange.from.slice(0, 4), tx = S.fin.tx.filter(x => x.date.slice(0, 4) === year && (matrixType === 'all' || x.type === matrixType)), keys = [...new Set(tx.map(x => [x.type, x.group, x.sub].join('␟')))].sort(); downloadCsv(`matrix-${year}.csv`, [[t('type'), t('mainGroup'), t('subCat'), ...[...Array(12)].map((_, i) => i + 1), t('totalLbl')], ...keys.map(k => { const [ty, g, sb2] = k.split('␟'), l = tx.filter(x => x.type === ty && x.group === g && x.sub === sb2); return [ty, g, sb2, ...[...Array(12)].map((_, i) => sum(l.filter(x => Number(x.date.slice(5, 7)) === i + 1))), sum(l)]; })]); }
 function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' })); a.download = `intajiyati-${today()}.json`; a.click(); URL.revokeObjectURL(a.href); }
 
 /* ───────── Start ───────── */
