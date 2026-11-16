@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intajiyati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root {
+  --bg: #0b0f17; --surface: #121826; --surface2: #182033; --surface3: #1f2a40;
+  --border: #ffffff12; --border2: #ffffff22;
+  --text: #eef2fb; --muted: #94a0bd; --faint: #5d6885;
+  --accent: #ff6b35; --accent-h: #ff8556; --accent-soft: #ff6b3518; --on-accent: #fff;
+  --green: #10d9a0; --blue: #4a9eff; --purple: #9b6dff; --yellow: #ffd166; --pink: #ff6b9d; --teal: #2dd4bf;
+  --hm1: #0d4a3a; --hm2: #10876a; --hm3: #10d9a0; --hm4: #5dffcf;
+  --r: 14px; --r2: 9px; --shadow: 0 10px 40px #00000055;
+}
+[data-theme="light"] {
+  --bg: #f4f6fb; --surface: #ffffff; --surface2: #f3f5fa; --surface3: #e8ecf4;
+  --border: #0f172a14; --border2: #0f172a26;
+  --text: #111827; --muted: #556077; --faint: #8a94a8;
+  --accent: #e8551f; --accent-h: #d24a17; --accent-soft: #e8551f14;
+  --green: #059669; --blue: #2563eb; --purple: #7c3aed; --yellow: #b7791f; --pink: #db2777; --teal: #0d9488;
+  --hm1: #c7f0e0; --hm2: #7fdcbb; --hm3: #2bb98a; --hm4: #047857;
+  --shadow: 0 10px 40px #0f172a1f;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', 'Cairo', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+[dir="rtl"] body { font-family: 'Cairo', 'Inter', system-ui, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.hidden { display: none !important; }
+
+/* Auth */
+.auth { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(900px 500px at 50% -10%, var(--accent-soft), transparent 70%), var(--bg); }
+.auth-card { width: 100%; max-width: 400px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 32px 28px; box-shadow: var(--shadow); }
+.auth-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
+.brand-mark { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), #ff3d00); display: grid; place-items: center; color: #fff; }
+.auth h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.auth-sub { color: var(--muted); font-size: 13px; margin-bottom: 22px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.auth-links { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; font-size: 13px; flex-wrap: wrap; }
+.link { background: none; border: none; color: var(--accent); cursor: pointer; font-weight: 600; padding: 0; }
+.link:hover { text-decoration: underline; }
+.msg { font-size: 13px; padding: 10px 12px; border-radius: var(--r2); margin-bottom: 14px; }
+.msg.err { background: #ff4d6d1c; color: var(--pink); border: 1px solid #ff4d6d40; }
+.msg.ok { background: #10d9a01c; color: var(--green); border: 1px solid #10d9a040; }
+
+/* Inputs & buttons */
+input[type=text], input[type=email], input[type=password], input[type=time], select, textarea {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--r2);
+  padding: 10px 12px; outline: none; transition: border-color .15s, box-shadow .15s; resize: vertical;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 16px; border-radius: var(--r2); font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: background .15s, border-color .15s, color .15s; white-space: nowrap; }
+.btn:focus-visible, .nav-item:focus-visible, .check:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent-h); }
+.btn-ghost { background: var(--surface2); color: var(--muted); border-color: var(--border2); }
+.btn-ghost:hover { color: var(--text); background: var(--surface3); }
+.btn-danger { background: #ff4d6d1c; color: var(--pink); border-color: #ff4d6d40; }
+.btn-block { width: 100%; padding: 11px 16px; }
+.btn[disabled] { opacity: .6; cursor: wait; }
+.icon-btn { background: none; border: none; color: var(--faint); cursor: pointer; padding: 4px; border-radius: 6px; display: inline-flex; }
+.icon-btn:hover { color: var(--text); background: var(--surface3); }
+.icon-btn.danger:hover { color: var(--pink); }
+.seg { display: inline-flex; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--r2); padding: 3px; gap: 2px; }
+.seg button { background: none; border: none; padding: 5px 11px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--muted); }
+.seg button.on { background: var(--accent); color: var(--on-accent); }
+
+/* Layout */
+.sidebar { position: fixed; inset-block: 0; inset-inline-start: 0; width: 240px; background: var(--surface); border-inline-end: 1px solid var(--border); display: flex; flex-direction: column; z-index: 200; transition: transform .25s; }
+.sidebar .brand { padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.nav { padding: 10px 0; overflow-y: auto; flex: 1; }
+.nav-label { padding: 14px 20px 6px; font-size: 10.5px; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+.nav-item { display: flex; align-items: center; gap: 11px; width: calc(100% - 20px); margin: 2px 10px; padding: 9px 12px; border-radius: var(--r2); cursor: pointer; color: var(--muted); font-size: 13.5px; font-weight: 600; background: none; border: none; text-align: start; transition: background .15s, color .15s; }
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--accent-soft); color: var(--accent); }
+.side-foot { padding: 14px; border-top: 1px solid var(--border); }
+.user-chip { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 800; flex-shrink: 0; text-transform: uppercase; }
+.user-mail { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: start; }
+.sync { font-size: 11px; color: var(--faint); display: flex; align-items: center; gap: 5px; }
+.sync i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; }
+.sync.saving i { background: var(--yellow); } .sync.error i { background: var(--pink); }
+.main { margin-inline-start: 240px; padding: 28px; min-height: 100vh; max-width: 1500px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.page-title { font-size: 24px; font-weight: 800; letter-spacing: -.01em; }
+.page-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.grid { display: grid; gap: 16px; margin-bottom: 16px; }
+.g4 { grid-template-columns: repeat(4, 1fr); } .g3 { grid-template-columns: repeat(3, 1fr); } .g2 { grid-template-columns: repeat(2, 1fr); } .g21 { grid-template-columns: 2fr 1fr; align-items: start; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; min-width: 0; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 16px; }
+.card-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.kpi { font-size: 32px; font-weight: 800; line-height: 1.1; }
+.kpi-label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.bar { height: 6px; background: var(--surface3); border-radius: 10px; overflow: hidden; }
+.bar > div { height: 100%; border-radius: 10px; transition: width .5s ease; }
+.empty { text-align: center; padding: 32px 16px; color: var(--faint); font-size: 13px; }
+.row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.row:last-child { border-bottom: none; }
+.row-main { flex: 1; min-width: 0; }
+.row-title { font-size: 13.5px; font-weight: 600; }
+.row-title.done { text-decoration: line-through; color: var(--faint); }
+.emoji { font-size: 20px; min-width: 28px; text-align: center; }
+.check { width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--border2); background: var(--surface2); cursor: pointer; display: grid; place-items: center; flex-shrink: 0; color: #fff; font-size: 13px; font-weight: 800; transition: background .15s, border-color .15s; }
+.check.on { background: var(--green); border-color: var(--green); }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--surface3); color: var(--muted); }
+.time { font-size: 12px; color: var(--faint); min-width: 44px; }
+.donuts { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
+.donut { position: relative; display: grid; place-items: center; }
+.donut svg { transform: rotate(-90deg); display: block; }
+.donut span { position: absolute; font-weight: 800; }
+.heat { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.heat div { aspect-ratio: 1; border-radius: 5px; background: var(--surface3); }
+.heat .l1 { background: var(--hm1); } .heat .l2 { background: var(--hm2); } .heat .l3 { background: var(--hm3); } .heat .l4 { background: var(--hm4); }
+.legend { display: flex; gap: 4px; align-items: center; font-size: 10px; color: var(--faint); margin-bottom: 10px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.day { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; display: flex; flex-direction: column; }
+.day.today { border-color: var(--accent); }
+.day-head { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--border); }
+.day-name { font-size: 12px; font-weight: 700; } .day-date { font-size: 11px; color: var(--faint); }
+.day-body { padding: 8px; flex: 1; }
+.plan { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 7px; margin-bottom: 4px; border-radius: 6px; font-size: 11.5px; font-weight: 600; background: var(--accent-soft); color: var(--accent); word-break: break-word; }
+.plan button { background: none; border: none; color: inherit; cursor: pointer; opacity: .6; font-size: 13px; line-height: 1; }
+.day input { padding: 6px 8px; font-size: 11.5px; }
+.kanban { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.kcol { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; min-height: 160px; }
+.kcol.over { border-color: var(--accent); }
+.kcol-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-weight: 700; font-size: 13px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.kcard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); padding: 12px; margin-bottom: 8px; cursor: grab; }
+.kcard:hover { border-color: var(--border2); }
+.kcard-title { font-size: 13px; font-weight: 600; word-break: break-word; }
+.kcard-meta { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+.kcard-actions { margin-inline-start: auto; display: flex; }
+.tag { padding: 2px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 700; }
+.note { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2); padding: 14px; margin-bottom: 10px; cursor: pointer; width: 100%; text-align: start; display: block; }
+.note:hover, .note.sel { border-color: var(--accent); }
+.note-prev { font-size: 12px; color: var(--muted); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.vbars { display: flex; align-items: flex-end; gap: 14px; height: 130px; }
+.vbars > div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; height: 100%; font-size: 11px; color: var(--muted); }
+.vbars i { width: 100%; border-radius: 6px 6px 0 0; display: block; min-height: 3px; }
+.ach { display: flex; gap: 12px; flex-wrap: wrap; }
+.ach > div { border: 1px solid var(--border); border-radius: var(--r); padding: 16px; min-width: 130px; text-align: center; background: var(--surface2); }
+.ach > div.locked { opacity: .4; filter: grayscale(1); }
+table.wk { width: 100%; border-collapse: collapse; min-width: 620px; }
+table.wk th { padding: 8px; font-size: 11px; color: var(--muted); font-weight: 700; }
+table.wk td { padding: 6px; text-align: center; border-top: 1px solid var(--border); }
+table.wk td:first-child, table.wk th:first-child { text-align: start; font-size: 12.5px; font-weight: 600; }
+.mood { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.mood button { padding: 6px 11px; border-radius: 20px; cursor: pointer; font-size: 18px; border: 2px solid var(--border2); background: var(--surface2); }
+.mood button.on { border-color: var(--accent); background: var(--accent-soft); }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.set-row:last-child { border-bottom: none; }
+.set-row small { display: block; color: var(--muted); font-size: 12px; }
+
+/* Modal */
+.overlay { position: fixed; inset: 0; background: #000000a0; z-index: 500; display: grid; place-items: center; padding: 20px; }
+.modal { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+.modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+
+.menu-toggle { position: fixed; bottom: 18px; inset-inline-end: 18px; width: 50px; height: 50px; border-radius: 50%; background: var(--accent); color: #fff; border: none; cursor: pointer; display: none; z-index: 300; place-items: center; box-shadow: var(--shadow); }
+@media (max-width: 1100px) { .g4 { grid-template-columns: repeat(2, 1fr); } .week { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) {
+  [dir="rtl"] .sidebar { transform: translateX(100%); } [dir="ltr"] .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: none !important; box-shadow: var(--shadow); }
+  .main { margin-inline-start: 0; padding: 18px 16px 80px; }
+  .g3, .g2, .g21, .kanban { grid-template-columns: 1fr; }
+  .menu-toggle { display: grid; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<div id="auth" class="auth hidden"></div>
+<div id="app" class="hidden">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="main"></main>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu"></button>
+</div>
+<div id="modalRoot"></div>
+
+<script>
+'use strict';
+/* ───────── Config ───────── */
+const SUPABASE_URL = 'https://ixlcjuciuepedctqkcsz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_q0MvSSLIJdWObJMPeOmfhw_wOEK6UFn';
+const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+/* ───────── i18n ───────── */
+const LANGS = { ar: { name: 'العربية', dir: 'rtl', locale: 'ar-DZ' }, fr: { name: 'Français', dir: 'ltr', locale: 'fr-FR' }, en: { name: 'English', dir: 'ltr', locale: 'en-GB' } };
+const T = {
+ar: {
+  app: 'إنتاجيتي', tagline: 'نظام الإنتاجية المتكامل',
+  signin: 'تسجيل الدخول', signup: 'إنشاء حساب', signinSub: 'مرحباً بعودتك. ادخل إلى حسابك للمتابعة.', signupSub: 'أنشئ حسابك وابدأ بتنظيم يومك.',
+  email: 'البريد الإلكتروني', password: 'كلمة المرور', newPassword: 'كلمة المرور الجديدة', forgot: 'نسيت كلمة المرور؟', noAccount: 'ليس لديك حساب؟ أنشئ واحداً', haveAccount: 'لديك حساب؟ سجّل الدخول',
+  resetTitle: 'استعادة كلمة المرور', resetSub: 'أدخل بريدك وسنرسل لك رابط الاستعادة.', sendReset: 'إرسال رابط الاستعادة', backSignin: 'العودة لتسجيل الدخول',
+  errCreds: 'البريد أو كلمة المرور غير صحيحة.', errConfirm: 'يجب تأكيد بريدك الإلكتروني أولاً. تحقق من صندوق الوارد.', errShort: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', errExists: 'هذا البريد مسجّل مسبقاً.', errNet: 'تعذّر الاتصال بالخادم. تحقق من الإنترنت ثم أعد المحاولة.', errGeneric: 'حدث خطأ. حاول مرة أخرى.',
+  okConfirm: 'تم إنشاء الحساب. افتح رابط التأكيد المرسل إلى بريدك ثم سجّل الدخول.', okReset: 'إن كان البريد مسجّلاً، فقد أرسلنا إليه رابط الاستعادة.', okPassword: 'تم تحديث كلمة المرور.',
+  dashboard: 'لوحة التحكم', weekly: 'التخطيط الأسبوعي', daily: 'الروتين اليومي', habits: 'العادات', projects: 'المشاريع', notes: 'الملاحظات', analytics: 'تحليل الأداء', settings: 'الإعدادات',
+  nMain: 'الرئيسية', nPlan: 'التخطيط', nTrack: 'التتبع', nWork: 'العمل', nAccount: 'الحساب',
+  saved: 'تم الحفظ', saving: 'جارٍ الحفظ…', offline: 'محفوظ محلياً فقط', signout: 'تسجيل الخروج',
+  hello: 'مرحباً', kToday: 'روتين اليوم', kTodaySub: 'من الروتين مكتمل', kHabits: 'عادات اليوم', kHabitsSub: 'عادات مكتملة', kStreak: 'أفضل سلسلة', days: 'يوم', kWeek: 'معدل الأسبوع', kWeekSub: 'متوسط العادات',
+  weekDays: 'أيام الأسبوع الحالي', todayHabits: 'عادات اليوم', heat: 'آخر 35 يوماً', less: 'أقل', more: 'أكثر', projProgress: 'تقدم المشاريع', mood: 'مزاج اليوم', tasks: 'مهام',
+  noHabits: 'لا توجد عادات بعد. أضف أول عادة.', noProjects: 'لا توجد مشاريع بعد.', noTasks: 'لا توجد مهام', noNotes: 'لا توجد ملاحظات بعد.', noRoutine: 'لا توجد عناصر.',
+  prevWeek: 'الأسبوع السابق', nextWeek: 'الأسبوع التالي', thisWeek: 'هذا الأسبوع', goals: 'أهداف الأسبوع', goalsPh: 'اكتب أهداف الأسبوع هنا…', priorities: 'أهم 3 أولويات', schedule: 'الجدول الأسبوعي', addPlan: '+ إضافة', worked: 'ما الذي نجح؟', improve: 'ما يحتاج تحسيناً؟', score: 'تقييم الأسبوع', outOf: 'من 10', habitsShort: 'عادات',
+  morning: 'روتين الصباح', evening: 'روتين المساء', completion: 'نسبة الإنجاز', done: 'مكتمل', addItem: 'إضافة عنصر', time: 'الوقت', task: 'المهمة',
+  vDay: 'اليوم', vWeek: 'الأسبوع', vMonth: '30 يوماً', addHabit: 'عادة جديدة', habitName: 'اسم العادة', emoji: 'رمز تعبيري', doneToday: 'مكتملة اليوم', total: 'إجمالي العادات', bestStreak: 'أعلى سلسلة', rateToday: 'معدل اليوم', habit: 'العادة',
+  addProject: 'مشروع جديد', projectName: 'اسم المشروع', addTask: 'مهمة جديدة', taskTitle: 'عنوان المهمة', project: 'المشروع', none: 'بدون مشروع', priority: 'الأولوية', high: 'عالية', med: 'متوسطة', low: 'منخفضة', todo: 'للعمل عليه', doing: 'جارٍ العمل', doneCol: 'مكتمل', board: 'لوحة المهام', activeProjects: 'مشاريع نشطة', tasksDone: 'مهام منجزة', move: 'نقل',
+  addNote: 'ملاحظة جديدة', all: 'الكل', book: 'كتب', podcast: 'بودكاست', idea: 'أفكار', review: 'مراجعات', editNote: 'تحرير الملاحظة', noteTitle: 'عنوان الملاحظة…', noteBody: 'اكتب ملاحظاتك هنا…', category: 'التصنيف', untitled: 'بدون عنوان',
+  aRate: 'معدل 30 يوماً', aRateSub: 'متوسط الالتزام', aBestDay: 'أفضل يوم', aBestDaySub: 'أعلى التزام', aBest: 'أفضل عادة', aWorst: 'أضعف عادة', aHabits: 'أداء العادات (30 يوماً)', aWeeks: 'مقارنة آخر 4 أسابيع', aAch: 'الإنجازات', wk: 'أسبوع',
+  ach1: 'سلسلة 7 أيام', ach2: 'سلسلة 30 يوماً', ach3: 'يوم مثالي', ach4: '10 مهام منجزة', ach5: '5 ملاحظات', achSub1: 'عادة واحدة 7 أيام متتالية', achSub2: 'عادة واحدة 30 يوماً متتالياً', achSub3: 'كل العادات في يوم واحد', achSub4: 'في لوحة المهام', achSub5: 'في الأرشيف',
+  language: 'اللغة', languageSub: 'لغة واجهة التطبيق', theme: 'المظهر', themeSub: 'داكن أو فاتح', dark: 'داكن', light: 'فاتح', account: 'الحساب', exportData: 'تصدير البيانات', exportSub: 'تنزيل نسخة JSON من بياناتك', export: 'تصدير', changePw: 'تغيير كلمة المرور', changePwSub: 'تعيين كلمة مرور جديدة لحسابك', change: 'تغيير',
+  save: 'حفظ', cancel: 'إلغاء', add: 'إضافة', delete: 'حذف', confirmDel: 'هل تريد حذف هذا العنصر؟ لا يمكن التراجع.', confirm: 'تأكيد', loading: 'جارٍ التحميل…', libMissing: 'تعذّر تحميل مكتبة الاتصال. تحقق من الإنترنت وأعد تحميل الصفحة.',
+},
+fr: {
+  app: 'Intajiyati', tagline: 'Système de productivité complet',
+  signin: 'Se connecter', signup: 'Créer un compte', signinSub: 'Bon retour. Connectez-vous pour continuer.', signupSub: 'Créez votre compte et organisez vos journées.',
+  email: 'Adresse e-mail', password: 'Mot de passe', newPassword: 'Nouveau mot de passe', forgot: 'Mot de passe oublié ?', noAccount: 'Pas de compte ? Créez-en un', haveAccount: 'Déjà inscrit ? Connectez-vous',
+  resetTitle: 'Réinitialiser le mot de passe', resetSub: 'Saisissez votre e-mail pour recevoir un lien de réinitialisation.', sendReset: 'Envoyer le lien', backSignin: 'Retour à la connexion',
+  errCreds: 'E-mail ou mot de passe incorrect.', errConfirm: 'Confirmez d’abord votre e-mail. Vérifiez votre boîte de réception.', errShort: 'Le mot de passe doit contenir au moins 6 caractères.', errExists: 'Cet e-mail est déjà inscrit.', errNet: 'Connexion au serveur impossible. Vérifiez votre réseau puis réessayez.', errGeneric: 'Une erreur est survenue. Réessayez.',
+  okConfirm: 'Compte créé. Ouvrez le lien de confirmation reçu par e-mail, puis connectez-vous.', okReset: 'Si cet e-mail est inscrit, un lien de réinitialisation vient d’être envoyé.', okPassword: 'Mot de passe mis à jour.',
+  dashboard: 'Tableau de bord', weekly: 'Plan de la semaine', daily: 'Routine du jour', habits: 'Habitudes', projects: 'Projets', notes: 'Notes', analytics: 'Statistiques', settings: 'Paramètres',
+  nMain: 'Accueil', nPlan: 'Planification', nTrack: 'Suivi', nWork: 'Travail', nAccount: 'Compte',
+  saved: 'Enregistré', saving: 'Enregistrement…', offline: 'Enregistré en local uniquement', signout: 'Se déconnecter',
+  hello: 'Bonjour', kToday: 'Routine du jour', kTodaySub: 'de la routine terminée', kHabits: 'Habitudes du jour', kHabitsSub: 'habitudes terminées', kStreak: 'Meilleure série', days: 'jours', kWeek: 'Moyenne de la semaine', kWeekSub: 'moyenne des habitudes',
+  weekDays: 'Jours de la semaine en cours', todayHabits: 'Habitudes du jour', heat: '35 derniers jours', less: 'Moins', more: 'Plus', projProgress: 'Avancement des projets', mood: 'Humeur du jour', tasks: 'tâches',
+  noHabits: 'Aucune habitude. Ajoutez la première.', noProjects: 'Aucun projet pour le moment.', noTasks: 'Aucune tâche', noNotes: 'Aucune note pour le moment.', noRoutine: 'Aucun élément.',
+  prevWeek: 'Semaine précédente', nextWeek: 'Semaine suivante', thisWeek: 'Cette semaine', goals: 'Objectifs de la semaine', goalsPh: 'Écrivez vos objectifs ici…', priorities: 'Top 3 des priorités', schedule: 'Planning de la semaine', addPlan: '+ Ajouter', worked: 'Ce qui a marché', improve: 'À améliorer', score: 'Note de la semaine', outOf: 'sur 10', habitsShort: 'habitudes',
+  morning: 'Routine du matin', evening: 'Routine du soir', completion: 'Taux de réalisation', done: 'terminé', addItem: 'Ajouter un élément', time: 'Heure', task: 'Tâche',
+  vDay: 'Jour', vWeek: 'Semaine', vMonth: '30 jours', addHabit: 'Nouvelle habitude', habitName: 'Nom de l’habitude', emoji: 'Emoji', doneToday: 'Terminées aujourd’hui', total: 'Total des habitudes', bestStreak: 'Plus longue série', rateToday: 'Taux du jour', habit: 'Habitude',
+  addProject: 'Nouveau projet', projectName: 'Nom du projet', addTask: 'Nouvelle tâche', taskTitle: 'Titre de la tâche', project: 'Projet', none: 'Sans projet', priority: 'Priorité', high: 'Haute', med: 'Moyenne', low: 'Basse', todo: 'À faire', doing: 'En cours', doneCol: 'Terminé', board: 'Tableau des tâches', activeProjects: 'projets actifs', tasksDone: 'tâches terminées', move: 'Déplacer',
+  addNote: 'Nouvelle note', all: 'Tout', book: 'Livres', podcast: 'Podcasts', idea: 'Idées', review: 'Bilans', editNote: 'Modifier la note', noteTitle: 'Titre de la note…', noteBody: 'Écrivez vos notes ici…', category: 'Catégorie', untitled: 'Sans titre',
+  aRate: 'Taux sur 30 jours', aRateSub: 'régularité moyenne', aBestDay: 'Meilleur jour', aBestDaySub: 'régularité la plus haute', aBest: 'Meilleure habitude', aWorst: 'Habitude la plus faible', aHabits: 'Habitudes (30 jours)', aWeeks: 'Les 4 dernières semaines', aAch: 'Succès', wk: 'Sem.',
+  ach1: 'Série de 7 jours', ach2: 'Série de 30 jours', ach3: 'Journée parfaite', ach4: '10 tâches terminées', ach5: '5 notes', achSub1: 'une habitude 7 jours de suite', achSub2: 'une habitude 30 jours de suite', achSub3: 'toutes les habitudes en un jour', achSub4: 'dans le tableau des tâches', achSub5: 'dans vos archives',
+  language: 'Langue', languageSub: 'Langue de l’interface', theme: 'Apparence', themeSub: 'Sombre ou clair', dark: 'Sombre', light: 'Clair', account: 'Compte', exportData: 'Exporter les données', exportSub: 'Télécharger une copie JSON de vos données', export: 'Exporter', changePw: 'Changer le mot de passe', changePwSub: 'Définir un nouveau mot de passe', change: 'Changer',
+  save: 'Enregistrer', cancel: 'Annuler', add: 'Ajouter', delete: 'Supprimer', confirmDel: 'Supprimer cet élément ? Cette action est irréversible.', confirm: 'Confirmer', loading: 'Chargement…', libMissing: 'Impossible de charger la bibliothèque de connexion. Vérifiez votre réseau et rechargez la page.',
+},
+en: {
+  app: 'Intajiyati', tagline: 'All-in-one productivity system',
+  signin: 'Sign in', signup: 'Create account', signinSub: 'Welcome back. Sign in to continue.', signupSub: 'Create your account and start organising your day.',
+  email: 'Email address', password: 'Password', newPassword: 'New password', forgot: 'Forgot password?', noAccount: 'No account? Create one', haveAccount: 'Have an account? Sign in',
+  resetTitle: 'Reset password', resetSub: 'Enter your email and we will send you a reset link.', sendReset: 'Send reset link', backSignin: 'Back to sign in',
+  errCreds: 'Wrong email or password.', errConfirm: 'Confirm your email first. Check your inbox.', errShort: 'Password must be at least 6 characters.', errExists: 'This email is already registered.', errNet: 'Can’t reach the server. Check your connection and try again.', errGeneric: 'Something went wrong. Try again.',
+  okConfirm: 'Account created. Open the confirmation link in your email, then sign in.', okReset: 'If that email is registered, a reset link is on its way.', okPassword: 'Password updated.',
+  dashboard: 'Dashboard', weekly: 'Weekly plan', daily: 'Daily routine', habits: 'Habits', projects: 'Projects', notes: 'Notes', analytics: 'Analytics', settings: 'Settings',
+  nMain: 'Home', nPlan: 'Planning', nTrack: 'Tracking', nWork: 'Work', nAccount: 'Account',
+  saved: 'Saved', saving: 'Saving…', offline: 'Saved on this device only', signout: 'Sign out',
+  hello: 'Hello', kToday: 'Today’s routine', kTodaySub: 'of routine complete', kHabits: 'Today’s habits', kHabitsSub: 'habits complete', kStreak: 'Best streak', days: 'days', kWeek: 'Week average', kWeekSub: 'habit average',
+  weekDays: 'This week, day by day', todayHabits: 'Today’s habits', heat: 'Last 35 days', less: 'Less', more: 'More', projProgress: 'Project progress', mood: 'Today’s mood', tasks: 'tasks',
+  noHabits: 'No habits yet. Add your first one.', noProjects: 'No projects yet.', noTasks: 'No tasks', noNotes: 'No notes yet.', noRoutine: 'No items.',
+  prevWeek: 'Previous week', nextWeek: 'Next week', thisWeek: 'This week', goals: 'Weekly goals', goalsPh: 'Write this week’s goals here…', priorities: 'Top 3 priorities', schedule: 'Weekly schedule', addPlan: '+ Add', worked: 'What worked?', improve: 'What to improve?', score: 'Week rating', outOf: 'out of 10', habitsShort: 'habits',
+  morning: 'Morning routine', evening: 'Evening routine', completion: 'Completion', done: 'complete', addItem: 'Add item', time: 'Time', task: 'Task',
+  vDay: 'Day', vWeek: 'Week', vMonth: '30 days', addHabit: 'New habit', habitName: 'Habit name', emoji: 'Emoji', doneToday: 'Done today', total: 'Total habits', bestStreak: 'Longest streak', rateToday: 'Today’s rate', habit: 'Habit',
+  addProject: 'New project', projectName: 'Project name', addTask: 'New task', taskTitle: 'Task title', project: 'Project', none: 'No project', priority: 'Priority', high: 'High', med: 'Medium', low: 'Low', todo: 'To do', doing: 'In progress', doneCol: 'Done', board: 'Task board', activeProjects: 'active projects', tasksDone: 'tasks done', move: 'Move',
+  addNote: 'New note', all: 'All', book: 'Books', podcast: 'Podcasts', idea: 'Ideas', review: 'Reviews', editNote: 'Edit note', noteTitle: 'Note title…', noteBody: 'Write your notes here…', category: 'Category', untitled: 'Untitled',
+  aRate: '30-day rate', aRateSub: 'average consistency', aBestDay: 'Best day', aBestDaySub: 'highest consistency', aBest: 'Strongest habit', aWorst: 'Weakest habit', aHabits: 'Habits (30 days)', aWeeks: 'Last 4 weeks', aAch: 'Achievements', wk: 'Wk',
+  ach1: '7-day streak', ach2: '30-day streak', ach3: 'Perfect day', ach4: '10 tasks done', ach5: '5 notes', achSub1: 'one habit, 7 days in a row', achSub2: 'one habit, 30 days in a row', achSub3: 'every habit in one day', achSub4: 'on the task board', achSub5: 'in your archive',
+  language: 'Language', languageSub: 'Interface language', theme: 'Appearance', themeSub: 'Dark or light', dark: 'Dark', light: 'Light', account: 'Account', exportData: 'Export data', exportSub: 'Download a JSON copy of your data', export: 'Export', changePw: 'Change password', changePwSub: 'Set a new password for your account', change: 'Change',
+  save: 'Save', cancel: 'Cancel', add: 'Add', delete: 'Delete', confirmDel: 'Delete this item? This can’t be undone.', confirm: 'Confirm', loading: 'Loading…', libMissing: 'Couldn’t load the connection library. Check your network and reload the page.',
+}};
+const SEED = {
+  ar: { habits: [['🕌','الصلاة في وقتها'],['📿','أذكار الصباح والمساء'],['📖','الورد القرآني'],['📚','قراءة الكتب'],['🗣️','تعلم الإنجليزية'],['🎙️','الاستماع للبودكاست'],['🏃','المشي أو الجري'],['💧','شرب الماء'],['🎓','مشاهدة الكورسات'],['🌙','النوم المبكر'],['🧠','العمل العميق']],
+    morning: [['05:00','⏰','الاستيقاظ للفجر'],['05:10','🕌','صلاة الفجر'],['05:30','📿','أذكار الصباح'],['06:00','📖','قراءة القرآن (30 دقيقة)'],['06:30','📚','قراءة الكتاب (30 دقيقة)'],['07:00','🗣️','تعلم الإنجليزية (30 دقيقة)'],['07:30','🏃','الرياضة أو المشي'],['08:00','☕','الاستحمام والفطور'],['09:00','🧠','بداية العمل العميق'],['11:00','🎓','مشاهدة الكورس']],
+    evening: [['12:30','🕌','صلاة الظهر'],['15:30','🕌','صلاة العصر'],['16:00','👨‍👩‍👧','وقت مع الأسرة'],['18:00','📋','مراجعة المهام'],['18:30','🕌','صلاة المغرب'],['19:00','📿','أذكار المساء'],['19:30','🎙️','الاستماع للبودكاست'],['20:00','🕌','صلاة العشاء'],['21:00','📊','مراجعة اليوم'],['22:00','🌙','النوم المبكر']] },
+  fr: { habits: [['🕌','Prière à l’heure'],['📿','Adhkar matin et soir'],['📖','Lecture du Coran'],['📚','Lecture'],['🗣️','Apprendre l’anglais'],['🎙️','Écouter un podcast'],['🏃','Marche ou course'],['💧','Boire de l’eau'],['🎓','Suivre un cours'],['🌙','Se coucher tôt'],['🧠','Travail en profondeur']],
+    morning: [['05:00','⏰','Réveil pour le Fajr'],['05:10','🕌','Prière du Fajr'],['05:30','📿','Adhkar du matin'],['06:00','📖','Lecture du Coran (30 min)'],['06:30','📚','Lecture (30 min)'],['07:00','🗣️','Anglais (30 min)'],['07:30','🏃','Sport ou marche'],['08:00','☕','Douche et petit-déjeuner'],['09:00','🧠','Début du travail en profondeur'],['11:00','🎓','Suivre le cours']],
+    evening: [['12:30','🕌','Prière du Dhuhr'],['15:30','🕌','Prière du Asr'],['16:00','👨‍👩‍👧','Temps en famille'],['18:00','📋','Revue des tâches'],['18:30','🕌','Prière du Maghrib'],['19:00','📿','Adhkar du soir'],['19:30','🎙️','Écouter un podcast'],['20:00','🕌','Prière du Isha'],['21:00','📊','Bilan de la journée'],['22:00','🌙','Se coucher tôt']] },
+  en: { habits: [['🕌','Prayer on time'],['📿','Morning and evening adhkar'],['📖','Quran reading'],['📚','Reading books'],['🗣️','Learning English'],['🎙️','Listening to a podcast'],['🏃','Walk or run'],['💧','Drinking water'],['🎓','Watching courses'],['🌙','Early sleep'],['🧠','Deep work']],
+    morning: [['05:00','⏰','Wake up for Fajr'],['05:10','🕌','Fajr prayer'],['05:30','📿','Morning adhkar'],['06:00','📖','Quran reading (30 min)'],['06:30','📚','Book reading (30 min)'],['07:00','🗣️','English practice (30 min)'],['07:30','🏃','Exercise or walk'],['08:00','☕','Shower and breakfast'],['09:00','🧠','Start deep work'],['11:00','🎓','Watch the course']],
+    evening: [['12:30','🕌','Dhuhr prayer'],['15:30','🕌','Asr prayer'],['16:00','👨‍👩‍👧','Family time'],['18:00','📋','Task review'],['18:30','🕌','Maghrib prayer'],['19:00','📿','Evening adhkar'],['19:30','🎙️','Listen to a podcast'],['20:00','🕌','Isha prayer'],['21:00','📊','Daily review'],['22:00','🌙','Early sleep']] },
+};
+const PALETTE = ['#ff6b35','#4a9eff','#10d9a0','#9b6dff','#ffd166','#ff6b9d','#2dd4bf'];
+const MOODS = ['😤','😔','😐','😊','🔥'];
+
+/* ───────── Helpers ───────── */
+const ls = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+let lang = ls.get('ps_lang'); if (!LANGS[lang]) { const n = (navigator.language || 'ar').slice(0, 2); lang = LANGS[n] ? n : 'ar'; }
+let theme = ls.get('ps_theme') === 'light' ? 'light' : 'dark';
+const t = k => (T[lang][k] ?? T.en[k] ?? k);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+const $ = id => document.getElementById(id);
+const dkey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const pdate = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const today = () => dkey(new Date());
+const weekStart = d => addDays(d, -d.getDay());
+const fmt = (d, o) => new Intl.DateTimeFormat(LANGS[lang].locale, o).format(d);
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const ICONS = {
+  logo: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>', dashboard: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  weekly: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>', daily: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  habits: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>', projects: '<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="13" rx="1.5"/>',
+  notes: '<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M9 8h3"/>', analytics: '<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',
+  settings: '<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/>',
+  logout: '<path d="M9 4H5v16h4M15 8l4 4-4 4M19 12H9"/>', plus: '<path d="M12 5v14M5 12h14"/>', trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', prev: '<path d="M15 6l-6 6 6 6"/>', next: '<path d="M9 6l6 6-6 6"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+};
+const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
+const donut = (p, color, size = 72, fs = 13, label = null) => `<div class="donut" style="width:${size}px;height:${size}px"><svg viewBox="0 0 36 36" width="${size}" height="${size}"><circle cx="18" cy="18" r="15.9155" fill="none" stroke="var(--surface3)" stroke-width="3.6"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="${color}" stroke-width="3.6" stroke-linecap="round" stroke-dasharray="${p} ${100 - p}"/></svg><span class="num" style="font-size:${fs}px;color:${color}">${label ?? p + '%'}</span></div>`;
+
+/* ───────── State ───────── */
+let user = null, S = null, page = 'dashboard', habitView = 'day', weekOffset = 0, noteFilter = 'all', noteSel = null, saveTimer = null, syncState = 'saved';
+function seedState() {
+  const s = SEED[lang], mk = a => a.map(([time, emoji, task]) => ({ id: uid(), time, emoji, task }));
+  return { v: 1, start: today(), ts: Date.now(),
+    habits: s.habits.map(([emoji, name], i) => ({ id: uid(), emoji, name, color: PALETTE[i % PALETTE.length] })),
+    habitLog: {}, routine: { morning: mk(s.morning), evening: mk(s.evening) }, routineLog: {},
+    projects: [], tasks: [], notes: [], weeks: {}, mood: {} };
+}
+function normalize(s) {
+  const d = seedState();
+  if (!s || typeof s !== 'object') return d;
+  for (const k of ['habits', 'projects', 'tasks', 'notes']) if (!Array.isArray(s[k])) s[k] = k === 'habits' ? d.habits : [];
+  for (const k of ['habitLog', 'routineLog', 'weeks', 'mood']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
+  if (!s.routine || !Array.isArray(s.routine.morning) || !Array.isArray(s.routine.evening)) s.routine = d.routine;
+  if (!s.start) s.start = today();
+  return s;
+}
+const cacheKey = () => 'ps_state_' + user.id;
+async function loadState() {
+  let local = null; try { local = JSON.parse(ls.get(cacheKey())); } catch (e) {}
+  let remote = null, failed = false;
+  try { const { data, error } = await sb.from('app_state').select('value').eq('key', 'state').maybeSingle(); if (error) throw error; remote = data ? data.value : null; } catch (e) { failed = true; }
+  const pick = remote && local ? ((remote.ts || 0) >= (local.ts || 0) ? remote : local) : (remote || local);
+  S = normalize(pick);
+  if (failed) setSync('error'); else if (pick !== remote) save();
+}
+function setSync(s) { syncState = s; const el = $('sync'); if (el) { el.className = 'sync ' + (s === 'saved' ? '' : s); el.lastChild.textContent = t(s === 'saved' ? 'saved' : s === 'saving' ? 'saving' : 'offline'); } }
+function save() {
+  S.ts = Date.now(); ls.set(cacheKey(), JSON.stringify(S)); setSync('saving');
+  clearTimeout(saveTimer); saveTimer = setTimeout(pushState, 700);
+}
+async function pushState() {
+  if (!user) return;
+  try { const { error } = await sb.from('app_state').upsert({ user_id: user.id, key: 'state', value: S, updated_at: new Date().toISOString() }); if (error) throw error; setSync('saved'); }
+  catch (e) { setSync('error'); }
+}
+const commit = () => { save(); render(); };
+
+/* ───────── Stats ───────── */
+const habitDone = (k, id) => (S.habitLog[k] || []).includes(id);
+const habitsDoneCount = k => S.habits.filter(h => habitDone(k, h.id)).length;
+const habitPct = k => pct(habitsDoneCount(k), S.habits.length);
+const routineItems = () => [...S.routine.morning, ...S.routine.evening];
+const routinePct = k => { const it = routineItems(); return pct(it.filter(i => (S.routineLog[k] || []).includes(i.id)).length, it.length); };
+function lastDays(n) { const out = []; for (let i = n - 1; i >= 0; i--) { const k = dkey(addDays(new Date(), -i)); if (k >= S.start) out.push(k); } return out; }
+function streak(id) { let d = new Date(), n = 0; if (!habitDone(dkey(d), id)) d = addDays(d, -1); while (habitDone(dkey(d), id)) { n++; d = addDays(d, -1); } return n; }
+const rate = (id, n = 30) => { const ds = lastDays(n); return pct(ds.filter(k => habitDone(k, id)).length, ds.length); };
+const avgPct = ds => ds.length ? Math.round(ds.reduce((a, k) => a + habitPct(k), 0) / ds.length) : 0;
+const bestStreak = () => S.habits.reduce((m, h) => Math.max(m, streak(h.id)), 0);
+const projStats = id => { const ts = S.tasks.filter(x => x.projectId === id), done = ts.filter(x => x.status === 'done').length; return { total: ts.length, done, p: pct(done, ts.length) }; };
+const weekKeyOf = off => dkey(addDays(weekStart(new Date()), off * 7));
+function weekData(off = weekOffset) { const k = weekKeyOf(off); if (!S.weeks[k]) S.weeks[k] = { goals: '', p: ['', '', ''], good: '', improve: '', score: 0, plans: {} }; const w = S.weeks[k]; if (!w.plans) w.plans = {}; if (!Array.isArray(w.p)) w.p = ['', '', '']; return w; }
+
+/* ───────── Modal ───────── */
+function closeModal() { $('modalRoot').innerHTML = ''; }
+function openForm({ title, fields = [], text = '', submit = t('save'), danger = false, onSubmit }) {
+  $('modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="mf" role="dialog" aria-modal="true"><h3>${esc(title)}</h3>${text ? `<p style="color:var(--muted);font-size:13px">${esc(text)}</p>` : ''}
+    ${fields.map(f => `<div class="field"><label for="f_${f.name}">${esc(f.label)}</label>${f.type === 'select'
+      ? `<select id="f_${f.name}">${f.options.map(([v, l]) => `<option value="${esc(v)}" ${v === f.value ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`
+      : `<input id="f_${f.name}" type="${f.type || 'text'}" value="${esc(f.value || '')}" ${f.required ? 'required' : ''} ${f.max ? `maxlength="${f.max}"` : ''} ${f.min ? `minlength="${f.min}"` : ''}>`}</div>`).join('')}
+    <div class="msg err hidden" id="mErr"></div>
+    <div class="modal-actions"><button type="button" class="btn btn-ghost" id="mCancel">${t('cancel')}</button><button class="btn ${danger ? 'btn-danger' : 'btn-primary'}">${esc(submit)}</button></div></form></div>`;
+  $('mCancel').onclick = closeModal;
+  $('ov').onmousedown = e => { if (e.target.id === 'ov') closeModal(); };
+  $('mf').onsubmit = async e => { e.preventDefault(); const v = {}; fields.forEach(f => v[f.name] = $('f_' + f.name).value.trim()); const err = await onSubmit(v); if (err) { $('mErr').textContent = err; $('mErr').classList.remove('hidden'); } else closeModal(); };
+  const first = fields[0] && $('f_' + fields[0].name); if (first) first.focus();
+}
+const confirmDel = fn => openForm({ title: t('delete'), text: t('confirmDel'), submit: t('delete'), danger: true, onSubmit: () => { fn(); commit(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ───────── Auth ───────── */
+let authMode = 'signin', authMsg = null;
+function applyChrome() { document.documentElement.lang = lang; document.documentElement.dir = LANGS[lang].dir; document.documentElement.dataset.theme = theme; document.title = t('app') + ' — ' + t('tagline'); }
+const langSeg = fn => `<div class="seg" role="group" aria-label="${t('language')}">${Object.keys(LANGS).map(l => `<button type="button" class="${l === lang ? 'on' : ''}" onclick="${fn}('${l}')">${l.toUpperCase()}</button>`).join('')}</div>`;
+function setLang(l) { lang = l; ls.set('ps_lang', l); applyChrome(); user ? render() : renderAuth(); }
+function setTheme(th) { theme = th; ls.set('ps_theme', th); applyChrome(); render(); }
+function authErr(e) { const m = (e && e.message || '').toLowerCase(); if (m.includes('invalid login')) return t('errCreds'); if (m.includes('not confirmed')) return t('errConfirm'); if (m.includes('already registered') || m.includes('already been registered')) return t('errExists'); if (m.includes('at least 6') || m.includes('password should')) return t('errShort'); if (m.includes('fetch') || m.includes('network')) return t('errNet'); return t('errGeneric'); }
+function renderAuth() {
+  applyChrome(); $('app').classList.add('hidden'); const el = $('auth'); el.classList.remove('hidden');
+  const reset = authMode === 'reset', up = authMode === 'signup';
+  el.innerHTML = `<div class="auth-card"><div class="auth-top"><div class="brand"><div class="brand-mark">${ic('logo')}</div>${t('app')}</div>${langSeg('setLang')}</div>
+    <h1>${t(reset ? 'resetTitle' : up ? 'signup' : 'signin')}</h1><p class="auth-sub">${t(reset ? 'resetSub' : up ? 'signupSub' : 'signinSub')}</p>
+    ${!sb ? `<div class="msg err">${t('libMissing')}</div>` : ''}${authMsg ? `<div class="msg ${authMsg.ok ? 'ok' : 'err'}" role="alert">${esc(authMsg.text)}</div>` : ''}
+    <form id="authForm"><div class="field"><label for="aEmail">${t('email')}</label><input id="aEmail" type="email" required autocomplete="email" dir="ltr"></div>
+    ${reset ? '' : `<div class="field"><label for="aPw">${t('password')}</label><input id="aPw" type="password" required minlength="6" autocomplete="${up ? 'new-password' : 'current-password'}" dir="ltr"></div>`}
+    <button class="btn btn-primary btn-block" id="aBtn" ${sb ? '' : 'disabled'}>${t(reset ? 'sendReset' : up ? 'signup' : 'signin')}</button></form>
+    <div class="auth-links">${reset ? `<button class="link" onclick="setAuthMode('signin')">${t('backSignin')}</button>` : `<button class="link" onclick="setAuthMode('${up ? 'signin' : 'signup'}')">${t(up ? 'haveAccount' : 'noAccount')}</button>${up ? '' : `<button class="link" onclick="setAuthMode('reset')">${t('forgot')}</button>`}`}</div></div>`;
+  $('authForm').onsubmit = submitAuth;
+}
+function setAuthMode(m) { const keep = $('aEmail') ? $('aEmail').value : ''; authMode = m; authMsg = null; renderAuth(); $('aEmail').value = keep; }
+async function submitAuth(e) {
+  e.preventDefault(); if (!sb) return;
+  const email = $('aEmail').value.trim(), pw = $('aPw') ? $('aPw').value : '', btn = $('aBtn'); btn.disabled = true;
+  const redirect = location.protocol.startsWith('http') ? location.origin + location.pathname : undefined;
+  try {
+    if (authMode === 'signin') { const { error } = await sb.auth.signInWithPassword({ email, password: pw }); if (error) throw error; return; }
+    if (authMode === 'signup') { const { data, error } = await sb.auth.signUp({ email, password: pw, options: { emailRedirectTo: redirect } }); if (error) throw error; if (data.session) return; authMode = 'signin'; authMsg = { ok: true, text: t('okConfirm') }; }
+    else { const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirect }); if (error) throw error; authMode = 'signin'; authMsg = { ok: true, text: t('okReset') }; }
+  } catch (err) { authMsg = { ok: false, text: authErr(err) }; }
+  renderAuth(); $('aEmail').value = email;
+}
+function changePassword() {
+  openForm({ title: t('changePw'), fields: [{ name: 'pw', label: t('newPassword'), type: 'password', required: true, min: 6 }], onSubmit: async v => {
+    if (v.pw.length < 6) return t('errShort'); const { error } = await sb.auth.updateUser({ password: v.pw }); if (error) return authErr(error); } });
+}
+async function signOut() { clearTimeout(saveTimer); await pushState(); await sb.auth.signOut(); }
+async function onSession(session, event) {
+  if (!session) { user = null; S = null; authMsg = authMsg || null; renderAuth(); return; }
+  if (user && user.id === session.user.id) { if (event === 'PASSWORD_RECOVERY') changePassword(); return; }
+  user = session.user; $('auth').classList.add('hidden'); $('app').classList.remove('hidden'); $('main').innerHTML = `<div class="empty">${t('loading')}</div>`;
+  await loadState(); render(); if (event === 'PASSWORD_RECOVERY') changePassword();
+}
+
+/* ───────── Shell ───────── */
+const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nAccount', ['settings']]];
+function go(p) { page = p; $('sidebar').classList.remove('open'); render(); window.scrollTo(0, 0); }
+function render() {
+  if (!user || !S) return; applyChrome();
+  $('menuToggle').innerHTML = ic('menu'); $('menuToggle').onclick = () => $('sidebar').classList.toggle('open');
+  $('sidebar').innerHTML = `<div class="brand"><div class="brand-mark">${ic('logo')}</div><div>${t('app')}<div style="font-size:11px;font-weight:500;color:var(--faint)">${t('tagline')}</div></div></div>
+    <nav class="nav">${NAV.map(([g, items]) => `<div class="nav-label">${t(g)}</div>${items.map(p => `<button class="nav-item ${p === page ? 'active' : ''}" onclick="go('${p}')" ${p === page ? 'aria-current="page"' : ''}>${ic(p)}${t(p)}</button>`).join('')}`).join('')}</nav>
+    <div class="side-foot"><div class="user-chip"><div class="avatar">${esc((user.email || '?')[0])}</div><div style="min-width:0;flex:1"><div class="user-mail" title="${esc(user.email)}">${esc(user.email)}</div><div class="sync" id="sync"><i></i><span></span></div></div><button class="icon-btn" onclick="signOut()" title="${t('signout')}" aria-label="${t('signout')}">${ic('logout')}</button></div></div>`;
+  setSync(syncState);
+  $('main').innerHTML = PAGES[page]();
+  if (page === 'projects') bindDnD();
+}
+const header = (title, sub, actions = '') => `<div class="page-header"><div><h1 class="page-title">${title}</h1><div class="page-sub">${sub}</div></div><div class="actions">${actions}</div></div>`;
+const card = (title, body, extra = '', style = '') => `<section class="card" style="${style}"><div class="card-head"><span class="card-title">${title}</span>${extra}</div>${body}</section>`;
+const kpiCard = (title, value, label, color, p = null) => `<section class="card"><div class="card-head"><span class="card-title">${title}</span></div><div class="kpi num" style="color:${color}">${value}</div><div class="kpi-label">${label}</div>${p === null ? '' : `<div class="bar" style="margin-top:10px"><div style="width:${p}%;background:${color}"></div></div>`}</section>`;
+const habitRow = (h, k, full) => `<div class="row"><span class="emoji">${esc(h.emoji)}</span><div class="row-main"><div class="row-title">${esc(h.name)}</div><div style="display:flex;gap:8px;align-items:center;margin-top:5px"><div class="bar" style="flex:1"><div style="width:${rate(h.id)}%;background:${h.color}"></div></div><span class="num" style="font-size:11px;color:var(--muted);min-width:34px">${rate(h.id)}%</span>${full ? `<span class="badge num">🔥 ${streak(h.id)}</span>` : ''}</div></div>
+  ${full ? `<button class="icon-btn danger" onclick="delHabit('${h.id}')" aria-label="${t('delete')}">${ic('trash')}</button>` : ''}<button class="check ${habitDone(k, h.id) ? 'on' : ''}" onclick="toggleHabit('${h.id}','${k}')" role="checkbox" aria-checked="${habitDone(k, h.id)}" aria-label="${esc(h.name)}">${habitDone(k, h.id) ? '✓' : ''}</button></div>`;
+
+/* ───────── Pages ───────── */
+const PAGES = {
+dashboard() {
+  const k = today(), ws = weekStart(new Date()), wdays = [...Array(7)].map((_, i) => addDays(ws, i)), past = wdays.filter(d => dkey(d) <= k && dkey(d) >= S.start).map(dkey);
+  const heat = [...Array(35)].map((_, i) => { const d = addDays(new Date(), i - 34), p = habitPct(dkey(d)); return `<div class="${p ? 'l' + Math.ceil(p / 25) : ''}" title="${fmt(d, { day: 'numeric', month: 'short' })} · ${p}%"></div>`; }).join('');
+  return header(t('dashboard'), `${t('hello')} · ${fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`, `<button class="btn btn-primary" onclick="addTask()">${ic('plus')}${t('addTask')}</button>`) +
+  `<div class="grid g4">${kpiCard(t('kToday'), routinePct(k) + '%', t('kTodaySub'), 'var(--accent)', routinePct(k))}${kpiCard(t('kHabits'), `${habitsDoneCount(k)}/${S.habits.length}`, t('kHabitsSub'), 'var(--green)', habitPct(k))}${kpiCard(t('kStreak'), bestStreak(), t('days'), 'var(--yellow)')}${kpiCard(t('kWeek'), avgPct(past) + '%', t('kWeekSub'), 'var(--blue)', avgPct(past))}</div>
+  <div class="grid g21">${card(t('weekDays'), `<div class="donuts">${wdays.map((d, i) => { const dk = dkey(d), fut = dk > k; return `<div style="text-align:center">${donut(fut ? 0 : habitPct(dk), PALETTE[i], 72, 13, fut ? '—' : null)}<div style="font-size:11px;font-weight:700;margin-top:6px;color:${dk === k ? 'var(--accent)' : 'var(--muted)'}">${fmt(d, { weekday: 'short' })}</div></div>`; }).join('')}</div>`)}
+  ${card(t('todayHabits'), S.habits.length ? S.habits.slice(0, 6).map(h => habitRow(h, k, false)).join('') : `<div class="empty">${t('noHabits')}</div>`, `<button class="link" onclick="go('habits')">${t('all')}</button>`)}</div>
+  <div class="grid g3">${card(t('heat'), `<div class="legend">${t('less')} <i style="background:var(--surface3)"></i><i style="background:var(--hm1)"></i><i style="background:var(--hm2)"></i><i style="background:var(--hm3)"></i><i style="background:var(--hm4)"></i> ${t('more')}</div><div class="heat">${heat}</div>`)}
+  ${card(t('projProgress'), S.projects.length ? S.projects.map(p => { const s = projStats(p.id); return `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:6px"><span style="display:flex;align-items:center;gap:8px;font-weight:600"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}</span><span class="num" style="font-size:12px;color:var(--muted)">${s.done}/${s.total} · ${s.p}%</span></div><div class="bar" style="height:8px"><div style="width:${s.p}%;background:${p.color}"></div></div></div>`; }).join('') : `<div class="empty">${t('noProjects')}</div>`)}
+  ${card(t('mood'), `<div style="text-align:center;font-size:44px;margin-bottom:12px">${MOODS[S.mood[k] ?? 3]}</div><div class="mood">${MOODS.map((m, i) => `<button class="${S.mood[k] === i ? 'on' : ''}" onclick="setMood(${i})" aria-pressed="${S.mood[k] === i}">${m}</button>`).join('')}</div>`)}</div>`;
+},
+weekly() {
+  const ws = addDays(weekStart(new Date()), weekOffset * 7), w = weekData(), k = today();
+  const ta = (f, ph = '') => `<textarea rows="4" placeholder="${esc(ph)}" oninput="setWeek('${f}',this.value)" aria-label="${t(f === 'good' ? 'worked' : f)}">${esc(w[f])}</textarea>`;
+  return header(t('weekly'), `${fmt(ws, { day: 'numeric', month: 'long' })} — ${fmt(addDays(ws, 6), { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    `<button class="btn btn-ghost" onclick="shiftWeek(-1)" aria-label="${t('prevWeek')}">${ic(LANGS[lang].dir === 'rtl' ? 'next' : 'prev')}</button><button class="btn btn-ghost" onclick="shiftWeek(0)">${t('thisWeek')}</button><button class="btn btn-ghost" onclick="shiftWeek(1)" aria-label="${t('nextWeek')}">${ic(LANGS[lang].dir === 'rtl' ? 'prev' : 'next')}</button>`) +
+  `<div class="grid g2">${card(t('goals'), ta('goals', t('goalsPh')))}${card(t('priorities'), [0, 1, 2].map(i => `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="num" style="background:${PALETTE[i]};color:#fff;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0">${i + 1}</span><input type="text" value="${esc(w.p[i])}" oninput="setPriority(${i},this.value)" aria-label="${t('priorities')} ${i + 1}"></div>`).join(''))}</div>
+  ${card(t('schedule'), `<div class="week">${[...Array(7)].map((_, i) => { const d = addDays(ws, i), dk = dkey(d), plans = w.plans[dk] || []; return `<div class="day ${dk === k ? 'today' : ''}"><div class="day-head"><div class="day-name" style="color:${PALETTE[i]}">${fmt(d, { weekday: 'long' })}</div><div class="day-date num">${fmt(d, { day: 'numeric', month: 'short' })} · ${dk > k ? '—' : habitPct(dk) + '%'}</div></div><div class="day-body">${plans.map((p, j) => `<div class="plan"><span>${esc(p)}</span><button onclick="delPlan('${dk}',${j})" aria-label="${t('delete')}">×</button></div>`).join('')}<input type="text" placeholder="${t('addPlan')}" maxlength="80" aria-label="${t('addPlan')}" onkeydown="if(event.key==='Enter'){addPlan('${dk}',this.value)}"></div></div>`; }).join('')}</div>`, '', 'margin-bottom:16px')}
+  <div class="grid g3">${card(t('worked'), ta('good'))}${card(t('improve'), ta('improve'))}${card(t('score'), `<div style="text-align:center"><div class="kpi num" style="font-size:46px;color:var(--yellow)">${w.score || '—'}</div><div style="color:var(--muted);font-size:13px">${t('outOf')}</div><div style="display:flex;justify-content:center;gap:2px;margin-top:12px;flex-wrap:wrap">${[...Array(10)].map((_, i) => `<button class="icon-btn" style="font-size:17px;color:${i < w.score ? 'var(--yellow)' : 'var(--faint)'}" onclick="setScore(${i + 1})" aria-label="${i + 1}">${i < w.score ? '★' : '☆'}</button>`).join('')}</div></div>`)}</div>`;
+},
+daily() {
+  const k = today(), log = S.routineLog[k] || [], p = routinePct(k);
+  const list = part => S.routine[part].length ? S.routine[part].map(i => { const on = log.includes(i.id); return `<div class="row"><button class="check ${on ? 'on' : ''}" onclick="toggleRoutine('${i.id}')" role="checkbox" aria-checked="${on}" aria-label="${esc(i.task)}">${on ? '✓' : ''}</button><span class="time num">${esc(i.time)}</span><span class="row-main row-title ${on ? 'done' : ''}">${esc(i.emoji)} ${esc(i.task)}</span><button class="icon-btn danger" onclick="delRoutine('${part}','${i.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div>`; }).join('') : `<div class="empty">${t('noRoutine')}</div>`;
+  const add = part => `<button class="icon-btn" onclick="addRoutine('${part}')" aria-label="${t('addItem')}">${ic('plus')}</button>`;
+  return header(t('daily'), fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }), `<div class="badge num" style="font-size:14px;padding:8px 14px;color:var(--green)">${p}% ${t('done')}</div>`) +
+  `<div class="grid g2">${card(t('morning'), list('morning'), add('morning'))}${card(t('evening'), list('evening'), add('evening'))}</div>
+  ${card(t('completion'), `<div class="bar" style="height:10px"><div style="width:${p}%;background:linear-gradient(90deg,var(--green),var(--teal))"></div></div>`, `<span class="num" style="color:var(--green);font-weight:700">${p}%</span>`)}`;
+},
+habits() {
+  const k = today(), ws = weekStart(new Date());
+  const seg = `<div class="seg">${[['day', 'vDay'], ['week', 'vWeek'], ['month', 'vMonth']].map(([v, l]) => `<button class="${habitView === v ? 'on' : ''}" onclick="setHabitView('${v}')">${t(l)}</button>`).join('')}</div>`;
+  const none = `<div class="empty">${t('noHabits')}</div>`;
+  let body;
+  if (habitView === 'day') body = `<div class="grid g4">${[[habitsDoneCount(k), 'doneToday', 'var(--green)'], [S.habits.length, 'total', 'var(--accent)'], [bestStreak(), 'bestStreak', 'var(--yellow)'], [habitPct(k) + '%', 'rateToday', 'var(--purple)']].map(([v, l, c]) => `<section class="card" style="text-align:center"><div class="kpi num" style="color:${c}">${v}</div><div class="kpi-label">${t(l)}</div></section>`).join('')}</div>${card(t('todayHabits'), S.habits.length ? S.habits.map(h => habitRow(h, k, true)).join('') : none)}`;
+  else if (habitView === 'week') body = card(t('vWeek'), S.habits.length ? `<div style="overflow-x:auto"><table class="wk"><thead><tr><th>${t('habit')}</th>${[...Array(7)].map((_, i) => `<th>${fmt(addDays(ws, i), { weekday: 'short' })}</th>`).join('')}<th>%</th></tr></thead><tbody>${S.habits.map(h => { let n = 0; return `<tr><td>${esc(h.emoji)} ${esc(h.name)}</td>${[...Array(7)].map((_, i) => { const dk = dkey(addDays(ws, i)), on = habitDone(dk, h.id); if (on) n++; return `<td><button class="check ${on ? 'on' : ''}" style="margin:auto;${on ? `background:${h.color};border-color:${h.color};` : ''}${dk > k ? 'opacity:.3;cursor:default' : ''}" ${dk > k ? 'disabled' : `onclick="toggleHabit('${h.id}','${dk}')"`} role="checkbox" aria-checked="${on}" aria-label="${esc(h.name)} ${dk}">${on ? '✓' : ''}</button></td>`; }).join('')}<td class="num" style="font-weight:700;color:${h.color}">${pct(n, 7)}%</td></tr>`; }).join('')}</tbody></table></div>` : none);
+  else body = card(t('vMonth'), S.habits.length ? S.habits.map(h => `<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:170px;max-width:40%;font-size:12.5px;font-weight:600">${esc(h.emoji)} ${esc(h.name)}</div><div class="bar" style="flex:1;height:8px"><div style="width:${rate(h.id)}%;background:${h.color}"></div></div><div class="num" style="font-size:12px;min-width:38px;font-weight:700;color:${h.color}">${rate(h.id)}%</div></div>`).join('') : none);
+  return header(t('habits'), fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long' }), seg + `<button class="btn btn-primary" onclick="addHabit()">${ic('plus')}${t('addHabit')}</button>`) + body;
+},
+projects() {
+  const cols = [['todo', 'var(--accent)'], ['doing', 'var(--yellow)'], ['done', 'var(--green)']], order = ['todo', 'doing', 'done'], rtl = LANGS[lang].dir === 'rtl';
+  const pr = { high: 'var(--pink)', med: 'var(--yellow)', low: 'var(--muted)' };
+  return header(t('projects'), `${S.projects.length} ${t('activeProjects')}`, `<button class="btn btn-ghost" onclick="addProject()">${ic('plus')}${t('addProject')}</button><button class="btn btn-primary" onclick="addTask()">${ic('plus')}${t('addTask')}</button>`) +
+  (S.projects.length ? `<div class="grid g4">${S.projects.map(p => { const s = projStats(p.id); return `<section class="card" style="border-top:3px solid ${p.color}"><div class="card-head"><span style="font-weight:700">${esc(p.name)}</span><button class="icon-btn danger" onclick="delProject('${p.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div><div style="display:grid;place-items:center;margin:6px 0 10px">${donut(s.p, p.color, 78, 14)}</div><div class="num" style="font-size:12px;color:var(--muted);text-align:center">${s.done}/${s.total} ${t('tasksDone')}</div></section>`; }).join('')}</div>` : '') +
+  card(t('board'), `<div class="kanban">${cols.map(([c, color]) => { const ts = S.tasks.filter(x => x.status === c), i = order.indexOf(c); return `<div class="kcol" data-col="${c}"><div class="kcol-head"><i class="dot" style="background:${color}"></i>${t(c === 'done' ? 'doneCol' : c)}<span class="badge num">${ts.length}</span></div>${ts.length ? ts.map(x => { const p = S.projects.find(q => q.id === x.projectId); return `<div class="kcard" draggable="true" data-id="${x.id}"><div class="kcard-title">${esc(x.title)}</div><div class="kcard-meta">${p ? `<span class="tag" style="background:${p.color}22;color:${p.color}">${esc(p.name)}</span>` : ''}<span class="tag" style="background:var(--surface3);color:${pr[x.priority] || pr.med}">${t(x.priority || 'med')}</span><span class="kcard-actions">${i > 0 ? `<button class="icon-btn" onclick="moveTask('${x.id}','${order[i - 1]}')" aria-label="${t('move')}: ${t(order[i - 1] === 'done' ? 'doneCol' : order[i - 1])}">${ic(rtl ? 'next' : 'prev')}</button>` : ''}${i < 2 ? `<button class="icon-btn" onclick="moveTask('${x.id}','${order[i + 1]}')" aria-label="${t('move')}: ${t(order[i + 1] === 'done' ? 'doneCol' : order[i + 1])}">${ic(rtl ? 'prev' : 'next')}</button>` : ''}<button class="icon-btn danger" onclick="delTask('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div></div>`; }).join('') : `<div class="empty" style="padding:18px">${t('noTasks')}</div>`}</div>`; }).join('')}</div>`);
+},
+notes() {
+  const cats = ['book', 'podcast', 'idea', 'review'], list = S.notes.filter(n => noteFilter === 'all' || n.cat === noteFilter).sort((a, b) => b.ts - a.ts), sel = S.notes.find(n => n.id === noteSel);
+  return header(t('notes'), cats.map(c => `${t(c)}: ${S.notes.filter(n => n.cat === c).length}`).join(' · '), `<button class="btn btn-primary" onclick="addNote()">${ic('plus')}${t('addNote')}</button>`) +
+  `<div class="grid g2"><div><div class="seg" style="margin-bottom:12px;flex-wrap:wrap">${['all', ...cats].map(c => `<button class="${noteFilter === c ? 'on' : ''}" onclick="setNoteFilter('${c}')">${t(c)}</button>`).join('')}</div>
+  ${list.length ? list.map(n => `<button class="note ${n.id === noteSel ? 'sel' : ''}" onclick="selNote('${n.id}')"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span class="row-title">${esc(n.title || t('untitled'))}</span><span class="badge">${t(n.cat)}</span></div><div class="note-prev">${esc(n.body)}</div><div class="num" style="font-size:11px;color:var(--faint);margin-top:8px">${fmt(new Date(n.ts), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</div></button>`).join('') : `<div class="card empty">${t('noNotes')}</div>`}</div>
+  ${sel ? card(t('editNote'), `<div class="field"><input type="text" id="nTitle" placeholder="${t('noteTitle')}" value="${esc(sel.title)}" aria-label="${t('noteTitle')}"></div><div class="field"><select id="nCat" aria-label="${t('category')}">${cats.map(c => `<option value="${c}" ${sel.cat === c ? 'selected' : ''}>${t(c)}</option>`).join('')}</select></div><textarea rows="12" id="nBody" placeholder="${t('noteBody')}" aria-label="${t('noteBody')}">${esc(sel.body)}</textarea><button class="btn btn-primary btn-block" style="margin-top:12px" onclick="saveNote()">${t('save')}</button>`, `<button class="icon-btn danger" onclick="delNote('${sel.id}')" aria-label="${t('delete')}">${ic('trash')}</button>`) : ''}</div>`;
+},
+analytics() {
+  const d30 = lastDays(30), ranked = S.habits.map(h => ({ h, r: rate(h.id) })).sort((a, b) => b.r - a.r), best = ranked[0], worst = ranked[ranked.length - 1];
+  const byDow = [...Array(7)].map((_, w) => { const ds = lastDays(28).filter(k => pdate(k).getDay() === w); return ds.length ? avgPct(ds) : -1; }), bd = byDow.indexOf(Math.max(...byDow));
+  const ws = weekStart(new Date()), weeks = [3, 2, 1, 0].map(o => { const ds = [...Array(7)].map((_, i) => dkey(addDays(ws, i - o * 7))).filter(k => k <= today() && k >= S.start); return { label: fmt(addDays(ws, -o * 7), { day: 'numeric', month: 'short' }), p: avgPct(ds) }; });
+  const perfect = S.habits.length && Object.keys(S.habitLog).some(k => habitPct(k) === 100), bs = bestStreak();
+  const ach = [['🔥', 'ach1', 'achSub1', bs >= 7], ['🏆', 'ach2', 'achSub2', bs >= 30], ['⭐', 'ach3', 'achSub3', perfect], ['✅', 'ach4', 'achSub4', S.tasks.filter(x => x.status === 'done').length >= 10], ['📝', 'ach5', 'achSub5', S.notes.length >= 5]];
+  return header(t('analytics'), fmt(new Date(), { month: 'long', year: 'numeric' })) +
+  `<div class="grid g4">${kpiCard(t('aRate'), avgPct(d30) + '%', t('aRateSub'), 'var(--green)')}${kpiCard(t('aBestDay'), byDow[bd] > 0 ? fmt(addDays(weekStart(new Date()), bd), { weekday: 'long' }) : '—', t('aBestDaySub'), 'var(--blue)')}${kpiCard(t('aBest'), best ? `${esc(best.h.emoji)} ${best.r}%` : '—', best ? esc(best.h.name) : '', 'var(--yellow)')}${kpiCard(t('aWorst'), worst ? `${esc(worst.h.emoji)} ${worst.r}%` : '—', worst ? esc(worst.h.name) : '', 'var(--pink)')}</div>
+  <div class="grid g2">${card(t('aHabits'), ranked.length ? ranked.map(({ h, r }) => `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12.5px"><span style="font-weight:600">${esc(h.emoji)} ${esc(h.name)}</span><span class="num" style="color:var(--muted)">${r}%</span></div><div class="bar"><div style="width:${r}%;background:${h.color}"></div></div></div>`).join('') : `<div class="empty">${t('noHabits')}</div>`)}
+  ${card(t('aWeeks'), `<div class="vbars">${weeks.map((w, i) => `<div><span class="num" style="font-weight:700;color:${PALETTE[i]}">${w.p}%</span><i style="height:${w.p * 0.8}%;background:${PALETTE[i]}"></i><span class="num">${w.label}</span></div>`).join('')}</div>`)}</div>
+  ${card(t('aAch'), `<div class="ach">${ach.map(([e, a, s, ok]) => `<div class="${ok ? '' : 'locked'}"><div style="font-size:28px">${e}</div><div style="font-size:12.5px;font-weight:700;margin-top:6px">${t(a)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${t(s)}</div></div>`).join('')}</div>`)}`;
+},
+settings() {
+  return header(t('settings'), esc(user.email)) + card(t('settings'), `
+  <div class="set-row"><div><b>${t('language')}</b><small>${t('languageSub')}</small></div><div class="seg">${Object.entries(LANGS).map(([l, o]) => `<button class="${l === lang ? 'on' : ''}" onclick="setLang('${l}')">${o.name}</button>`).join('')}</div></div>
+  <div class="set-row"><div><b>${t('theme')}</b><small>${t('themeSub')}</small></div><div class="seg">${['dark', 'light'].map(x => `<button class="${theme === x ? 'on' : ''}" onclick="setTheme('${x}')">${t(x)}</button>`).join('')}</div></div>
+  <div class="set-row"><div><b>${t('changePw')}</b><small>${t('changePwSub')}</small></div><button class="btn btn-ghost" onclick="changePassword()">${t('change')}</button></div>
+  <div class="set-row"><div><b>${t('exportData')}</b><small>${t('exportSub')}</small></div><button class="btn btn-ghost" onclick="exportData()">${t('export')}</button></div>
+  <div class="set-row"><div><b>${t('account')}</b><small dir="ltr">${esc(user.email)}</small></div><button class="btn btn-danger" onclick="signOut()">${ic('logout')}${t('signout')}</button></div>`);
+}};
+
+/* ───────── Actions ───────── */
+function toggle(log, k, id) { const a = log[k] || (log[k] = []), i = a.indexOf(id); i < 0 ? a.push(id) : a.splice(i, 1); if (!a.length) delete log[k]; }
+function toggleHabit(id, k) { toggle(S.habitLog, k, id); commit(); }
+function toggleRoutine(id) { toggle(S.routineLog, today(), id); commit(); }
+function setMood(i) { S.mood[today()] = i; commit(); }
+function setHabitView(v) { habitView = v; render(); }
+function addHabit() { openForm({ title: t('addHabit'), submit: t('add'), fields: [{ name: 'name', label: t('habitName'), required: true, max: 60 }, { name: 'emoji', label: t('emoji'), value: '✅', max: 8 }], onSubmit: v => { if (!v.name) return; S.habits.push({ id: uid(), name: v.name, emoji: v.emoji || '✅', color: PALETTE[S.habits.length % PALETTE.length] }); commit(); } }); }
+function delHabit(id) { confirmDel(() => { S.habits = S.habits.filter(h => h.id !== id); }); }
+function addRoutine(part) { openForm({ title: t('addItem'), submit: t('add'), fields: [{ name: 'time', label: t('time'), type: 'time', value: part === 'morning' ? '07:00' : '18:00', required: true }, { name: 'task', label: t('task'), required: true, max: 80 }, { name: 'emoji', label: t('emoji'), value: '📌', max: 8 }], onSubmit: v => { if (!v.task) return; S.routine[part].push({ id: uid(), time: v.time, task: v.task, emoji: v.emoji || '📌' }); S.routine[part].sort((a, b) => a.time.localeCompare(b.time)); commit(); } }); }
+function delRoutine(part, id) { confirmDel(() => { S.routine[part] = S.routine[part].filter(i => i.id !== id); }); }
+function shiftWeek(n) { weekOffset = n === 0 ? 0 : weekOffset + n; render(); }
+function setWeek(f, v) { weekData()[f] = v; save(); }
+function setPriority(i, v) { weekData().p[i] = v; save(); }
+function setScore(n) { const w = weekData(); w.score = w.score === n ? 0 : n; commit(); }
+function addPlan(dk, v) { v = v.trim(); if (!v) return; const w = weekData(); (w.plans[dk] || (w.plans[dk] = [])).push(v); commit(); }
+function delPlan(dk, j) { const w = weekData(); w.plans[dk].splice(j, 1); commit(); }
+function addProject() { openForm({ title: t('addProject'), submit: t('add'), fields: [{ name: 'name', label: t('projectName'), required: true, max: 60 }], onSubmit: v => { if (!v.name) return; S.projects.push({ id: uid(), name: v.name, color: PALETTE[S.projects.length % PALETTE.length] }); commit(); } }); }
+function delProject(id) { confirmDel(() => { S.projects = S.projects.filter(p => p.id !== id); S.tasks.forEach(x => { if (x.projectId === id) x.projectId = ''; }); }); }
+function addTask() { openForm({ title: t('addTask'), submit: t('add'), fields: [{ name: 'title', label: t('taskTitle'), required: true, max: 120 }, { name: 'projectId', label: t('project'), type: 'select', value: '', options: [['', t('none')], ...S.projects.map(p => [p.id, p.name])] }, { name: 'priority', label: t('priority'), type: 'select', value: 'med', options: [['high', t('high')], ['med', t('med')], ['low', t('low')]] }], onSubmit: v => { if (!v.title) return; S.tasks.push({ id: uid(), title: v.title, projectId: v.projectId, priority: v.priority, status: 'todo' }); page = 'projects'; commit(); } }); }
+function moveTask(id, status) { const x = S.tasks.find(q => q.id === id); if (x && x.status !== status) { x.status = status; commit(); } }
+function delTask(id) { confirmDel(() => { S.tasks = S.tasks.filter(x => x.id !== id); }); }
+function bindDnD() {
+  let drag = null;
+  document.querySelectorAll('.kcard').forEach(c => { c.ondragstart = e => { drag = c.dataset.id; e.dataTransfer.effectAllowed = 'move'; }; });
+  document.querySelectorAll('.kcol').forEach(col => { col.ondragover = e => { e.preventDefault(); col.classList.add('over'); }; col.ondragleave = () => col.classList.remove('over'); col.ondrop = e => { e.preventDefault(); col.classList.remove('over'); if (drag) moveTask(drag, col.dataset.col); }; });
+}
+function addNote() { const n = { id: uid(), title: '', body: '', cat: noteFilter === 'all' ? 'idea' : noteFilter, ts: Date.now() }; S.notes.push(n); noteSel = n.id; commit(); const el = $('nTitle'); if (el) el.focus(); }
+function selNote(id) { noteSel = id; render(); }
+function setNoteFilter(c) { noteFilter = c; render(); }
+function saveNote() { const n = S.notes.find(x => x.id === noteSel); if (!n) return; n.title = $('nTitle').value.trim(); n.body = $('nBody').value; n.cat = $('nCat').value; n.ts = Date.now(); commit(); }
+function delNote(id) { confirmDel(() => { S.notes = S.notes.filter(n => n.id !== id); noteSel = null; }); }
+function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' })); a.download = `intajiyati-${today()}.json`; a.click(); URL.revokeObjectURL(a.href); }
+
+/* ───────── Start ───────── */
+applyChrome();
+if (!sb) renderAuth();
+else { sb.auth.onAuthStateChange((event, session) => { setTimeout(() => onSession(session, event), 0); }); }
+window.addEventListener('beforeunload', () => { if (user && syncState === 'saving') pushState(); });
+</script>
+</body>
+</html>
