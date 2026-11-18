@@ -256,6 +256,80 @@ table.wk td:first-child, table.wk th:first-child { text-align: start; font-size:
   .slider label { width: 96px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+/* ───────── Motion ───────── */
+@property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+body::before { content: ''; position: fixed; inset: -20%; z-index: -1; pointer-events: none; background: radial-gradient(40% 35% at 20% 20%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%), radial-gradient(35% 30% at 80% 30%, color-mix(in srgb, var(--purple) 10%, transparent), transparent 70%), radial-gradient(40% 35% at 50% 90%, color-mix(in srgb, var(--blue) 9%, transparent), transparent 70%); animation: aurora 28s ease-in-out infinite alternate; }
+@keyframes aurora { 0% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(3%, -2%) rotate(6deg); } 100% { transform: translate(-3%, 2%) rotate(-5deg); } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px) scale(.98); } }
+@keyframes fadein { from { opacity: 0; } }
+@keyframes pop { 0% { opacity: 0; transform: scale(.4); } 70% { transform: scale(1.08); } }
+@keyframes grow { from { transform: scaleX(0); } }
+@keyframes donut { from { stroke-dasharray: 0 100; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes floaty { 50% { transform: translateY(-8px); } }
+@keyframes wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg) scale(1.1); } 75% { transform: rotate(10deg) scale(1.1); } }
+@keyframes starpop { 0% { transform: scale(1); } 40% { transform: scale(1.8) rotate(-20deg); filter: drop-shadow(0 0 8px var(--yellow)); } 100% { transform: scale(1) rotate(0); } }
+@keyframes flash { 0%, 30% { background: color-mix(in srgb, var(--accent) 22%, transparent); } }
+@keyframes ang { to { --ang: 360deg; } }
+@keyframes pulse { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
+@keyframes glowp { 50% { opacity: .9; } }
+.main.anim .page-header, .main.anim .hero { animation: rise .55s cubic-bezier(.2, .7, .2, 1) backwards; }
+.main.anim .card, .main.anim .trip, .main.anim table tbody tr { animation: rise .55s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: calc(80ms + var(--i, 0) * 45ms); }
+.main.anim .chip { animation: pop .45s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: calc(250ms + var(--i, 0) * 35ms); }
+.main.anim .bar > div { animation: grow 1s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: .25s; }
+.bar > div { transform-origin: left; } [dir="rtl"] .bar > div { transform-origin: right; }
+.main.anim .donut circle + circle { animation: donut 1.1s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: .2s; }
+.btn { position: relative; overflow: hidden; transition: background .15s, border-color .15s, transform .15s, box-shadow .2s; }
+.btn:active { transform: scale(.96); }
+.btn-primary { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--pink))); box-shadow: 0 6px 20px -8px var(--accent); }
+.btn-primary:hover { box-shadow: 0 10px 28px -8px var(--accent); }
+.btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, #ffffff55 50%, transparent 70%); transform: translateX(-120%); transition: transform .7s; pointer-events: none; }
+.btn-primary:hover::after { transform: translateX(120%); }
+.nav-item svg { transition: transform .25s cubic-bezier(.2, .7, .2, 1.4); }
+.nav-item:hover svg { transform: scale(1.18) rotate(-8deg); }
+.nav-item.active { box-shadow: inset 3px 0 0 var(--accent); } [dir="rtl"] .nav-item.active { box-shadow: inset -3px 0 0 var(--accent); }
+.brand-mark { box-shadow: 0 0 0 0 var(--accent); animation: brandglow 3.5s ease-in-out infinite; }
+@keyframes brandglow { 50% { box-shadow: 0 0 22px -2px var(--accent); } }
+.tilt, .g4 > .card { transition: transform .25s ease, box-shadow .25s, border-color .25s; position: relative; will-change: transform; }
+.tilt:hover, .g4 > .card:hover { box-shadow: 0 18px 40px -18px #000a; border-color: var(--border2); }
+.tilt::after, .g4 > .card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%); }
+.tilt:hover::after, .g4 > .card:hover::after { opacity: 1; }
+.tagbtn { transition: transform .15s; } .tagbtn:hover { transform: scale(1.1); }
+.star { transition: transform .15s; } .star:hover { transform: scale(1.25); }
+.star.pop { animation: starpop .7s cubic-bezier(.2, .7, .2, 1); }
+tr.flash td, .chip.flash { animation: flash 1.8s ease-out; }
+.chip { transition: transform .2s, border-color .2s, box-shadow .2s; }
+.chip:hover { transform: translateY(-2px); box-shadow: 0 6px 16px -8px var(--accent); }
+.glow { border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, conic-gradient(from var(--ang), var(--accent), var(--purple), var(--blue), var(--green), var(--accent)) border-box; animation: ang 6s linear infinite; }
+.trip:hover .trip-flag { animation: wave 1s ease-in-out; }
+.floaty { display: inline-block; animation: floaty 4s ease-in-out infinite; }
+.confetti { position: fixed; width: 8px; height: 12px; border-radius: 2px; z-index: 9999; pointer-events: none; }
+/* hero */
+.hero { position: relative; overflow: hidden; border-radius: 20px; border: 1px solid var(--border2); background: var(--surface); padding: 26px 28px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; min-height: 190px; isolation: isolate; }
+.hero-bg { position: absolute; inset: -60%; z-index: -1; background: conic-gradient(from 0deg at 50% 50%, color-mix(in srgb, var(--accent) 30%, transparent), color-mix(in srgb, var(--purple) 26%, transparent), color-mix(in srgb, var(--blue) 26%, transparent), color-mix(in srgb, var(--green) 20%, transparent), color-mix(in srgb, var(--accent) 30%, transparent)); filter: blur(50px); opacity: .8; animation: spin 26s linear infinite; }
+.hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, color-mix(in srgb, var(--surface) 80%, transparent) 15%, transparent 85%); }
+[dir="rtl"] .hero::after { background: linear-gradient(-90deg, color-mix(in srgb, var(--surface) 80%, transparent) 15%, transparent 85%); }
+.hero .page-title { font-size: 30px; background: linear-gradient(90deg, var(--text), var(--accent), var(--purple), var(--text)); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 8s linear infinite; }
+@keyframes shine { to { background-position: 300% 0; } }
+.hero-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.hero-stats span { background: color-mix(in srgb, var(--surface2) 80%, transparent); border: 1px solid var(--border2); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; backdrop-filter: blur(6px); }
+.hero-art svg { display: block; width: 300px; height: auto; overflow: visible; }
+.hero-art .rays { transform-box: fill-box; transform-origin: center; animation: spin 18s linear infinite; }
+.hero-art .pulse, .mm .pulse { transform-box: fill-box; transform-origin: center; animation: pulse 2.4s ease-out infinite; }
+.hero-art .dash { stroke-dasharray: 6 8; animation: dashmove 1.2s linear infinite; }
+@keyframes dashmove { to { stroke-dashoffset: -28; } }
+.hero-art .bob { animation: floaty 4s ease-in-out infinite; }
+/* mind map motion */
+.main.anim .mm .br { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .9s cubic-bezier(.4, 0, .2, 1) forwards; animation-delay: calc(var(--d, 0) * 1ms); }
+.main.anim .mm .n { animation: pop .55s cubic-bezier(.2, .7, .2, 1.3) backwards; animation-delay: calc(var(--d, 0) * 1ms); }
+.mm .n { transform-box: fill-box; transform-origin: center; transition: transform .2s; }
+.mm .n:hover { transform: scale(1.12); }
+.mm .orbit { transform-box: fill-box; transform-origin: center; animation: spin 30s linear infinite; }
+.mm .core { transform-box: fill-box; transform-origin: center; animation: glowp 3s ease-in-out infinite; opacity: .7; }
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 22px 18px; } .hero-art svg { width: 100%; max-width: 320px; margin: auto; } .hero .page-title { font-size: 25px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
+
 </style>
 </head>
 <body>
@@ -524,7 +598,7 @@ async function onSession(session, event) {
 
 /* ───────── Shell ───────── */
 const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nLife', ['ideas', 'mindmap', 'travel']], ['nFin', ['fin', 'income', 'expense', 'matrix', 'fincats']], ['nAccount', ['settings']]];
-function go(p) { if (page === 'notes' && p !== 'notes' && S) { const n = S.notes.length; S.notes = S.notes.filter(x => x.title || x.body); if (S.notes.length !== n) save(); noteSel = null; } page = p; $('sidebar').classList.remove('open'); render(); window.scrollTo(0, 0); }
+function go(p) { animNext = true; if (page === 'notes' && p !== 'notes' && S) { const n = S.notes.length; S.notes = S.notes.filter(x => x.title || x.body); if (S.notes.length !== n) save(); noteSel = null; } page = p; $('sidebar').classList.remove('open'); render(); window.scrollTo(0, 0); }
 function render() {
   if (!user || !S) return; applyChrome();
   $('menuToggle').innerHTML = ic('menu'); $('menuToggle').onclick = () => $('sidebar').classList.toggle('open');
@@ -533,6 +607,7 @@ function render() {
     <div class="side-foot"><div class="user-chip"><div class="avatar">${esc((user.email || '?')[0])}</div><div style="min-width:0;flex:1"><div class="user-mail" title="${esc(user.email)}">${esc(user.email)}</div><div class="sync" id="sync"><i></i><span></span></div></div><button class="icon-btn" onclick="signOut()" title="${t('signout')}" aria-label="${t('signout')}">${ic('logout')}</button></div></div>`;
   setSync(syncState);
   $('main').innerHTML = PAGES[page]();
+  postRender();
   if (page === 'projects') bindDnD();
 }
 const header = (title, sub, actions = '') => `<div class="page-header"><div><h1 class="page-title">${title}</h1><div class="page-sub">${sub}</div></div><div class="actions">${actions}</div></div>`;
@@ -766,6 +841,58 @@ function exportTx(type) { downloadCsv(`${type}-${finRange.from}_${finRange.to}.c
 function exportMatrix() { const year = finRange.from.slice(0, 4), tx = S.fin.tx.filter(x => x.date.slice(0, 4) === year && (matrixType === 'all' || x.type === matrixType)), keys = [...new Set(tx.map(x => [x.type, x.group, x.sub].join('␟')))].sort(); downloadCsv(`matrix-${year}.csv`, [[t('type'), t('mainGroup'), t('subCat'), ...[...Array(12)].map((_, i) => i + 1), t('totalLbl')], ...keys.map(k => { const [ty, g, sb2] = k.split('␟'), l = tx.filter(x => x.type === ty && x.group === g && x.sub === sb2); return [ty, g, sb2, ...[...Array(12)].map((_, i) => sum(l.filter(x => Number(x.date.slice(5, 7)) === i + 1))), sum(l)]; })]); }
 function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' })); a.download = `intajiyati-${today()}.json`; a.click(); URL.revokeObjectURL(a.href); }
 
+/* ───────── Motion engine ───────── */
+const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+let animNext = true, fx = {}, lastPt = { x: innerWidth / 2, y: innerHeight / 2 };
+addEventListener('pointerdown', e => { lastPt = { x: e.clientX, y: e.clientY }; }, true);
+function postRender() {
+  const m = $('main'); if (!m) return;
+  if (animNext && !RM) { m.classList.remove('anim'); void m.offsetWidth; m.classList.add('anim'); m.querySelectorAll('.card, .trip, table tbody tr, .chip').forEach((c, i) => c.style.setProperty('--i', Math.min(i, 16))); countUp(m); }
+  else m.classList.remove('anim');
+  animNext = false; fx = {};
+  if (!RM) m.querySelectorAll('.tilt, .g4 > .card').forEach(c => {
+    c.onpointermove = e => { if (e.pointerType !== 'mouse') return; const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; c.style.transform = `perspective(800px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg) translateY(-4px)`; c.style.setProperty('--mx', (x + .5) * 100 + '%'); c.style.setProperty('--my', (y + .5) * 100 + '%'); };
+    c.onpointerleave = () => { c.style.transform = ''; };
+  });
+}
+function countUp(root) {
+  root.querySelectorAll('.kpi').forEach(el => {
+    if (el.children.length) return; const m = el.textContent.trim().match(/^(\d+)(%|\/\d+)?$/); if (!m) return;
+    const end = +m[1], suf = m[2] || ''; if (!end) return; const t0 = performance.now(), d = 1000;
+    const step = now => { const p = Math.min(1, (now - t0) / d), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(end * e) + suf; if (p < 1) requestAnimationFrame(step); };
+    el.textContent = '0' + suf; requestAnimationFrame(step);
+  });
+}
+function confetti(n = 54) {
+  if (RM) return;
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('i'); d.className = 'confetti'; d.style.left = lastPt.x + 'px'; d.style.top = lastPt.y + 'px'; d.style.background = PALETTE[i % PALETTE.length]; if (i % 3 === 0) d.style.borderRadius = '50%';
+    document.body.appendChild(d);
+    const a = Math.random() * Math.PI * 2, v = 70 + Math.random() * 170, r = Math.random() * 900 - 450;
+    d.animate([{ transform: 'translate(-50%,-50%) rotate(0)', opacity: 1 }, { transform: `translate(${Math.cos(a) * v}px,${Math.sin(a) * v - 70}px) rotate(${r / 2}deg)`, opacity: 1, offset: .55 }, { transform: `translate(${Math.cos(a) * v * 1.2}px,${Math.sin(a) * v + 140}px) rotate(${r}deg)`, opacity: 0 }], { duration: 1200 + Math.random() * 600, easing: 'cubic-bezier(.15,.7,.3,1)' }).onfinish = () => d.remove();
+  }
+}
+const hero = (title, sub, actions, art, stats = []) => `<section class="hero"><div class="hero-bg"></div><div style="min-width:0"><h1 class="page-title">${title}</h1><div class="page-sub">${sub}</div>${stats.length ? `<div class="hero-stats">${stats.map(x => `<span class="num">${x}</span>`).join('')}</div>` : ''}<div class="actions" style="margin-top:18px">${actions}</div></div><div class="hero-art" aria-hidden="true">${art}</div></section>`;
+function ideasArt() {
+  const orb = 'M40,95 a110,46 0 1,0 220,0 a110,46 0 1,0 -220,0';
+  return `<svg viewBox="0 0 300 190"><defs><radialGradient id="bg1"><stop offset="0" stop-color="#ffd166" stop-opacity=".9"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/></radialGradient></defs>
+  <path d="${orb}" fill="none" stroke="var(--border2)" stroke-width="1.2" class="dash"/>
+  <g class="rays">${[...Array(12)].map((_, i) => { const a = i * Math.PI / 6; return `<line x1="${150 + Math.cos(a) * 44}" y1="${95 + Math.sin(a) * 44}" x2="${150 + Math.cos(a) * (i % 2 ? 58 : 66)}" y2="${95 + Math.sin(a) * (i % 2 ? 58 : 66)}" stroke="#ffd166" stroke-width="3" stroke-linecap="round" opacity=".7"/>`; }).join('')}</g>
+  <circle cx="150" cy="95" r="44" fill="url(#bg1)" class="pulse"/><circle cx="150" cy="95" r="40" fill="url(#bg1)" opacity=".7"/>
+  <text x="150" y="113" text-anchor="middle" font-size="50" class="bob">💡</text>
+  ${RM ? '' : IDEA_TYPES.map(([k, e, c], i) => `<g><circle r="13" fill="color-mix(in srgb, ${c} 25%, var(--surface))" stroke="${c}" stroke-width="1.5"/><text y="5" text-anchor="middle" font-size="13">${e}</text><animateMotion dur="11s" repeatCount="indefinite" begin="-${i * 2.2}s" path="${orb}"/></g>`).join('')}</svg>`;
+}
+function travelArt() {
+  const arc = 'M20,150 Q150,-30 280,130', flags = S.life.travel.filter(x => x.flag).slice(0, 5);
+  return `<svg viewBox="0 0 300 190">
+  <circle cx="150" cy="150" r="92" fill="none" stroke="var(--border2)" stroke-width="1"/>${[30, 58, 82].map(rx => `<ellipse cx="150" cy="150" rx="${rx}" ry="92" fill="none" stroke="var(--border)" stroke-width="1"/>`).join('')}<line x1="58" y1="150" x2="242" y2="150" stroke="var(--border)"/>
+  <path d="${arc}" fill="none" stroke="var(--accent)" stroke-width="2" class="dash" opacity=".85"/>
+  <circle cx="20" cy="150" r="5" fill="var(--green)"/><circle cx="20" cy="150" r="5" fill="var(--green)" class="pulse"/>
+  <circle cx="280" cy="130" r="5" fill="var(--pink)"/><circle cx="280" cy="130" r="5" fill="var(--pink)" class="pulse"/>
+  ${flags.map((x, i) => `<text x="${60 + i * 46}" y="${168 - (i % 2) * 22}" font-size="22" text-anchor="middle" class="bob" style="animation-delay:-${i * .7}s">${esc(x.flag)}</text>`).join('')}
+  ${RM ? `<text x="150" y="40" font-size="26" text-anchor="middle">✈️</text>` : `<g><path d="M-12,-2.5 L6,-2.5 L13,0 L6,2.5 L-12,2.5 Z M-1,-2.5 L-7,-12 L-3,-12 L6,-2.5 Z M-1,2.5 L-7,12 L-3,12 L6,2.5 Z M-12,-2.5 L-15,-7 L-12,-7 L-8,-2.5 Z M-12,2.5 L-15,7 L-12,7 L-8,2.5 Z" fill="var(--text)"/><animateMotion dur="5s" repeatCount="indefinite" rotate="auto" path="${arc}" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines=".45 0 .55 1"/></g>`}</svg>`;
+}
+
 /* ───────── Dreams & goals: ideas, mind map, travel ───────── */
 const IDEA_TYPES = [['project', '🚀', '#ff6b35'], ['skill', '🎓', '#10d9a0'], ['experience', '✨', '#9b6dff'], ['personal', '🌱', '#2dd4bf'], ['other', '💡', '#ffd166']];
 const ITYPE = Object.fromEntries(IDEA_TYPES.map(([k, e, c]) => [k, { e, c }]));
@@ -784,7 +911,7 @@ function lifeDash() {
   const f = S.life.ideas.filter(x => x.focus), order = { planned: 0, wish: 1 };
   const next = S.life.travel.filter(x => x.status !== 'visited').sort((a, b) => order[a.status] - order[b.status] || (Number(a.year) || 9999) - (Number(b.year) || 9999))[0];
   return `<div class="grid g21">${card('★ ' + t('lFocus'), f.length ? f.map(x => `<div class="lrow"><span style="font-size:18px">${(ITYPE[x.type] || ITYPE.other).e}</span><button class="link row-main" style="color:var(--text);text-align:start" onclick="editIdea('${x.id}')"><span class="row-title ${x.status === 'done' ? 'done' : ''}">${esc(x.title)}</span></button>${stTag(t('is_' + x.status), ISTAT[x.status])}</div>`).join('') : `<div class="empty">${t('lNoFocus')}</div>`, `<button class="link" onclick="go('ideas')">${t('all')}</button>`)}
-  ${card(t('lNextTrip'), next ? `<div style="text-align:center"><div style="font-size:52px;line-height:1.1">${esc(next.flag || '🌍')}</div><div style="font-weight:800;font-size:18px;margin-top:6px">${esc(next.country)}</div><div style="color:var(--muted);font-size:13px">${esc(next.cities || '')}</div><div class="trip-meta" style="justify-content:center;margin-top:10px">${stTag(t('ts_' + next.status), TSTAT[next.status])}${next.year ? `<span class="badge num">${esc(next.year)}</span>` : ''}${next.budget ? `<span class="badge num">${money(next.budget)}</span>` : ''}</div></div>` : `<div class="empty">${t('lNoNext')}</div>`, `<button class="link" onclick="go('travel')">${t('all')}</button>`)}</div>`;
+  ${card(t('lNextTrip'), next ? `<div style="text-align:center"><div style="font-size:52px;line-height:1.1"><span class="floaty">${esc(next.flag || '🌍')}</span></div><div style="font-weight:800;font-size:18px;margin-top:6px">${esc(next.country)}</div><div style="color:var(--muted);font-size:13px">${esc(next.cities || '')}</div><div class="trip-meta" style="justify-content:center;margin-top:10px">${stTag(t('ts_' + next.status), TSTAT[next.status])}${next.year ? `<span class="badge num">${esc(next.year)}</span>` : ''}${next.budget ? `<span class="badge num">${money(next.budget)}</span>` : ''}</div></div>` : `<div class="empty">${t('lNoNext')}</div>`, `<button class="link" onclick="go('travel')">${t('all')}</button>`)}</div>`;
 }
 
 Object.assign(PAGES, {
@@ -792,20 +919,20 @@ ideas() {
   const L = S.life.ideas, focusN = L.filter(x => x.focus).length;
   const list = L.filter(x => (ideaType === 'all' || x.type === ideaType) && (ideaStat === 'all' || x.status === ideaStat)).sort((a, b) => (b.focus ? 1 : 0) - (a.focus ? 1 : 0) || (a.status === 'done') - (b.status === 'done') || ideaScore(b) - ideaScore(a) || b.ts - a.ts);
   const seg = `<div class="seg">${[['list', 'lList'], ['matrix', 'lMatrix']].map(([v, l]) => `<button class="${ideaView === v ? 'on' : ''}" onclick="setIdeaView('${v}')">${t(l)}</button>`).join('')}</div>`;
-  const dump = `<section class="card" style="margin-bottom:16px"><form class="dump" onsubmit="event.preventDefault();quickIdea()"><select id="qType" aria-label="${t('lType')}">${IDEA_TYPES.map(([k, e]) => `<option value="${k}" ${k === (ideaType === 'all' ? 'other' : ideaType) ? 'selected' : ''}>${e} ${t('it_' + k)}</option>`).join('')}</select><input type="text" id="qIdea" maxlength="140" placeholder="${t('lDumpPh')}" aria-label="${t('lDumpPh')}"><button class="btn btn-primary" aria-label="${t('add')}">${ic('plus')}</button></form></section>`;
+  const dump = `<section class="card glow" style="margin-bottom:16px"><form class="dump" onsubmit="event.preventDefault();quickIdea()"><select id="qType" aria-label="${t('lType')}">${IDEA_TYPES.map(([k, e]) => `<option value="${k}" ${k === (ideaType === 'all' ? 'other' : ideaType) ? 'selected' : ''}>${e} ${t('it_' + k)}</option>`).join('')}</select><input type="text" id="qIdea" maxlength="140" placeholder="${t('lDumpPh')}" aria-label="${t('lDumpPh')}"><button class="btn btn-primary" aria-label="${t('add')}">${ic('plus')}</button></form></section>`;
   const kpis = `<div class="grid g4">${kpiCard(t('lTotal'), L.length, t('records'), 'var(--accent)')}${kpiCard('★ ' + t('lFocus'), `${focusN}/5`, t('lFocusSub'), 'var(--yellow)', pct(focusN, 5))}${kpiCard(t('is_doing'), L.filter(x => x.status === 'doing').length, t('records'), 'var(--blue)')}${kpiCard(t('is_done'), L.filter(x => x.status === 'done').length, `${pct(L.filter(x => x.status === 'done').length, L.length)}%`, 'var(--green)', pct(L.filter(x => x.status === 'done').length, L.length))}</div>`;
   const filters = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"><div class="seg" style="flex-wrap:wrap">${[['all', t('all')], ...IDEA_TYPES.map(([k, e]) => [k, `${e} ${t('it_' + k)}`])].map(([v, l]) => `<button class="${ideaType === v ? 'on' : ''}" onclick="setIdeaType('${v}')">${esc(l)}</button>`).join('')}</div><div class="seg" style="flex-wrap:wrap">${['all', ...Object.keys(ISTAT)].map(v => `<button class="${ideaStat === v ? 'on' : ''}" onclick="setIdeaStat('${v}')">${v === 'all' ? t('all') : t('is_' + v)}</button>`).join('')}</div></div>`;
   let body;
   if (!L.length) body = `<section class="card empty">${t('noIdeas')}</section>`;
-  else if (ideaView === 'list') body = `<section class="card">${filters}${list.length ? `<div style="overflow-x:auto"><table class="ft"><thead><tr><th></th><th>${t('lIdea')}</th><th>${t('lType')}</th><th>${t('lStatus')}</th><th>${t('lImpact')}</th><th>${t('lEffort')}</th><th>${t('lTarget')}</th><th>${t('lCost')}</th><th></th></tr></thead><tbody>${list.map(x => { const lp = linkedProject(x); return `<tr><td><button class="icon-btn star ${x.focus ? 'on' : ''}" onclick="toggleFocus('${x.id}')" aria-pressed="${!!x.focus}" title="${t('lFocusTip')}" aria-label="${t('lFocusTip')}">${x.focus ? '★' : '☆'}</button></td><td style="max-width:300px"><div class="row-title ${x.status === 'done' ? 'done' : ''}" style="word-break:break-word">${esc(x.title)}</div>${x.notes ? `<div style="color:var(--muted);font-size:12px;white-space:pre-line;word-break:break-word">${esc(x.notes)}</div>` : ''}</td><td>${typeTag(x.type)}</td><td>${stTag(t('is_' + x.status), ISTAT[x.status], `cycleIdea('${x.id}')`)}</td><td>${dots(x.impact)}</td><td>${dots(x.effort)}</td><td class="num" style="white-space:nowrap">${x.target ? fmt(pdate(x.target), { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td><td class="num" style="white-space:nowrap">${x.cost ? money(x.cost) : '—'}</td><td style="white-space:nowrap;text-align:end"><button class="icon-btn" onclick="ideaToProject('${x.id}')" title="${t(lp ? 'lOpenProject' : 'lToProject')}" aria-label="${t(lp ? 'lOpenProject' : 'lToProject')}" style="${lp ? 'color:var(--accent)' : ''}">${ic('projects')}</button><button class="icon-btn" onclick="editIdea('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delIdea('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></td></tr>`; }).join('')}</tbody></table></div>` : `<div class="empty">${t('noMatch')}</div>`}</section>`;
+  else if (ideaView === 'list') body = `<section class="card">${filters}${list.length ? `<div style="overflow-x:auto"><table class="ft"><thead><tr><th></th><th>${t('lIdea')}</th><th>${t('lType')}</th><th>${t('lStatus')}</th><th>${t('lImpact')}</th><th>${t('lEffort')}</th><th>${t('lTarget')}</th><th>${t('lCost')}</th><th></th></tr></thead><tbody>${list.map(x => { const lp = linkedProject(x); return `<tr class="${fx.flash === x.id ? 'flash' : ''}"><td><button class="icon-btn star ${x.focus ? 'on' : ''} ${fx.pop === x.id ? 'pop' : ''}" onclick="toggleFocus('${x.id}')" aria-pressed="${!!x.focus}" title="${t('lFocusTip')}" aria-label="${t('lFocusTip')}">${x.focus ? '★' : '☆'}</button></td><td style="max-width:300px"><div class="row-title ${x.status === 'done' ? 'done' : ''}" style="word-break:break-word">${esc(x.title)}</div>${x.notes ? `<div style="color:var(--muted);font-size:12px;white-space:pre-line;word-break:break-word">${esc(x.notes)}</div>` : ''}</td><td>${typeTag(x.type)}</td><td>${stTag(t('is_' + x.status), ISTAT[x.status], `cycleIdea('${x.id}')`)}</td><td>${dots(x.impact)}</td><td>${dots(x.effort)}</td><td class="num" style="white-space:nowrap">${x.target ? fmt(pdate(x.target), { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td><td class="num" style="white-space:nowrap">${x.cost ? money(x.cost) : '—'}</td><td style="white-space:nowrap;text-align:end"><button class="icon-btn" onclick="ideaToProject('${x.id}')" title="${t(lp ? 'lOpenProject' : 'lToProject')}" aria-label="${t(lp ? 'lOpenProject' : 'lToProject')}" style="${lp ? 'color:var(--accent)' : ''}">${ic('projects')}</button><button class="icon-btn" onclick="editIdea('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delIdea('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></td></tr>`; }).join('')}</tbody></table></div>` : `<div class="empty">${t('noMatch')}</div>`}</section>`;
   else {
     const open = list.filter(x => x.status !== 'done'), rated = open.filter(x => x.impact && x.effort), hi = x => x.impact >= 3, he = x => x.effort >= 3;
-    const chips = a => a.length ? `<div class="chips">${a.map(x => `<button class="chip" onclick="editIdea('${x.id}')">${x.focus ? '<span style="color:var(--yellow)">★</span>' : ''}${(ITYPE[x.type] || ITYPE.other).e} <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.title)}</span></button>`).join('')}</div>` : `<div class="empty" style="padding:14px">${t('lEmptyQ')}</div>`;
-    const q = (title, sub, color, a) => `<section class="card quad" style="border-top-color:${color}"><div class="card-head"><div><div style="font-weight:800;color:${color}">${title}</div><div style="font-size:12px;color:var(--muted)">${sub}</div></div><span class="badge num">${a.length}</span></div>${chips(a)}</section>`;
+    const chips = a => a.length ? `<div class="chips">${a.map(x => `<button class="chip ${fx.flash === x.id ? 'flash' : ''}" onclick="editIdea('${x.id}')">${x.focus ? '<span style="color:var(--yellow)">★</span>' : ''}${(ITYPE[x.type] || ITYPE.other).e} <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.title)}</span></button>`).join('')}</div>` : `<div class="empty" style="padding:14px">${t('lEmptyQ')}</div>`;
+    const q = (title, sub, color, a) => `<section class="card quad tilt" style="border-top-color:${color}"><div class="card-head"><div><div style="font-weight:800;color:${color}">${title}</div><div style="font-size:12px;color:var(--muted)">${sub}</div></div><span class="badge num">${a.length}</span></div>${chips(a)}</section>`;
     const un = open.filter(x => !(x.impact && x.effort));
     body = `<section class="card" style="margin-bottom:16px;padding-bottom:6px">${filters}</section><div class="grid g2">${q(t('qWins'), t('qWinsSub'), 'var(--green)', rated.filter(x => hi(x) && !he(x)))}${q(t('qBig'), t('qBigSub'), 'var(--blue)', rated.filter(x => hi(x) && he(x)))}${q(t('qFill'), t('qFillSub'), 'var(--yellow)', rated.filter(x => !hi(x) && !he(x)))}${q(t('qLater'), t('qLaterSub'), 'var(--pink)', rated.filter(x => !hi(x) && he(x)))}</div>${un.length ? q(t('qUnrated'), t('qUnratedSub'), 'var(--faint)', un) : ''}`;
   }
-  return header(t('ideas'), t('ideasSub'), seg + `<button class="btn btn-primary" onclick="addIdea()">${ic('plus')}${t('lAddIdea')}</button>`) + dump + kpis + body;
+  return hero(t('ideas'), t('ideasSub'), seg + `<button class="btn btn-primary" onclick="addIdea()">${ic('plus')}${t('lAddIdea')}</button>`, ideasArt(), [`💡 ${L.length}`, `★ ${focusN}/5`, `✅ ${L.filter(x => x.status === 'done').length}`]) + dump + kpis + body;
 },
 mindmap() {
   const groups = [{ add: 'addTrip()', e: '✈️', c: '#4a9eff', label: t('travel'), items: S.life.travel.map(x => ({ fn: `editTrip('${x.id}')`, label: `${x.flag || ''} ${x.country}`.trim(), done: x.status === 'visited', focus: x.status === 'planned' })) },
@@ -817,16 +944,20 @@ mindmap() {
   groups.forEach((g, gi) => {
     const a = -Math.PI / 2 + gi * sector, [bx, by] = P(a, R1), shown = g.items.slice(0, MAX), extra = g.items.length - shown.length, leaves = extra > 0 ? [...shown, { label: `+${extra}`, fn: g.add.startsWith('addTrip') ? "go('travel')" : "go('ideas')", more: true }] : shown;
     const step = Math.min(0.26, sector * 0.92 / Math.max(1, leaves.length - 1));
-    links += `<path d="M${cx} ${cy} Q${P(a, R1 * 0.5)[0]} ${P(a, R1 * 0.5)[1] + 0} ${bx} ${by}" stroke="${g.c}" stroke-width="4" fill="none" stroke-linecap="round" opacity=".75"/>`;
+    const mainPath = `M${cx} ${cy} Q${P(a, R1 * 0.5)[0]} ${P(a, R1 * 0.5)[1]} ${bx} ${by}`, bd = 150 + gi * 110;
+    links += `<path class="br" pathLength="1" style="--d:${bd}" d="${mainPath}" stroke="${g.c}" stroke-width="4" fill="none" stroke-linecap="round" opacity=".75"/>`;
+    if (!RM) links += `<circle r="3.4" fill="${g.c}"><animateMotion dur="2.6s" repeatCount="indefinite" begin="-${gi * .45}s" path="${mainPath}"/><animate attributeName="opacity" values="0;1;1;0" dur="2.6s" repeatCount="indefinite" begin="-${gi * .45}s"/></circle>`;
     leaves.forEach((it, j) => {
       const la = a + (j - (leaves.length - 1) / 2) * step, r = R2 + (j % 2) * 54, [lx, ly] = P(la, r), [qx, qy] = P(a, (R1 + r) / 2), right = Math.cos(la) >= -0.02, op = it.done ? .45 : 1;
-      links += `<path d="M${bx} ${by} Q${qx} ${qy} ${lx} ${ly}" stroke="${g.c}" stroke-width="1.6" fill="none" opacity="${.45 * op}"/>`;
-      nodes += `<g class="n" onclick="${it.fn}" opacity="${op}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){${it.fn}}"><title>${esc(it.label)}</title><circle cx="${lx}" cy="${ly}" r="${it.focus ? 7 : 5.5}" fill="${it.done ? 'var(--surface3)' : g.c}" stroke="${it.focus ? 'var(--yellow)' : g.c}" stroke-width="${it.focus ? 2.5 : 1.5}"/><text class="lb" x="${lx + (right ? 11 : -11)}" y="${ly + 4.5}" text-anchor="${right ? 'start' : 'end'}" font-size="13" font-weight="${it.focus ? 800 : 600}" fill="${it.more ? 'var(--muted)' : 'var(--text)'}" ${it.done ? 'text-decoration="line-through"' : ''}>${esc(cut(it.label))}</text></g>`;
+      const lp = `M${bx} ${by} Q${qx} ${qy} ${lx} ${ly}`, ld = bd + 450 + j * 60;
+      links += `<path class="br" pathLength="1" style="--d:${ld}" d="${lp}" stroke="${g.c}" stroke-width="1.6" fill="none" opacity="${.45 * op}"/>`;
+      if (it.focus && !RM) links += `<circle r="2.6" fill="var(--yellow)"><animateMotion dur="2s" repeatCount="indefinite" begin="-${j * .3}s" path="${lp}"/><animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin="-${j * .3}s"/></circle>`;
+      nodes += `<g class="n" style="--d:${ld + 350}" onclick="${it.fn}" opacity="${op}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){${it.fn}}"><title>${esc(it.label)}</title><circle cx="${lx}" cy="${ly}" r="${it.focus ? 7 : 5.5}" fill="${it.done ? 'var(--surface3)' : g.c}" stroke="${it.focus ? 'var(--yellow)' : g.c}" stroke-width="${it.focus ? 2.5 : 1.5}"/><text class="lb" x="${lx + (right ? 11 : -11)}" y="${ly + 4.5}" text-anchor="${right ? 'start' : 'end'}" font-size="13" font-weight="${it.focus ? 800 : 600}" fill="${it.more ? 'var(--muted)' : 'var(--text)'}" ${it.done ? 'text-decoration="line-through"' : ''}>${esc(cut(it.label))}</text></g>`;
     });
-    nodes += `<g class="n" onclick="${g.add}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){${g.add}}"><title>${esc(g.label)} · ${t('add')}</title><circle cx="${bx}" cy="${by}" r="36" fill="color-mix(in srgb, ${g.c} 20%, var(--surface))" stroke="${g.c}" stroke-width="2"/><text x="${bx}" y="${by + 8}" text-anchor="middle" font-size="24">${g.e}</text><text class="lb" x="${bx}" y="${by + 56}" text-anchor="middle" font-size="13.5" font-weight="800" fill="${g.c}">${esc(g.label)} · ${g.total}</text></g>`;
+    nodes += `<g class="n" style="--d:${bd + 500}" onclick="${g.add}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){${g.add}}"><title>${esc(g.label)} · ${t('add')}</title><circle cx="${bx}" cy="${by}" r="36" fill="none" stroke="${g.c}" stroke-width="2" class="pulse" style="animation-delay:-${gi * .4}s"/><circle cx="${bx}" cy="${by}" r="36" fill="color-mix(in srgb, ${g.c} 20%, var(--surface))" stroke="${g.c}" stroke-width="2"/><text x="${bx}" y="${by + 8}" text-anchor="middle" font-size="24">${g.e}</text><text class="lb" x="${bx}" y="${by + 56}" text-anchor="middle" font-size="13.5" font-weight="800" fill="${g.c}">${esc(g.label)} · ${g.total}</text></g>`;
   });
   const total = groups.reduce((n, g) => n + g.total, 0);
-  const svg = `<svg class="mm" viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr" font-family="inherit" role="img" aria-label="${t('mindmap')}">${links}<circle cx="${cx}" cy="${cy}" r="64" fill="var(--accent)"/><circle cx="${cx}" cy="${cy}" r="74" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".35"/><text x="${cx}" y="${cy + 2}" text-anchor="middle" font-size="21" font-weight="800" fill="#fff">${esc(t('mmCenter'))}</text><text x="${cx}" y="${cy + 24}" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffffcc">${total}</text>${nodes}</svg>`;
+  const svg = `<svg class="mm" viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr" font-family="inherit" role="img" aria-label="${t('mindmap')}"><defs><radialGradient id="mmc"><stop offset="0" stop-color="var(--accent)" stop-opacity=".55"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></radialGradient><linearGradient id="mmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--pink)"/></linearGradient></defs><circle cx="${cx}" cy="${cy}" r="130" fill="url(#mmc)" class="core"/>${links}<circle cx="${cx}" cy="${cy}" r="64" fill="url(#mmg)"/><circle cx="${cx}" cy="${cy}" r="64" fill="none" stroke="var(--accent)" stroke-width="2" class="pulse"/><circle cx="${cx}" cy="${cy}" r="80" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 9" stroke-linecap="round" opacity=".6" class="orbit"/><text x="${cx}" y="${cy + 2}" text-anchor="middle" font-size="21" font-weight="800" fill="#fff">${esc(t('mmCenter'))}</text><text x="${cx}" y="${cy + 24}" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffffcc">${total}</text>${nodes}</svg>`;
   return header(t('mindmap'), t('mmSub'), `<button class="btn btn-ghost" onclick="toggleMmDone()">${t(mmDone ? 'lHideDone' : 'lShowDone')}</button><button class="btn btn-ghost" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button><button class="btn btn-primary" onclick="addIdea()">${ic('plus')}${t('lAddIdea')}</button>`) + `<section class="card mm-wrap">${svg}</section>`;
 },
 travel() {
@@ -835,10 +966,10 @@ travel() {
   const budget = L.filter(x => x.status !== 'visited').reduce((s2, x) => s2 + (Number(x.budget) || 0), 0), vp = pct(n('visited'), L.length);
   const kpis = `<div class="grid g4">${kpiCard(t('ts_visited'), n('visited'), `${vp}% · ${L.length} ${t('lDest')}`, 'var(--green)', vp)}${kpiCard(t('ts_planned'), n('planned'), t('lDest'), 'var(--blue)')}${kpiCard(t('ts_wish'), n('wish'), t('lDest'), 'var(--purple)')}${kpiCard(t('lTripBudget'), compact(budget), `${t('ts_planned')} + ${t('ts_wish')}`, 'var(--yellow)')}</div>`;
   const seg = `<div class="seg" style="flex-wrap:wrap">${['all', ...Object.keys(TSTAT)].map(v => `<button class="${tripStat === v ? 'on' : ''}" onclick="setTripStat('${v}')">${v === 'all' ? t('all') : t('ts_' + v)}</button>`).join('')}</div>`;
-  const cards = list.length ? `<div class="trips">${list.map(x => `<section class="card trip" style="border-top:3px solid ${TSTAT[x.status]}"><div class="trip-top"><div class="trip-flag">${esc(x.flag || '🌍')}</div><div class="row-main"><div style="font-weight:800;font-size:15px;word-break:break-word">${esc(x.country)}</div><div style="color:var(--muted);font-size:12.5px;word-break:break-word">${esc(x.cities || '')}</div></div><span style="display:flex"><button class="icon-btn" onclick="editTrip('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delTrip('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div><div class="trip-meta">${stTag(t('ts_' + x.status), TSTAT[x.status], `cycleTrip('${x.id}')`)}${x.continent ? `<span class="badge">${t('c_' + x.continent)}</span>` : ''}${x.year ? `<span class="badge num">📅 ${esc(x.year)}</span>` : ''}${x.season ? `<span class="badge">☀️ ${esc(x.season)}</span>` : ''}${x.budget ? `<span class="badge num">💰 ${money(x.budget)}</span>` : ''}</div>${x.notes ? `<div style="font-size:12.5px;color:var(--muted);white-space:pre-line;word-break:break-word">${esc(x.notes)}</div>` : ''}</section>`).join('')}</div>` : `<section class="card empty">${t(L.length ? 'noMatch' : 'noTrips')}<div style="margin-top:12px"><button class="btn btn-primary" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button></div></section>`;
+  const cards = list.length ? `<div class="trips">${list.map(x => `<section class="card trip tilt" style="border-top:3px solid ${TSTAT[x.status]}"><div class="trip-top"><div class="trip-flag">${esc(x.flag || '🌍')}</div><div class="row-main"><div style="font-weight:800;font-size:15px;word-break:break-word">${esc(x.country)}</div><div style="color:var(--muted);font-size:12.5px;word-break:break-word">${esc(x.cities || '')}</div></div><span style="display:flex"><button class="icon-btn" onclick="editTrip('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delTrip('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div><div class="trip-meta">${stTag(t('ts_' + x.status), TSTAT[x.status], `cycleTrip('${x.id}')`)}${x.continent ? `<span class="badge">${t('c_' + x.continent)}</span>` : ''}${x.year ? `<span class="badge num">📅 ${esc(x.year)}</span>` : ''}${x.season ? `<span class="badge">☀️ ${esc(x.season)}</span>` : ''}${x.budget ? `<span class="badge num">💰 ${money(x.budget)}</span>` : ''}</div>${x.notes ? `<div style="font-size:12.5px;color:var(--muted);white-space:pre-line;word-break:break-word">${esc(x.notes)}</div>` : ''}</section>`).join('')}</div>` : `<section class="card empty">${t(L.length ? 'noMatch' : 'noTrips')}<div style="margin-top:12px"><button class="btn btn-primary" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button></div></section>`;
   const conts = CONTS.map(c => { const a = L.filter(x => x.continent === c), v = a.filter(x => x.status === 'visited').length; return a.length ? `<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px"><span style="font-weight:600">${t('c_' + c)}</span><span class="num" style="color:var(--muted)">${v}/${a.length}</span></div><div class="bar" style="height:8px"><div style="width:${pct(v, a.length)}%;background:${CONT_C[c]}"></div></div></div>` : ''; }).join('');
   const side = card(t('lExplored'), `<div style="display:grid;place-items:center;margin-bottom:18px">${donut(vp, 'var(--green)', 110, 20)}</div><div class="card-title" style="margin-bottom:12px">${t('lByCont')}</div>${conts || `<div class="empty" style="padding:10px">—</div>`}`);
-  return header(t('travel'), `${L.length} ${t('lDest')}`, seg + `<button class="btn btn-primary" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button>`) + kpis + `<div class="grid g21"><div>${cards}</div>${side}</div>`;
+  return hero(t('travel'), `${L.length} ${t('lDest')}`, seg + `<button class="btn btn-primary" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button>`, travelArt(), [`🌍 ${L.length}`, `✅ ${n('visited')}`, `🗓️ ${n('planned')}`, `✨ ${n('wish')}`]) + kpis + `<div class="grid g21"><div>${cards}</div>${side}</div>`;
 },
 });
 
@@ -847,7 +978,7 @@ function setIdeaType(v) { ideaType = v; render(); }
 function setIdeaStat(v) { ideaStat = v; render(); }
 function setTripStat(v) { tripStat = v; render(); }
 function toggleMmDone() { mmDone = !mmDone; render(); }
-function quickIdea() { const el = $('qIdea'), v = (el.value || '').trim(); if (!v) return; S.life.ideas.push({ id: uid(), title: v, type: $('qType').value, status: 'idea', impact: 0, effort: 0, focus: false, target: '', cost: 0, notes: '', ts: Date.now() }); commit(); const q = $('qIdea'); if (q) q.focus(); }
+function quickIdea() { const el = $('qIdea'), v = (el.value || '').trim(); if (!v) return; const nid = uid(); fx.flash = nid; S.life.ideas.push({ id: nid, title: v, type: $('qType').value, status: 'idea', impact: 0, effort: 0, focus: false, target: '', cost: 0, notes: '', ts: Date.now() }); commit(); const q = $('qIdea'); if (q) q.focus(); }
 const RATE_OPTS = () => [['0', '— ' + t('lUnrated')], ...[1, 2, 3, 4, 5].map(i => [String(i), '●'.repeat(i) + ' ' + i + '/5'])];
 function ideaForm(x, type) {
   openForm({ title: t(x ? 'edit' : 'lAddIdea'), submit: t(x ? 'save' : 'add'), fields: [
@@ -859,13 +990,13 @@ function ideaForm(x, type) {
     { name: 'target', label: t('lTarget'), type: 'date', value: x ? x.target : '' },
     { name: 'cost', label: `${t('lCost')} (${CUR})`, type: 'number', value: x && x.cost ? String(x.cost) : '' },
     { name: 'notes', label: t('lNotes'), type: 'textarea', value: x ? x.notes : '', max: 1000 }],
-    onSubmit: v => { if (!v.title) return; const d = { title: v.title, type: v.type, status: v.status, impact: Number(v.impact) || 0, effort: Number(v.effort) || 0, target: v.target, cost: Math.max(0, Number(v.cost) || 0), notes: v.notes }; if (x) Object.assign(x, d); else S.life.ideas.push({ id: uid(), focus: false, ts: Date.now(), ...d }); commit(); } });
+    onSubmit: v => { if (!v.title) return; const d = { title: v.title, type: v.type, status: v.status, impact: Number(v.impact) || 0, effort: Number(v.effort) || 0, target: v.target, cost: Math.max(0, Number(v.cost) || 0), notes: v.notes }; const was = x && x.status; if (x) Object.assign(x, d); else { const nid = uid(); fx.flash = nid; S.life.ideas.push({ id: nid, focus: false, ts: Date.now(), ...d }); } commit(); if (d.status === 'done' && was !== 'done') confetti(); } });
 }
 function addIdea(type) { ideaForm(null, type); }
 function editIdea(id) { const x = S.life.ideas.find(q => q.id === id); if (x) ideaForm(x); }
 function delIdea(id) { confirmDel(() => { S.life.ideas = S.life.ideas.filter(x => x.id !== id); }); }
-function cycleIdea(id) { const x = S.life.ideas.find(q => q.id === id); if (!x) return; const k = Object.keys(ISTAT); x.status = k[(k.indexOf(x.status) + 1) % k.length]; commit(); }
-function toggleFocus(id) { const x = S.life.ideas.find(q => q.id === id); if (!x) return; if (!x.focus && S.life.ideas.filter(q => q.focus).length >= 5) { openForm({ title: '★ ' + t('lFocus'), text: t('lFocusMax'), submit: 'OK', onSubmit: () => {} }); return; } x.focus = !x.focus; commit(); }
+function cycleIdea(id) { const x = S.life.ideas.find(q => q.id === id); if (!x) return; const k = Object.keys(ISTAT); x.status = k[(k.indexOf(x.status) + 1) % k.length]; commit(); if (x.status === 'done') confetti(); }
+function toggleFocus(id) { const x = S.life.ideas.find(q => q.id === id); if (!x) return; if (!x.focus && S.life.ideas.filter(q => q.focus).length >= 5) { openForm({ title: '★ ' + t('lFocus'), text: t('lFocusMax'), submit: 'OK', onSubmit: () => {} }); return; } x.focus = !x.focus; if (x.focus) fx.pop = x.id; commit(); }
 function ideaToProject(id) {
   const x = S.life.ideas.find(q => q.id === id); if (!x) return;
   let p = linkedProject(x);
@@ -883,12 +1014,12 @@ function tripForm(x) {
     { name: 'year', label: t('lYear'), type: 'number', value: x && x.year ? String(x.year) : '' },
     { name: 'budget', label: `${t('lBudget')} (${CUR})`, type: 'number', value: x && x.budget ? String(x.budget) : '' },
     { name: 'notes', label: t('lNotes'), type: 'textarea', value: x ? x.notes : '', max: 1000 }],
-    onSubmit: v => { if (!v.country) return; const d = { country: v.country, flag: v.flag, cities: v.cities, continent: v.continent, status: v.status, season: v.season, year: v.year ? String(Math.round(Number(v.year)) || '') : '', budget: Math.max(0, Number(v.budget) || 0), notes: v.notes }; if (x) Object.assign(x, d); else S.life.travel.push({ id: uid(), ts: Date.now(), ...d }); commit(); } });
+    onSubmit: v => { if (!v.country) return; const d = { country: v.country, flag: v.flag, cities: v.cities, continent: v.continent, status: v.status, season: v.season, year: v.year ? String(Math.round(Number(v.year)) || '') : '', budget: Math.max(0, Number(v.budget) || 0), notes: v.notes }; const was = x && x.status; if (x) Object.assign(x, d); else S.life.travel.push({ id: uid(), ts: Date.now(), ...d }); commit(); if (d.status === 'visited' && was !== 'visited') confetti(); } });
 }
 function addTrip() { tripForm(null); }
 function editTrip(id) { const x = S.life.travel.find(q => q.id === id); if (x) tripForm(x); }
 function delTrip(id) { confirmDel(() => { S.life.travel = S.life.travel.filter(x => x.id !== id); }); }
-function cycleTrip(id) { const x = S.life.travel.find(q => q.id === id); if (!x) return; const k = Object.keys(TSTAT); x.status = k[(k.indexOf(x.status) + 1) % k.length]; commit(); }
+function cycleTrip(id) { const x = S.life.travel.find(q => q.id === id); if (!x) return; const k = Object.keys(TSTAT); x.status = k[(k.indexOf(x.status) + 1) % k.length]; commit(); if (x.status === 'visited') confetti(); }
 
 /* ───────── Start ───────── */
 applyChrome();
