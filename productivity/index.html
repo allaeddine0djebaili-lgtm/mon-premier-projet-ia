@@ -330,6 +330,94 @@ tr.flash td, .chip.flash { animation: flash 1.8s ease-out; }
 .mm .orbit { transform-box: fill-box; transform-origin: center; animation: spin 30s linear infinite; }
 .mm .core { transform-box: fill-box; transform-origin: center; animation: glowp 3s ease-in-out infinite; opacity: .7; }
 @media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 22px 18px; } .hero-art svg { width: 100%; max-width: 320px; margin: auto; } .hero .page-title { font-size: 25px; } }
+
+/* ───────── My year ───────── */
+.yword { display: block; background: none; border: none; cursor: pointer; padding: 0; margin-top: 12px; text-align: start; }
+.yword-txt { font-size: 26px; font-weight: 800; letter-spacing: .02em; background: linear-gradient(90deg, var(--yellow), var(--accent), var(--pink), var(--yellow)); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 6s linear infinite; }
+.yword-txt::before { content: '« '; } .yword-txt::after { content: ' »'; }
+.ytabs button { padding: 8px 16px; font-size: 13px; }
+.goals { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.grange { width: 100%; margin-top: 12px; accent-color: var(--c); }
+.qgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 14px; }
+.qchip { background: var(--surface2); border: 1px solid var(--border2); border-radius: 9px; padding: 6px 7px; font-size: 11px; text-align: start; cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; transition: transform .15s, background .2s, border-color .2s; }
+.qchip span { color: var(--muted); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.35; }
+.qchip:hover { transform: translateY(-2px); }
+.qchip.cur { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.qchip.on { background: color-mix(in srgb, var(--green) 16%, transparent); border-color: color-mix(in srgb, var(--green) 50%, transparent); }
+.qchip.on b { color: var(--green); }
+.qchip.empty { cursor: default; opacity: .35; }
+.wheel { width: 100%; max-width: 280px; display: block; margin: auto; overflow: visible; }
+.wedge { transform-box: view-box; transform-origin: 50% 50%; transition: opacity .2s; }
+.wedge:hover { opacity: 1 !important; filter: brightness(1.15); }
+.main.anim .wedge { animation: pop .8s cubic-bezier(.2, .7, .2, 1.2) backwards; animation-delay: calc(300ms + var(--i) * 70ms); }
+.wheel-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.wheel-legend span { display: inline-flex; align-items: center; gap: 5px; }
+@keyframes ringin { from { stroke-dasharray: 0 var(--c); } }
+.main.anim .ringv { animation: ringin 1.4s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: .3s; }
+.hero-art svg[viewBox="-110 -100 220 200"] { width: 240px; }
+/* letter */
+.env { position: relative; height: 130px; border-radius: 12px; background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 30%, var(--surface2)), var(--surface2)); border: 1px solid var(--border2); overflow: hidden; perspective: 600px; }
+.env::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top right, transparent 49.5%, var(--border2) 50%, transparent 50.5%), linear-gradient(to top left, transparent 49.5%, var(--border2) 50%, transparent 50.5%); }
+.env-flap { position: absolute; inset: 0 0 45% 0; background: color-mix(in srgb, var(--accent) 40%, var(--surface3)); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform .6s; }
+.env.ready:hover .env-flap { transform: rotateX(160deg); }
+.env-seal { position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; background: radial-gradient(circle at 35% 35%, #ff8a5c, #c2410c); box-shadow: 0 6px 16px -4px #c2410caa; animation: brandglow 2.6s ease-in-out infinite; }
+.paper { background: linear-gradient(var(--surface2), var(--surface2)) padding-box; border: 1px dashed var(--border2); border-radius: 10px; padding: 16px; animation: letterup .9s cubic-bezier(.2, .7, .2, 1); }
+@keyframes letterup { from { opacity: 0; transform: translateY(40px) rotate(-2deg) scale(.95); } }
+/* moments timeline */
+.tl { position: relative; padding-inline-start: 4px; }
+.tl::before { content: ''; position: absolute; inset-block: 8px; inset-inline-start: 21px; width: 2px; background: linear-gradient(var(--accent), var(--purple), var(--blue)); opacity: .5; }
+.tl-item { position: relative; display: flex; gap: 14px; align-items: center; padding: 10px 6px; border-radius: 10px; }
+.tl-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--surface2); border: 2px solid var(--accent); display: grid; place-items: center; font-size: 17px; flex-shrink: 0; z-index: 1; }
+.tl-body { flex: 1; min-width: 0; }
+.main.anim .tl-item { animation: rise .5s cubic-bezier(.2, .7, .2, 1) backwards; }
+.main.anim .tl-item:nth-child(n) { animation-delay: calc(120ms + var(--i, 0) * 40ms); }
+.tl-item.flash { animation: flash 1.8s ease-out; }
+/* review */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.step { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; cursor: pointer; font-weight: 700; font-size: 13px; color: var(--muted); transition: all .25s; }
+.step-n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--surface3); flex-shrink: 0; transition: all .25s; }
+.step.on { border-color: var(--accent); color: var(--text); box-shadow: 0 8px 24px -14px var(--accent); }
+.step.on .step-n { background: var(--accent); color: #fff; transform: scale(1.1); }
+.step.past .step-n { background: var(--green); color: #fff; }
+.rsub { color: var(--muted); margin-bottom: 14px; }
+.rrow { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.rrow:last-of-type { border-bottom: none; }
+.rcard { animation: rise .45s cubic-bezier(.2, .7, .2, 1); }
+/* wrapped */
+.wrap { position: fixed; inset: 0; z-index: 900; display: grid; place-items: center; color: #fff; overflow: hidden; }
+.wrap-bg { position: absolute; inset: -20%; background: radial-gradient(60% 50% at 30% 30%, var(--g1), transparent 70%), radial-gradient(60% 60% at 70% 70%, var(--g2), transparent 70%), #0b0f17; animation: aurora 12s ease-in-out infinite alternate; }
+.wrap-orbs i { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .45; animation: floaty 7s ease-in-out infinite; }
+.wrap-orbs i:nth-child(1) { width: 260px; height: 260px; background: var(--g1); top: 10%; left: 8%; }
+.wrap-orbs i:nth-child(2) { width: 200px; height: 200px; background: var(--g2); bottom: 8%; right: 10%; animation-delay: -2s; }
+.wrap-orbs i:nth-child(3) { width: 140px; height: 140px; background: #fff; top: 55%; left: 55%; opacity: .12; animation-delay: -4s; }
+.wrap-bars { position: absolute; top: 16px; inset-inline: 16px; display: flex; gap: 5px; z-index: 2; }
+.wrap-bars div { flex: 1; height: 3.5px; border-radius: 3px; background: #ffffff40; overflow: hidden; }
+.wrap-bars i { display: block; height: 100%; width: 0; background: #fff; }
+.wrap-bars i.full { width: 100%; } .wrap-bars i.run { animation: wbar 6s linear forwards; }
+@keyframes wbar { to { width: 100%; } }
+.wrap-x { position: absolute; top: 30px; inset-inline-end: 18px; z-index: 3; background: #ffffff22; border: none; color: #fff; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 16px; backdrop-filter: blur(8px); }
+.wrap-nav { position: absolute; top: 50%; z-index: 3; transform: translateY(-50%); background: #ffffff1c; border: none; color: #fff; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(8px); }
+.wrap-nav.prev { inset-inline-start: 18px; } .wrap-nav.next { inset-inline-end: 18px; }
+.wrap-nav:hover, .wrap-x:hover { background: #ffffff38; }
+.wrap-slide { position: relative; z-index: 2; text-align: center; max-width: 560px; padding: 70px 70px 40px; }
+.wrap-slide > * { animation: rise .7s cubic-bezier(.2, .7, .2, 1) backwards; }
+.wrap-slide > :nth-child(2) { animation-delay: .15s; } .wrap-slide > :nth-child(3) { animation-delay: .3s; } .wrap-slide > :nth-child(4) { animation-delay: .45s; } .wrap-slide > :nth-child(5) { animation-delay: .6s; }
+.w-pop { animation: pop .7s cubic-bezier(.2, .7, .2, 1.4) backwards !important; }
+.w-eyebrow { font-size: 15px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; opacity: .85; }
+.w-big { font-size: clamp(64px, 16vw, 128px); font-weight: 900; line-height: 1; letter-spacing: -.03em; text-shadow: 0 10px 40px #0005; }
+.w-big small { font-size: .4em; opacity: .7; }
+.w-word { font-size: 30px; font-weight: 800; margin-top: 12px; }
+.w-lab { font-size: 18px; font-weight: 700; margin-top: 8px; opacity: .92; }
+.w-list { display: flex; flex-direction: column; gap: 8px; margin-top: 22px; }
+.w-list span { background: #ffffff1f; border: 1px solid #ffffff2a; border-radius: 12px; padding: 9px 14px; font-weight: 600; backdrop-filter: blur(6px); }
+.w-lessons span { font-size: 16px; }
+.w-row { display: flex; gap: 14px; justify-content: center; margin-top: 22px; }
+.w-row div { background: #ffffff1f; border-radius: 14px; padding: 12px 18px; display: flex; flex-direction: column; min-width: 130px; }
+.w-row b { font-size: 26px; } .w-row span { font-size: 12px; opacity: .85; }
+.w-flags { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 22px; }
+.w-flags span { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; animation: pop .6s cubic-bezier(.2, .7, .2, 1.4) backwards; }
+.w-cta { margin-top: 26px; background: #fff; color: #111; font-size: 15px; padding: 12px 24px; }
+@media (max-width: 900px) { .steps { grid-template-columns: repeat(2, 1fr); } .wrap-slide { padding: 70px 26px 90px; } .wrap-nav { top: auto; bottom: 20px; transform: none; } .qgrid { grid-template-columns: repeat(2, 1fr); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
 
 </style>
@@ -356,6 +444,7 @@ const T = {
 ar: {
   prevDay: 'اليوم السابق', nextDay: 'اليوم التالي', todayBtn: 'اليوم', weekStrip: 'أيام الأسبوع', dayProgress: 'تقدم اليوم', completed: 'مكتمل', notCompleted: 'غير مكتمل', dayTasks: 'مهام اليوم', dayTaskPh: 'أضف مهمة لهذا اليوم…', noDayTasks: 'لا توجد مهام لهذا اليوم.', mindset: 'الحالة الذهنية', energy: 'الطاقة', focus: 'التركيز', motivation: 'الحماس', mindScore: 'المؤشر', mindWeek: 'الحالة الذهنية خلال الأسبوع', edit: 'تعديل', monthGrid: 'متتبع الشهر', progress: 'التقدم', completedHabits: 'عادات مكتملة',
   searchNotes: 'بحث في الملاحظات…', noMatch: 'لا توجد نتائج مطابقة.', color: 'اللون', saveClose: 'حفظ وإغلاق', pickNote: 'اختر ملاحظة من القائمة أو أنشئ واحدة جديدة.',
+  year: 'سنتي', ySub: 'رؤية، أهداف، متابعة، ثم مراجعة', yWord: 'كلمة السنة', yWordPh: 'اختر كلمة واحدة تلخّص سنتك', yGoals: 'الأهداف', yMoments: 'لحظات السنة', yReview: 'المراجعة', yWrapped: 'ملخّص السنة', yAddGoal: 'هدف جديد', yGoalTitle: 'الهدف (اجعله قابلاً للقياس)', yArea: 'المجال', yMetric: 'طريقة قياس التقدّم', m_manual: 'يدوي: أحدّث النسبة بنفسي', m_travel: 'تلقائي: عدد الدول التي أزورها', m_savings: 'تلقائي: الادخار (المداخيل − المصاريف)', m_habit: 'تلقائي: نسبة الالتزام بعادة', m_project: 'تلقائي: إنجاز مشروع', yTargetN: 'الرقم المستهدف', yHabit: 'العادة', yProject: 'المشروع', yWhy: 'لماذا هذا الهدف مهم لك؟', yQuarter: 'الربع', yQph: 'محطة الربع', yAuto: 'تلقائي', yLate: 'متأخر', yYearDone: 'من السنة', yGoalsAvg: 'متوسط الأهداف', a_deen: 'الدين', a_health: 'الصحة', a_money: 'المال', a_learn: 'التعلّم', a_work: 'العمل', a_family: 'العائلة', a_travel: 'السفر', a_self: 'الذات', yWheel: 'عجلة التوازن', yWheelSub: 'متوسط التقدّم في كل مجال', yNoGoals: 'لا أهداف لهذه السنة بعد. ابدأ بـ 5 إلى 8 أهداف قابلة للقياس.', gs_active: 'جارٍ', gs_achieved: 'تحقق', gs_partial: 'جزئياً', gs_missed: 'لم يتحقق', yFrom: 'مرحّل من', yCarriedTag: 'رُحّل', yLetter: 'رسالة إلى نفسي', yLetterPh: 'اكتب لنفسك في نهاية هذه السنة: ماذا تتمنى؟ بماذا تعدها؟', ySeal: 'اختم الرسالة', ySealed: 'مختومة حتى 31 ديسمبر', yDaysLeft: 'يوماً متبقياً', yOpen: 'افتح الرسالة', yOpenEarly: 'فتح مبكر', yOpenEarlyQ: 'هل تريد فتح الرسالة قبل موعدها؟', yLetterFrom: 'رسالتك المكتوبة في', yMid: 'مراجعة منتصف السنة', yMidSub: 'محطة قصيرة في يونيو لتعديل المسار', yMidGood: 'ما الذي يسير جيداً؟', yMidAdjust: 'ما الذي سأعدّله؟', yMidDo: 'ابدأ', yMomentPh: 'سجّل إنجازاً أو لحظة جميلة…', yNoMoments: 'لا لحظات بعد. سجّل إنجازاتك الصغيرة والكبيرة لتجدها عند المراجعة.', yR1: 'ماذا حققت؟', yR1s: 'قيّم كل هدف بصدق', yR2: 'ما لم يتحقق', yR2s: 'لماذا؟ وهل ما زال مهماً لك؟', yReason: 'السبب', yCarry: 'أحمله للسنة القادمة', yDrop: 'أتركه', yR3: 'الدروس', yR3s: 'ما الذي علّمتك إياه هذه السنة؟', yLesson: 'درس', yBest: 'أفضل لحظة في السنة', yKeep: 'سأستمر في…', yStop: 'سأتوقف عن…', yR4: 'الخلاصة', yR4s: 'راجع ثم أنهِ السنة', yFinish: 'أنهِ المراجعة وجهّز سنة', yNext: 'التالي', yBack: 'السابق', yReviewDone: 'اكتملت مراجعة هذه السنة', yAllDone: 'رائع! لا أهداف متبقية.', yToCarry: 'أهداف ستُرحَّل إلى', yRedo: 'تعديل المراجعة', yReviewEarly: 'المراجعة مخصّصة لنهاية السنة، لكن يمكنك البدء متى شئت.', yWatch: 'شاهد ملخّص السنة', yw_intro: 'سنتك', yw_goals: 'أهداف تحققت', yw_habits: 'متوسط الالتزام بالعادات', yw_checks: 'مرة أنجزت فيها عادة', yw_streak: 'أطول سلسلة أيام متتالية', yw_travel: 'دول زرتها', yw_money: 'صافي الادخار', yw_moments: 'لحظة سجّلتها', yw_lessons: 'دروس السنة', yw_outro: 'إلى', yw_ready: 'صفحة جديدة تنتظرك', ySoFar: 'حتى الآن', yClose: 'إغلاق', yNone: 'لا بيانات بعد', yNoNoGoals: 'أضف هدفاً أولاً.', yEdit: 'تعديل', yQDone: 'تم', yCountry: 'دولة', yTravelHint: 'تُحسب الوجهات التي حالتها "زرتها" وسنتها المستهدفة هذه السنة', yProgress: 'التقدّم',
   nLife: 'أحلامي وأهدافي', ideas: 'بنك الأفكار', mindmap: 'الخريطة الذهنية', travel: 'السفر', ideasSub: 'فرّغ ذهنك هنا، ثم صنّف ورتّب حسب الأثر والجهد', lDumpPh: 'تفريغ الذهن: اكتب أي فكرة واضغط Enter…', lAddIdea: 'فكرة جديدة', lIdea: 'الفكرة', lType: 'النوع', lStatus: 'الحالة', lImpact: 'الأثر', lEffort: 'الجهد', lTarget: 'الموعد المستهدف', lCost: 'التكلفة التقديرية', lNotes: 'ملاحظات', lUnrated: 'غير مقيّم', lFocus: 'تركيز هذا العام', lFocusSub: 'اختر من 3 إلى 5 أشياء فقط', lFocusMax: 'لديك 5 أفكار في التركيز. أزل واحدة قبل إضافة أخرى.', lFocusTip: 'ضع في التركيز', lTotal: 'كل الأفكار', lList: 'قائمة', lMatrix: 'مصفوفة الأولوية', it_project: 'مشروع', it_skill: 'مهارة', it_experience: 'تجربة', it_personal: 'شخصي', it_other: 'أخرى', is_idea: 'فكرة', is_planning: 'تخطيط', is_doing: 'قيد التنفيذ', is_done: 'تم', qWins: 'مكاسب سريعة', qWinsSub: 'أثر عالٍ · جهد قليل: ابدأ هنا', qBig: 'مشاريع كبرى', qBigSub: 'أثر عالٍ · جهد كبير: خطّط لها', qFill: 'أشياء بسيطة', qFillSub: 'أثر قليل · جهد قليل: عند وقت الفراغ', qLater: 'أعد التفكير', qLaterSub: 'أثر قليل · جهد كبير: أجّلها', qUnrated: 'تحتاج تقييماً', qUnratedSub: 'حدّد الأثر والجهد لتظهر في المصفوفة', lToProject: 'تحويل إلى مشروع', lOpenProject: 'فتح المشروع', noIdeas: 'لا توجد أفكار بعد. ابدأ بكتابة كل ما يخطر ببالك في الحقل أعلاه.', lEmptyQ: 'لا شيء هنا', mmCenter: 'حياتي', mmSub: 'تُبنى تلقائياً من أفكارك ووجهات سفرك. اضغط على أي عنصر لتعديله، أو على فرع لإضافة عنصر إليه.', lShowDone: 'إظهار المنجز', lHideDone: 'إخفاء المنجز', lAddTrip: 'وجهة جديدة', lCountry: 'الدولة', lPickCountry: 'اختر الدولة…', lNeedCountry: 'اختر دولة من القائمة.', lCities: 'المدن والأماكن', lContinent: 'القارة', lSeason: 'أفضل موسم', lYear: 'السنة المستهدفة', lBudget: 'الميزانية التقديرية', ts_wish: 'حلم', ts_planned: 'مخطط لها', ts_visited: 'زرتها', c_africa: 'إفريقيا', c_mideast: 'الشرق الأوسط', c_europe: 'أوروبا', c_asia: 'آسيا', c_americas: 'الأمريكيتان', c_oceania: 'أوقيانوسيا', noTrips: 'لم تضف أي وجهة بعد. أضف الدول التي تحلم بزيارتها.', lTripBudget: 'ميزانية الرحلات القادمة', lByCont: 'حسب القارة', lExplored: 'تقدّم الاستكشاف', lDest: 'وجهة', lNextTrip: 'الرحلة القادمة', lNoFocus: 'ضع نجمة ★ على 3 إلى 5 أفكار في بنك الأفكار لتظهر هنا.', lNoNext: 'لا توجد رحلة قادمة بعد.',
   nFin: 'المالية', fin: 'النظرة المالية', income: 'المداخيل', expense: 'المصاريف', matrix: 'المصفوفة السنوية', fincats: 'التصنيفات المالية', finSub: 'كل الأرقام للفترة', totalIncome: 'إجمالي المداخيل', totalExpenses: 'إجمالي المصاريف', netBalance: 'الرصيد الصافي', surplus: '▲ فائض', deficit: '▼ عجز', avgExpense: 'متوسط المصروف الشهري', perMonth: 'شهرياً خلال الفترة', monthlyChart: 'المداخيل مقابل المصاريف شهرياً', net: 'الصافي', expDist: 'توزيع المصاريف', byGroup: 'حسب المجموعة الرئيسية', newIncome: 'دخل جديد', newExpense: 'مصروف جديد', exportCsv: 'تصدير CSV', date: 'التاريخ', mainGroup: 'المجموعة الرئيسية', subCat: 'التصنيف الفرعي', amount: 'المبلغ', notesCol: 'ملاحظات', records: 'سجل', totalLbl: 'الإجمالي', searchTx: 'بحث في المجموعة، التصنيف، الملاحظات…', noTx: 'لا توجد معاملات في هذه الفترة.', matrixSub: 'جدول محوري شهري للأرباح والخسائر', allTypes: 'كل الأنواع', grandTotal: 'المجموع الكلي', addCat: 'تصنيف جديد', type: 'النوع', catCount: 'تصنيفات فرعية', groupsCount: 'مجموعات رئيسية', noCats: 'لا توجد تصنيفات. أضف تصنيفاً أولاً.', needCat: 'أضف تصنيفاً من هذا النوع أولاً.', from: 'من', to: 'إلى', errAmount: 'أدخل مبلغاً أكبر من صفر.',
   app: 'إنتاجيتي', tagline: 'نظام الإنتاجية المتكامل',
@@ -383,6 +472,7 @@ ar: {
 fr: {
   prevDay: 'Jour précédent', nextDay: 'Jour suivant', todayBtn: 'Aujourd’hui', weekStrip: 'Jours de la semaine', dayProgress: 'Progression du jour', completed: 'Terminé', notCompleted: 'Restant', dayTasks: 'Tâches du jour', dayTaskPh: 'Ajouter une tâche pour ce jour…', noDayTasks: 'Aucune tâche pour ce jour.', mindset: 'État d’esprit', energy: 'Énergie', focus: 'Concentration', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'État d’esprit sur la semaine', edit: 'Modifier', monthGrid: 'Suivi du mois', progress: 'Progression', completedHabits: 'habitudes cochées',
   searchNotes: 'Rechercher dans les notes…', noMatch: 'Aucun résultat.', color: 'Couleur', saveClose: 'Enregistrer et fermer', pickNote: 'Choisissez une note dans la liste ou créez-en une.',
+  year: 'Mon année', ySub: 'Vision, objectifs, suivi, puis bilan', yWord: 'Mot de l\'année', yWordPh: 'Choisissez un mot qui résume votre année', yGoals: 'Objectifs', yMoments: 'Moments', yReview: 'Bilan', yWrapped: 'Rétrospective', yAddGoal: 'Nouvel objectif', yGoalTitle: 'Objectif (mesurable)', yArea: 'Domaine', yMetric: 'Mesure du progrès', m_manual: 'Manuel : je mets à jour le %', m_travel: 'Auto : pays visités', m_savings: 'Auto : épargne (revenus − dépenses)', m_habit: 'Auto : régularité d\'une habitude', m_project: 'Auto : avancement d\'un projet', yTargetN: 'Valeur cible', yHabit: 'Habitude', yProject: 'Projet', yWhy: 'Pourquoi est-ce important ?', yQuarter: 'Trimestre', yQph: 'Étape du trimestre', yAuto: 'Auto', yLate: 'En retard', yYearDone: 'de l\'année', yGoalsAvg: 'Moyenne des objectifs', a_deen: 'Religion', a_health: 'Santé', a_money: 'Argent', a_learn: 'Apprentissage', a_work: 'Travail', a_family: 'Famille', a_travel: 'Voyage', a_self: 'Soi', yWheel: 'Roue d\'équilibre', yWheelSub: 'Progrès moyen par domaine', yNoGoals: 'Aucun objectif pour cette année. Commencez par 5 à 8 objectifs mesurables.', gs_active: 'En cours', gs_achieved: 'Atteint', gs_partial: 'Partiel', gs_missed: 'Non atteint', yFrom: 'Reporté de', yCarriedTag: 'Reporté', yLetter: 'Lettre à moi-même', yLetterPh: 'Écrivez à vous-même pour la fin de l\'année : vos souhaits, vos promesses…', ySeal: 'Sceller la lettre', ySealed: 'Scellée jusqu\'au 31 décembre', yDaysLeft: 'jours restants', yOpen: 'Ouvrir la lettre', yOpenEarly: 'Ouvrir plus tôt', yOpenEarlyQ: 'Ouvrir la lettre avant la date ?', yLetterFrom: 'Votre lettre écrite le', yMid: 'Bilan de mi-année', yMidSub: 'Une pause en juin pour corriger le cap', yMidGood: 'Qu\'est-ce qui marche bien ?', yMidAdjust: 'Que vais-je ajuster ?', yMidDo: 'Commencer', yMomentPh: 'Notez une réussite ou un beau moment…', yNoMoments: 'Aucun moment. Notez vos petites et grandes victoires.', yR1: 'Qu\'ai-je accompli ?', yR1s: 'Évaluez chaque objectif honnêtement', yR2: 'Ce qui n\'a pas abouti', yR2s: 'Pourquoi ? Est-ce encore important ?', yReason: 'Raison', yCarry: 'Je le reporte', yDrop: 'Je l\'abandonne', yR3: 'Leçons', yR3s: 'Qu\'avez-vous appris cette année ?', yLesson: 'Leçon', yBest: 'Meilleur moment de l\'année', yKeep: 'Je continue…', yStop: 'J\'arrête…', yR4: 'Synthèse', yR4s: 'Relisez puis clôturez l\'année', yFinish: 'Clôturer et préparer', yNext: 'Suivant', yBack: 'Précédent', yReviewDone: 'Bilan de l\'année terminé', yAllDone: 'Bravo ! Aucun objectif restant.', yToCarry: 'objectifs reportés en', yRedo: 'Modifier le bilan', yReviewEarly: 'Le bilan est prévu pour la fin d\'année, mais vous pouvez commencer quand vous voulez.', yWatch: 'Voir la rétrospective', yw_intro: 'Votre année', yw_goals: 'objectifs atteints', yw_habits: 'régularité moyenne des habitudes', yw_checks: 'habitudes cochées', yw_streak: 'plus longue série de jours', yw_travel: 'pays visités', yw_money: 'épargne nette', yw_moments: 'moments notés', yw_lessons: 'Leçons de l\'année', yw_outro: 'Vers', yw_ready: 'Une nouvelle page vous attend', ySoFar: 'jusqu\'ici', yClose: 'Fermer', yNone: 'Pas encore de données', yNoNoGoals: 'Ajoutez d\'abord un objectif.', yEdit: 'Modifier', yQDone: 'Fait', yCountry: 'pays', yTravelHint: 'Compte les destinations « Visité » dont l\'année visée est cette année', yProgress: 'Progrès',
   nLife: 'Rêves & objectifs', ideas: 'Banque d\'idées', mindmap: 'Carte mentale', travel: 'Voyages', ideasSub: 'Videz votre tête ici, puis classez selon l\'impact et l\'effort', lDumpPh: 'Vide-tête : écrivez une idée et appuyez sur Entrée…', lAddIdea: 'Nouvelle idée', lIdea: 'Idée', lType: 'Type', lStatus: 'Statut', lImpact: 'Impact', lEffort: 'Effort', lTarget: 'Date visée', lCost: 'Coût estimé', lNotes: 'Notes', lUnrated: 'Non évalué', lFocus: 'Focus de l\'année', lFocusSub: 'Choisissez 3 à 5 éléments seulement', lFocusMax: 'Vous avez déjà 5 idées en focus. Retirez-en une d\'abord.', lFocusTip: 'Mettre en focus', lTotal: 'Toutes les idées', lList: 'Liste', lMatrix: 'Matrice de priorité', it_project: 'Projet', it_skill: 'Compétence', it_experience: 'Expérience', it_personal: 'Personnel', it_other: 'Autre', is_idea: 'Idée', is_planning: 'Planification', is_doing: 'En cours', is_done: 'Fait', qWins: 'Gains rapides', qWinsSub: 'Fort impact · peu d\'effort : commencez ici', qBig: 'Grands projets', qBigSub: 'Fort impact · gros effort : planifiez', qFill: 'Petites choses', qFillSub: 'Faible impact · peu d\'effort : temps libre', qLater: 'À repenser', qLaterSub: 'Faible impact · gros effort : à reporter', qUnrated: 'À évaluer', qUnratedSub: 'Indiquez impact et effort pour les placer', lToProject: 'Convertir en projet', lOpenProject: 'Ouvrir le projet', noIdeas: 'Aucune idée pour l\'instant. Notez tout ce qui vous passe par la tête ci-dessus.', lEmptyQ: 'Rien ici', mmCenter: 'Ma vie', mmSub: 'Générée à partir de vos idées et destinations. Cliquez sur un élément pour le modifier, ou sur une branche pour y ajouter.', lShowDone: 'Afficher terminés', lHideDone: 'Masquer terminés', lAddTrip: 'Nouvelle destination', lCountry: 'Pays', lPickCountry: 'Choisissez un pays…', lNeedCountry: 'Choisissez un pays dans la liste.', lCities: 'Villes et lieux', lContinent: 'Continent', lSeason: 'Meilleure saison', lYear: 'Année visée', lBudget: 'Budget estimé', ts_wish: 'Rêve', ts_planned: 'Prévu', ts_visited: 'Visité', c_africa: 'Afrique', c_mideast: 'Moyen-Orient', c_europe: 'Europe', c_asia: 'Asie', c_americas: 'Amériques', c_oceania: 'Océanie', noTrips: 'Aucune destination. Ajoutez les pays que vous rêvez de visiter.', lTripBudget: 'Budget des prochains voyages', lByCont: 'Par continent', lExplored: 'Progression', lDest: 'destinations', lNextTrip: 'Prochain voyage', lNoFocus: 'Mettez une étoile ★ sur 3 à 5 idées pour les voir ici.', lNoNext: 'Aucun voyage prévu.',
   nFin: 'Finances', fin: 'Vue financière', income: 'Revenus', expense: 'Dépenses', matrix: 'Matrice annuelle', fincats: 'Catégories', finSub: 'Tous les chiffres pour la période', totalIncome: 'Total des revenus', totalExpenses: 'Total des dépenses', netBalance: 'Solde net', surplus: '▲ Excédent', deficit: '▼ Déficit', avgExpense: 'Dépense mensuelle moyenne', perMonth: 'par mois sur la période', monthlyChart: 'Revenus et dépenses par mois', net: 'Net', expDist: 'Répartition des dépenses', byGroup: 'Par groupe principal', newIncome: 'Nouveau revenu', newExpense: 'Nouvelle dépense', exportCsv: 'Exporter CSV', date: 'Date', mainGroup: 'Groupe principal', subCat: 'Sous-catégorie', amount: 'Montant', notesCol: 'Notes', records: 'lignes', totalLbl: 'Total', searchTx: 'Rechercher groupe, catégorie, notes…', noTx: 'Aucune transaction sur cette période.', matrixSub: 'Tableau croisé mensuel des revenus et dépenses', allTypes: 'Tous les types', grandTotal: 'Total général', addCat: 'Nouvelle catégorie', type: 'Type', catCount: 'sous-catégories', groupsCount: 'groupes principaux', noCats: 'Aucune catégorie. Ajoutez-en une d’abord.', needCat: 'Ajoutez d’abord une catégorie de ce type.', from: 'Du', to: 'Au', errAmount: 'Saisissez un montant supérieur à zéro.',
   app: 'Intajiyati', tagline: 'Système de productivité complet',
@@ -410,6 +500,7 @@ fr: {
 en: {
   prevDay: 'Previous day', nextDay: 'Next day', todayBtn: 'Today', weekStrip: 'Days of the week', dayProgress: 'Day progress', completed: 'Completed', notCompleted: 'Not completed', dayTasks: 'Tasks for the day', dayTaskPh: 'Add a task for this day…', noDayTasks: 'No tasks for this day.', mindset: 'Mindset check-in', energy: 'Energy', focus: 'Focus', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'Mindset across the week', edit: 'Edit', monthGrid: 'Month tracker', progress: 'Progress', completedHabits: 'habits completed',
   searchNotes: 'Search notes…', noMatch: 'No matching notes.', color: 'Colour', saveClose: 'Save and close', pickNote: 'Pick a note from the list or create a new one.',
+  year: 'My year', ySub: 'Vision, goals, tracking, then review', yWord: 'Word of the year', yWordPh: 'Pick one word that sums up your year', yGoals: 'Goals', yMoments: 'Moments', yReview: 'Review', yWrapped: 'Year wrapped', yAddGoal: 'New goal', yGoalTitle: 'Goal (make it measurable)', yArea: 'Area', yMetric: 'How progress is measured', m_manual: 'Manual: I update the %', m_travel: 'Auto: countries visited', m_savings: 'Auto: savings (income − expenses)', m_habit: 'Auto: habit consistency', m_project: 'Auto: project completion', yTargetN: 'Target value', yHabit: 'Habit', yProject: 'Project', yWhy: 'Why does this matter to you?', yQuarter: 'Quarter', yQph: 'Quarter milestone', yAuto: 'Auto', yLate: 'Behind', yYearDone: 'of the year', yGoalsAvg: 'Goals average', a_deen: 'Faith', a_health: 'Health', a_money: 'Money', a_learn: 'Learning', a_work: 'Work', a_family: 'Family', a_travel: 'Travel', a_self: 'Self', yWheel: 'Balance wheel', yWheelSub: 'Average progress per area', yNoGoals: 'No goals for this year yet. Start with 5 to 8 measurable goals.', gs_active: 'Active', gs_achieved: 'Achieved', gs_partial: 'Partial', gs_missed: 'Missed', yFrom: 'Carried from', yCarriedTag: 'Carried', yLetter: 'Letter to myself', yLetterPh: 'Write to yourself for the end of this year: hopes, promises…', ySeal: 'Seal the letter', ySealed: 'Sealed until 31 December', yDaysLeft: 'days left', yOpen: 'Open the letter', yOpenEarly: 'Open early', yOpenEarlyQ: 'Open the letter before its date?', yLetterFrom: 'Your letter written on', yMid: 'Mid-year check-in', yMidSub: 'A short stop in June to adjust course', yMidGood: 'What is going well?', yMidAdjust: 'What will I adjust?', yMidDo: 'Start', yMomentPh: 'Log a win or a great moment…', yNoMoments: 'No moments yet. Log your small and big wins.', yR1: 'What did I achieve?', yR1s: 'Rate each goal honestly', yR2: 'What did not happen', yR2s: 'Why? Does it still matter?', yReason: 'Reason', yCarry: 'Carry it forward', yDrop: 'Let it go', yR3: 'Lessons', yR3s: 'What did this year teach you?', yLesson: 'Lesson', yBest: 'Best moment of the year', yKeep: 'I will keep…', yStop: 'I will stop…', yR4: 'Summary', yR4s: 'Check, then close the year', yFinish: 'Finish and set up', yNext: 'Next', yBack: 'Back', yReviewDone: 'This year\'s review is complete', yAllDone: 'Great! No goals left behind.', yToCarry: 'goals carried to', yRedo: 'Edit review', yReviewEarly: 'The review is meant for year end, but you can start any time.', yWatch: 'Watch year wrapped', yw_intro: 'Your year', yw_goals: 'goals achieved', yw_habits: 'average habit consistency', yw_checks: 'habit check-ins', yw_streak: 'longest streak of days', yw_travel: 'countries visited', yw_money: 'net savings', yw_moments: 'moments logged', yw_lessons: 'Lessons of the year', yw_outro: 'On to', yw_ready: 'A fresh page awaits', ySoFar: 'so far', yClose: 'Close', yNone: 'No data yet', yNoNoGoals: 'Add a goal first.', yEdit: 'Edit', yQDone: 'Done', yCountry: 'countries', yTravelHint: 'Counts destinations marked Visited whose target year is this year', yProgress: 'Progress',
   nLife: 'Dreams & goals', ideas: 'Idea bank', mindmap: 'Mind map', travel: 'Travel', ideasSub: 'Dump everything here, then sort it by impact and effort', lDumpPh: 'Brain dump: type an idea and press Enter…', lAddIdea: 'New idea', lIdea: 'Idea', lType: 'Type', lStatus: 'Status', lImpact: 'Impact', lEffort: 'Effort', lTarget: 'Target date', lCost: 'Estimated cost', lNotes: 'Notes', lUnrated: 'Unrated', lFocus: 'Focus this year', lFocusSub: 'Pick 3 to 5 things only', lFocusMax: 'You already have 5 ideas in focus. Remove one first.', lFocusTip: 'Add to focus', lTotal: 'All ideas', lList: 'List', lMatrix: 'Priority matrix', it_project: 'Project', it_skill: 'Skill', it_experience: 'Experience', it_personal: 'Personal', it_other: 'Other', is_idea: 'Idea', is_planning: 'Planning', is_doing: 'In progress', is_done: 'Done', qWins: 'Quick wins', qWinsSub: 'High impact · low effort: start here', qBig: 'Big bets', qBigSub: 'High impact · high effort: plan them', qFill: 'Fill-ins', qFillSub: 'Low impact · low effort: spare time', qLater: 'Rethink', qLaterSub: 'Low impact · high effort: postpone', qUnrated: 'Needs rating', qUnratedSub: 'Set impact and effort to place them', lToProject: 'Turn into project', lOpenProject: 'Open project', noIdeas: 'No ideas yet. Write down everything on your mind in the field above.', lEmptyQ: 'Nothing here', mmCenter: 'My life', mmSub: 'Built from your ideas and destinations. Click an item to edit it, or a branch to add to it.', lShowDone: 'Show done', lHideDone: 'Hide done', lAddTrip: 'New destination', lCountry: 'Country', lPickCountry: 'Choose a country…', lNeedCountry: 'Choose a country from the list.', lCities: 'Cities and places', lContinent: 'Continent', lSeason: 'Best season', lYear: 'Target year', lBudget: 'Estimated budget', ts_wish: 'Dream', ts_planned: 'Planned', ts_visited: 'Visited', c_africa: 'Africa', c_mideast: 'Middle East', c_europe: 'Europe', c_asia: 'Asia', c_americas: 'Americas', c_oceania: 'Oceania', noTrips: 'No destinations yet. Add the countries you dream of visiting.', lTripBudget: 'Upcoming trips budget', lByCont: 'By continent', lExplored: 'Exploration', lDest: 'destinations', lNextTrip: 'Next trip', lNoFocus: 'Star ★ 3 to 5 ideas in the idea bank to see them here.', lNoNext: 'No upcoming trip yet.',
   nFin: 'Finance', fin: 'Financial overview', income: 'Incomes', expense: 'Expenses', matrix: 'Annual matrix', fincats: 'Categories', finSub: 'All figures for', totalIncome: 'Total income', totalExpenses: 'Total expenses', netBalance: 'Net balance', surplus: '▲ Surplus', deficit: '▼ Deficit', avgExpense: 'Avg monthly expense', perMonth: 'per month in period', monthlyChart: 'Monthly income vs expenses', net: 'Net', expDist: 'Expense distribution', byGroup: 'By main group', newIncome: 'New income', newExpense: 'New expense', exportCsv: 'Export CSV', date: 'Date', mainGroup: 'Main group', subCat: 'Sub category', amount: 'Amount', notesCol: 'Notes', records: 'records', totalLbl: 'Total', searchTx: 'Search group, category, notes…', noTx: 'No transactions in this period.', matrixSub: 'P&L pivot, monthly breakdown', allTypes: 'All types', grandTotal: 'Grand total', addCat: 'Add category', type: 'Type', catCount: 'sub-categories', groupsCount: 'main groups', noCats: 'No categories yet. Add one first.', needCat: 'Add a category of this type first.', from: 'From', to: 'To', errAmount: 'Enter an amount greater than zero.',
   app: 'Intajiyati', tagline: 'All-in-one productivity system',
@@ -471,6 +562,7 @@ const ICONS = {
   settings: '<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/>',
   logout: '<path d="M9 4H5v16h4M15 8l4 4-4 4M19 12H9"/>', plus: '<path d="M12 5v14M5 12h14"/>', trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', prev: '<path d="M15 6l-6 6 6 6"/>', next: '<path d="M9 6l6 6-6 6"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', edit: '<path d="M4 20h4l10-10-4-4L4 16z"/><path d="M13 7l4 4"/>',
   fin: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/>', income: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>', expense: '<path d="M3 7l6 6 4-4 8 8M15 17h6v-6"/>',
+  year: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/><path d="M12 3V1M21 12h2"/>',
   ideas: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>', mindmap: '<circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M9.6 10.2L5.5 6.4M14.4 10.2l4.1-3.8M9.6 13.8l-4.1 3.8M14.4 13.8l4.1 3.8"/>', travel: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3z"/>',
   matrix: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>', fincats: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="8" cy="8" r="1.5"/>', download: '<path d="M12 4v11M7 11l5 5 5-5M4 20h16"/>',
 };
@@ -484,7 +576,7 @@ function seedState() {
   return { v: 1, start: today(), ts: Date.now(),
     habits: s.habits.map(([emoji, name], i) => ({ id: uid(), emoji, name, color: PALETTE[i % PALETTE.length] })),
     habitLog: {}, routine: { morning: mk(s.morning), evening: mk(s.evening) }, routineLog: {},
-    projects: [], tasks: [], notes: [], weeks: {}, mood: {}, dayTasks: {}, mind: {}, fin: { tx: [], cats: [] }, life: { ideas: [], travel: [] } };
+    projects: [], tasks: [], notes: [], weeks: {}, mood: {}, dayTasks: {}, mind: {}, fin: { tx: [], cats: [] }, life: { ideas: [], travel: [] }, years: {} };
 }
 function normalize(s) {
   const d = seedState();
@@ -494,7 +586,7 @@ function normalize(s) {
   for (const w of Object.values(s.weeks)) if (w && w.plans) { for (const [dk, arr] of Object.entries(w.plans)) (arr || []).forEach(p => (s.dayTasks[dk] || (s.dayTasks[dk] = [])).push({ id: uid(), title: String(p), done: false })); delete w.plans; }
   if (!s.routine || !Array.isArray(s.routine.morning) || !Array.isArray(s.routine.evening)) s.routine = d.routine;
   if (!s.fin || typeof s.fin !== 'object') s.fin = {}; if (!Array.isArray(s.fin.tx)) s.fin.tx = []; if (!Array.isArray(s.fin.cats)) s.fin.cats = [];
-  if (!s.life || typeof s.life !== 'object') s.life = {}; for (const k of ['ideas', 'travel']) if (!Array.isArray(s.life[k])) s.life[k] = []; s.life.travel.forEach(x => { if (!x.cc) { const g = guessCC(x.country); if (g) { x.cc = g; if (!x.continent) x.continent = CC_CONT[g]; } } });
+  if (!s.life || typeof s.life !== 'object') s.life = {}; for (const k of ['ideas', 'travel']) if (!Array.isArray(s.life[k])) s.life[k] = []; if (!s.years || typeof s.years !== 'object' || Array.isArray(s.years)) s.years = {}; s.life.travel.forEach(x => { if (!x.cc) { const g = guessCC(x.country); if (g) { x.cc = g; if (!x.continent) x.continent = CC_CONT[g]; } } });
   if (!s.start) s.start = today();
   return s;
 }
@@ -542,7 +634,7 @@ function weekData(off = weekOffset) { const k = weekKeyOf(off); if (!S.weeks[k])
 function closeModal() { $('modalRoot').innerHTML = ''; }
 function openForm({ title, fields = [], text = '', submit = t('save'), danger = false, onSubmit }) {
   $('modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="mf" role="dialog" aria-modal="true"><h3>${esc(title)}</h3>${text ? `<p style="color:var(--muted);font-size:13px">${esc(text)}</p>` : ''}
-    ${fields.map(f => `<div class="field"><label for="f_${f.name}">${esc(f.label)}</label>${f.type === 'textarea' ? `<textarea id="f_${f.name}" rows="3" ${f.max ? `maxlength="${f.max}"` : ''}>${esc(f.value || '')}</textarea>` : f.type === 'select'
+    ${fields.map(f => `<div class="field" id="w_${f.name}"><label for="f_${f.name}">${esc(f.label)}</label>${f.type === 'textarea' ? `<textarea id="f_${f.name}" rows="3" ${f.max ? `maxlength="${f.max}"` : ''}>${esc(f.value || '')}</textarea>` : f.type === 'select'
       ? `<select id="f_${f.name}">${f.options.map(([v, l]) => `<option value="${esc(v)}" ${v === f.value ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>${f.preview ? `<div class="flag-prev" id="p_${f.name}"></div>` : ''}`
       : `<input id="f_${f.name}" type="${f.type || 'text'}" value="${esc(f.value || '')}" ${f.required ? 'required' : ''} ${f.max ? `maxlength="${f.max}"` : ''} ${f.min ? `minlength="${f.min}"` : ''}>`}</div>`).join('')}
     <div class="msg err hidden" id="mErr"></div>
@@ -550,6 +642,8 @@ function openForm({ title, fields = [], text = '', submit = t('save'), danger = 
   $('mCancel').onclick = closeModal;
   $('ov').onmousedown = e => { if (e.target.id === 'ov') closeModal(); };
   $('mf').onsubmit = async e => { e.preventDefault(); const v = {}; fields.forEach(f => v[f.name] = $('f_' + f.name).value.trim()); const err = await onSubmit(v); if (err) { $('mErr').textContent = err; $('mErr').classList.remove('hidden'); } else closeModal(); };
+  const vis = () => fields.forEach(f => { if (f.showIf) { const dep = $('f_' + f.showIf[0]); $('w_' + f.name).style.display = f.showIf[1].includes(dep.value) ? '' : 'none'; } });
+  fields.forEach(f => { if (f.showIf) $('f_' + f.showIf[0]).addEventListener('change', vis); }); vis();
   fields.forEach(f => { if (f.onchange) { const el = $('f_' + f.name); el.addEventListener('change', () => f.onchange(el.value)); f.onchange(el.value); } });
   const first = fields[0] && $('f_' + fields[0].name); if (first) first.focus();
 }
@@ -600,7 +694,7 @@ async function onSession(session, event) {
 }
 
 /* ───────── Shell ───────── */
-const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nLife', ['ideas', 'mindmap', 'travel']], ['nFin', ['fin', 'income', 'expense', 'matrix', 'fincats']], ['nAccount', ['settings']]];
+const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nLife', ['year', 'ideas', 'mindmap', 'travel']], ['nFin', ['fin', 'income', 'expense', 'matrix', 'fincats']], ['nAccount', ['settings']]];
 function go(p) { animNext = true; if (page === 'notes' && p !== 'notes' && S) { const n = S.notes.length; S.notes = S.notes.filter(x => x.title || x.body); if (S.notes.length !== n) save(); noteSel = null; } page = p; $('sidebar').classList.remove('open'); render(); window.scrollTo(0, 0); }
 function render() {
   if (!user || !S) return; applyChrome();
@@ -850,7 +944,7 @@ let animNext = true, fx = {}, lastPt = { x: innerWidth / 2, y: innerHeight / 2 }
 addEventListener('pointerdown', e => { lastPt = { x: e.clientX, y: e.clientY }; }, true);
 function postRender() {
   const m = $('main'); if (!m) return;
-  if (animNext && !RM) { m.classList.remove('anim'); void m.offsetWidth; m.classList.add('anim'); m.querySelectorAll('.card, .trip, table tbody tr, .chip').forEach((c, i) => c.style.setProperty('--i', Math.min(i, 16))); countUp(m); }
+  if (animNext && !RM) { m.classList.remove('anim'); void m.offsetWidth; m.classList.add('anim'); m.querySelectorAll('.card, .trip, table tbody tr, .chip, .tl-item').forEach((c, i) => c.style.setProperty('--i', Math.min(i, 16))); countUp(m); }
   else m.classList.remove('anim');
   animNext = false; fx = {};
   if (!RM) m.querySelectorAll('.tilt, .g4 > .card').forEach(c => {
@@ -929,8 +1023,8 @@ const linkedProject = x => x.projectId && S.projects.find(p => p.id === x.projec
 function lifeDash() {
   const f = S.life.ideas.filter(x => x.focus), order = { planned: 0, wish: 1 };
   const next = S.life.travel.filter(x => x.status !== 'visited').sort((a, b) => order[a.status] - order[b.status] || (Number(a.year) || 9999) - (Number(b.year) || 9999))[0];
-  return `<div class="grid g21">${card('★ ' + t('lFocus'), f.length ? f.map(x => `<div class="lrow"><span style="font-size:18px">${(ITYPE[x.type] || ITYPE.other).e}</span><button class="link row-main" style="color:var(--text);text-align:start" onclick="editIdea('${x.id}')"><span class="row-title ${x.status === 'done' ? 'done' : ''}">${esc(x.title)}</span></button>${stTag(t('is_' + x.status), ISTAT[x.status])}</div>`).join('') : `<div class="empty">${t('lNoFocus')}</div>`, `<button class="link" onclick="go('ideas')">${t('all')}</button>`)}
-  ${card(t('lNextTrip'), next ? `<div style="text-align:center"><div style="font-size:52px;line-height:1.1"><span class="floaty">${flagImg(next, 72)}</span></div><div style="font-weight:800;font-size:18px;margin-top:10px">${esc(tripName(next))}</div><div style="color:var(--muted);font-size:13px">${esc(next.cities || '')}</div><div class="trip-meta" style="justify-content:center;margin-top:10px">${stTag(t('ts_' + next.status), TSTAT[next.status])}${next.year ? `<span class="badge num">${esc(next.year)}</span>` : ''}${next.budget ? `<span class="badge num">${money(next.budget)}</span>` : ''}</div></div>` : `<div class="empty">${t('lNoNext')}</div>`, `<button class="link" onclick="go('travel')">${t('all')}</button>`)}</div>`;
+  return `<div class="grid g3">${card('★ ' + t('lFocus'), f.length ? f.map(x => `<div class="lrow"><span style="font-size:18px">${(ITYPE[x.type] || ITYPE.other).e}</span><button class="link row-main" style="color:var(--text);text-align:start" onclick="editIdea('${x.id}')"><span class="row-title ${x.status === 'done' ? 'done' : ''}">${esc(x.title)}</span></button>${stTag(t('is_' + x.status), ISTAT[x.status])}</div>`).join('') : `<div class="empty">${t('lNoFocus')}</div>`, `<button class="link" onclick="go('ideas')">${t('all')}</button>`)}
+  ${yearDash()}${card(t('lNextTrip'), next ? `<div style="text-align:center"><div style="font-size:52px;line-height:1.1"><span class="floaty">${flagImg(next, 72)}</span></div><div style="font-weight:800;font-size:18px;margin-top:10px">${esc(tripName(next))}</div><div style="color:var(--muted);font-size:13px">${esc(next.cities || '')}</div><div class="trip-meta" style="justify-content:center;margin-top:10px">${stTag(t('ts_' + next.status), TSTAT[next.status])}${next.year ? `<span class="badge num">${esc(next.year)}</span>` : ''}${next.budget ? `<span class="badge num">${money(next.budget)}</span>` : ''}</div></div>` : `<div class="empty">${t('lNoNext')}</div>`, `<button class="link" onclick="go('travel')">${t('all')}</button>`)}</div>`;
 }
 
 Object.assign(PAGES, {
@@ -1044,6 +1138,223 @@ function addTrip() { tripForm(null); }
 function editTrip(id) { const x = S.life.travel.find(q => q.id === id); if (x) tripForm(x); }
 function delTrip(id) { confirmDel(() => { S.life.travel = S.life.travel.filter(x => x.id !== id); }); }
 function cycleTrip(id) { const x = S.life.travel.find(q => q.id === id); if (!x) return; const k = Object.keys(TSTAT); x.status = k[(k.indexOf(x.status) + 1) % k.length]; commit(); if (x.status === 'visited') confetti(); }
+
+/* ───────── My year: goals, review, letter, moments, wrapped ───────── */
+const AREAS = [['deen', '🕌', '#10d9a0'], ['health', '💪', '#ff6b9d'], ['money', '💰', '#ffd166'], ['learn', '📚', '#4a9eff'], ['work', '🚀', '#ff6b35'], ['family', '👨‍👩‍👧', '#9b6dff'], ['travel', '✈️', '#2dd4bf'], ['self', '🌱', '#7dd3fc']];
+const AREA = Object.fromEntries(AREAS.map(([k, e, c]) => [k, { e, c }]));
+const GSTAT = { active: 'var(--blue)', achieved: 'var(--green)', partial: 'var(--yellow)', missed: 'var(--pink)' };
+const METRICS = ['manual', 'travel', 'savings', 'habit', 'project'];
+const curYear = () => new Date().getFullYear();
+let yearSel = curYear(), yearTab = 'goals', wrapState = null;
+function yData(y = yearSel) {
+  const k = String(y);
+  if (!S.years[k]) S.years[k] = {};
+  const d = S.years[k];
+  if (typeof d.word !== 'string') d.word = '';
+  if (!Array.isArray(d.goals)) d.goals = [];
+  if (!Array.isArray(d.moments)) d.moments = [];
+  if (!d.letter || typeof d.letter !== 'object') d.letter = { text: '', sealed: 0, opened: 0 };
+  if (!d.mid || typeof d.mid !== 'object') d.mid = {};
+  if (!d.review || typeof d.review !== 'object') d.review = {};
+  const r = d.review; r.step = r.step || 0; for (const f of ['verdict', 'reason', 'decision']) if (!r[f] || typeof r[f] !== 'object') r[f] = {}; if (!Array.isArray(r.lessons)) r.lessons = ['', '', ''];
+  return d;
+}
+const yearsList = () => [...new Set([...Object.keys(S.years).filter(k => (S.years[k].goals || []).length || (S.years[k].moments || []).length || S.years[k].word).map(Number), curYear(), curYear() + 1])].sort((a, b) => a - b);
+function yearDays(y) { const from = `${y}-01-01` < S.start ? S.start : `${y}-01-01`, to = today() < `${y}-12-31` ? today() : `${y}-12-31`, out = []; if (from > to) return out; for (let d = pdate(from); dkey(d) <= to; d = addDays(d, 1)) out.push(dkey(d)); return out; }
+function yearElapsed(y) { const c = curYear(); if (y < c) return 100; if (y > c) return 0; const n = new Date(), a = new Date(y, 0, 1), b = new Date(y + 1, 0, 1); return Math.round((n - a) / (b - a) * 100); }
+const txYear = (type, y) => S.fin.tx.filter(x => x.type === type && x.date.slice(0, 4) === String(y));
+function goalProg(g, y = yearSel) {
+  const tg = Number(g.target) || 0, cl = v => Math.max(0, Math.min(100, Math.round(v)));
+  switch (g.metric) {
+    case 'travel': { const n = S.life.travel.filter(x => x.status === 'visited' && String(x.year) === String(y)).length, T = tg || 1; return { p: cl(n / T * 100), label: `${n}/${T} ${t('yCountry')}`, auto: true }; }
+    case 'savings': { const net = sum(txYear('income', y)) - sum(txYear('expense', y)), T = tg || 1; return { p: cl(net / T * 100), label: '\u2066' + `${compact(net)} / ${compact(T)}` + '\u2069', auto: true }; }
+    case 'habit': { const h = S.habits.find(q => q.id === g.ref), ds = yearDays(y); if (!h) return { p: 0, label: '—', auto: true }; const r = pct(ds.filter(k => habitDone(k, h.id)).length, ds.length), T = tg || 80; return { p: cl(r / T * 100), label: `${h.emoji} \u2066${r}% / ${T}%\u2069`, auto: true }; }
+    case 'project': { const p = S.projects.find(q => q.id === g.ref); if (!p) return { p: 0, label: '—', auto: true }; const s = projStats(p.id); return { p: s.p, label: `${s.done}/${s.total}`, auto: true }; }
+    default: return { p: cl(g.progress || 0), label: `${cl(g.progress || 0)}%`, auto: false };
+  }
+}
+const goalLate = (g, y) => { if (y !== curYear() || g.status !== 'active') return false; const q = Math.floor(new Date().getMonth() / 3); return (g.quarters || []).some((txt, i) => i < q && txt && !(g.qdone || [])[i]); };
+const areaAvg = (goals, a) => { const gs = goals.filter(g => g.area === a); return gs.length ? Math.round(gs.reduce((n, g) => n + goalProg(g).p, 0) / gs.length) : null; };
+const goalsAvg = (goals, y) => goals.length ? Math.round(goals.reduce((n, g) => n + goalProg(g, y).p, 0) / goals.length) : 0;
+
+function ring(p, r, color, w = 12) { const c = 2 * Math.PI * r; return `<circle r="${r}" fill="none" stroke="var(--surface3)" stroke-width="${w}"/><circle class="ringv" r="${r}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${c * p / 100} ${c}" transform="rotate(-90)" style="--c:${c}"/>`; }
+function yearArt(y, d) {
+  const el = yearElapsed(y), ga = goalsAvg(d.goals, y);
+  return `<svg viewBox="-110 -100 220 200"><g>${ring(el, 84, 'var(--accent)', 10)}${ring(ga, 64, 'var(--green)', 10)}</g>
+  <circle r="84" fill="none" stroke="var(--accent)" stroke-width="2" class="pulse" opacity=".5"/>
+  ${[0, 1, 2, 3].map(i => { const a = -Math.PI / 2 + i * Math.PI / 2, on = el >= (i + 1) * 25; return `<g transform="translate(${Math.cos(a) * 98} ${Math.sin(a) * 98})"><circle r="11" fill="${on ? 'var(--accent)' : 'var(--surface2)'}" stroke="var(--accent)" stroke-width="1.5"/><text y="4" text-anchor="middle" font-size="9" font-weight="800" fill="${on ? '#fff' : 'var(--muted)'}">Q${i + 1}</text></g>`; }).join('')}
+  <text y="-6" text-anchor="middle" font-size="30" font-weight="800" fill="var(--text)">${y}</text>
+  <text y="14" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)">${el}% ${esc(t('yYearDone'))}</text>
+  <text y="30" text-anchor="middle" font-size="10" font-weight="700" fill="var(--green)">${ga}% ${esc(t('yGoals'))}</text></svg>`;
+}
+function wheel(goals) {
+  const R = 100, n = AREAS.length, sec = Math.PI * 2 / n, arc = (r, a0, a1) => `M0 0 L${Math.cos(a0) * r} ${Math.sin(a0) * r} A${r} ${r} 0 0 1 ${Math.cos(a1) * r} ${Math.sin(a1) * r} Z`;
+  return `<svg viewBox="-130 -130 260 260" class="wheel">${[25, 50, 75, 100].map(p => `<circle r="${18 + (R - 18) * p / 100}" fill="none" stroke="var(--border)" stroke-dasharray="2 4"/>`).join('')}
+  ${AREAS.map(([k, e, c], i) => { const a0 = -Math.PI / 2 + i * sec + .03, a1 = a0 + sec - .06, v = areaAvg(goals, k), r = 18 + (R - 18) * (v || 0) / 100, am = (a0 + a1) / 2;
+    return `<path d="${arc(R, a0, a1)}" fill="${c}" opacity=".07"/>${v !== null ? `<path class="wedge" style="--i:${i}" d="${arc(r, a0, a1)}" fill="${c}" opacity=".85"><title>${esc(t('a_' + k))}: ${v}%</title></path>` : ''}<text x="${Math.cos(am) * (R + 16)}" y="${Math.sin(am) * (R + 16) + 6}" text-anchor="middle" font-size="16" opacity="${v === null ? .35 : 1}">${e}</text>`; }).join('')}
+  <circle r="16" fill="var(--surface)" stroke="var(--border2)"/><text y="5" text-anchor="middle" font-size="12" font-weight="800" fill="var(--text)">${goals.length}</text></svg>
+  <div class="wheel-legend">${AREAS.map(([k, e, c]) => { const v = areaAvg(goals, k); return v === null ? '' : `<span><i class="dot" style="background:${c}"></i>${t('a_' + k)} <b class="num">${v}%</b></span>`; }).join('')}</div>`;
+}
+function goalCard(g, y) {
+  const a = AREA[g.area] || AREA.self, pr = goalProg(g, y), late = goalLate(g, y), q = y === curYear() ? Math.floor(new Date().getMonth() / 3) : -1, st = g.status || 'active';
+  return `<section class="card goal tilt" style="border-top:3px solid ${a.c}" data-id="${g.id}">
+    <div class="card-head" style="margin-bottom:10px"><span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${stTag(`${a.e} ${t('a_' + g.area)}`, a.c)}${stTag(t('gs_' + st), GSTAT[st])}${late ? stTag('⚠ ' + t('yLate'), 'var(--pink)') : ''}${g.fromYear ? `<span class="badge num">↪ ${t('yFrom')} ${g.fromYear}</span>` : ''}${g.carried ? `<span class="badge">→ ${t('yCarriedTag')}</span>` : ''}</span>
+    <span style="display:flex"><button class="icon-btn" onclick="editGoal('${g.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delGoal('${g.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div>
+    <div style="font-weight:800;font-size:15.5px;word-break:break-word">${esc(g.title)}</div>
+    ${g.why ? `<div style="color:var(--muted);font-size:12.5px;margin-top:4px;white-space:pre-line;word-break:break-word">${esc(g.why)}</div>` : ''}
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 6px;gap:8px"><span class="num glabel" style="font-size:12px;color:var(--muted)">${pr.auto ? `<span class="badge" style="color:var(--accent)">⚡ ${t('yAuto')}</span> ` : ''}${esc(pr.label)}</span><b class="num gpct" style="font-size:20px;color:${a.c}">${pr.p}%</b></div>
+    <div class="bar" style="height:9px"><div class="gbar" style="width:${pr.p}%;background:linear-gradient(90deg, ${a.c}, color-mix(in srgb, ${a.c} 60%, #fff))"></div></div>
+    ${pr.auto ? '' : `<input type="range" min="0" max="100" step="5" value="${pr.p}" class="grange" style="--c:${a.c}" aria-label="${t('yAuto')}" oninput="setGoalProg('${g.id}',this.value,this)" onchange="goalProgDone('${g.id}')">`}
+    ${(g.quarters || []).some(Boolean) ? `<div class="qgrid">${[0, 1, 2, 3].map(i => { const txt = (g.quarters || [])[i], on = (g.qdone || [])[i]; return txt ? `<button class="qchip ${on ? 'on' : ''} ${i === q ? 'cur' : ''}" onclick="toggleQ('${g.id}',${i})" aria-pressed="${!!on}" title="${esc(txt)}"><b>Q${i + 1} ${on ? '✓' : ''}</b><span>${esc(txt)}</span></button>` : `<div class="qchip empty"><b>Q${i + 1}</b></div>`; }).join('')}</div>` : ''}
+  </section>`;
+}
+function letterCard(y, d) {
+  const L = d.letter, openDate = `${y}-12-31`, canOpen = today() >= openDate;
+  let body;
+  if (!L.sealed) body = `<textarea id="yLetterTxt" rows="6" maxlength="4000" placeholder="${t('yLetterPh')}" oninput="setLetter(this.value)">${esc(L.text)}</textarea><button class="btn btn-primary btn-block" style="margin-top:12px" onclick="sealLetter()">🔒 ${t('ySeal')}</button>`;
+  else if (!L.opened) { const left = Math.max(0, Math.ceil((pdate(openDate) - pdate(today())) / 864e5)); body = `<div class="env ${canOpen ? 'ready' : ''}"><div class="env-flap"></div><div class="env-seal">${canOpen ? '✉️' : '🔒'}</div></div><div style="text-align:center;margin-top:14px">${canOpen ? `<button class="btn btn-primary" onclick="openLetter()">✉️ ${t('yOpen')}</button>` : `<div style="font-weight:800" class="num">${left} ${t('yDaysLeft')}</div><div style="color:var(--muted);font-size:12px">${t('ySealed')}</div><button class="link" style="margin-top:8px;font-size:12px" onclick="openLetter(true)">${t('yOpenEarly')}</button>`}</div>`; }
+  else body = `<div class="paper"><div style="font-size:11px;color:var(--faint);margin-bottom:8px">${t('yLetterFrom')} ${fmt(new Date(L.sealed), { day: 'numeric', month: 'long', year: 'numeric' })}</div><div style="white-space:pre-line;line-height:1.8">${esc(L.text)}</div></div>`;
+  return card('✉️ ' + t('yLetter'), body);
+}
+function midCard(y, d) {
+  const m = d.mid, show = m.done || (y === curYear() && new Date().getMonth() >= 4) || y < curYear();
+  if (!show && !m.done) return card('🧭 ' + t('yMid'), `<div style="color:var(--muted);font-size:13px">${t('yMidSub')}</div><button class="btn btn-ghost btn-block" style="margin-top:12px" onclick="doMid()">${t('yMidDo')}</button>`);
+  return card('🧭 ' + t('yMid'), m.done ? `<div class="lrow" style="display:block"><div class="card-title" style="margin-bottom:4px">${t('yMidGood')}</div><div style="white-space:pre-line">${esc(m.good || '—')}</div></div><div class="lrow" style="display:block"><div class="card-title" style="margin-bottom:4px">${t('yMidAdjust')}</div><div style="white-space:pre-line">${esc(m.adjust || '—')}</div></div><button class="link" style="font-size:12px;margin-top:6px" onclick="doMid()">${t('yEdit')}</button>` : `<div style="color:var(--muted);font-size:13px">${t('yMidSub')}</div><button class="btn btn-primary btn-block" style="margin-top:12px" onclick="doMid()">${t('yMidDo')}</button>`);
+}
+function momentsView(y, d) {
+  const list = [...d.moments].sort((a, b) => b.date.localeCompare(a.date) || b.ts - a.ts), defDate = String(y) === today().slice(0, 4) ? today() : `${y}-12-31`;
+  return `<section class="card glow" style="margin-bottom:16px"><form class="dump" onsubmit="event.preventDefault();addMoment()"><input type="text" id="mEmoji" value="🌟" maxlength="8" style="max-width:64px;text-align:center" aria-label="${t('emoji')}"><input type="date" id="mDate" value="${defDate}" min="${y}-01-01" max="${y}-12-31" style="max-width:170px" aria-label="${t('date')}"><input type="text" id="mText" maxlength="200" placeholder="${t('yMomentPh')}" aria-label="${t('yMomentPh')}"><button class="btn btn-primary" aria-label="${t('add')}">${ic('plus')}</button></form></section>` +
+  (list.length ? `<section class="card"><div class="tl">${list.map(m => `<div class="tl-item ${fx.flash === m.id ? 'flash' : ''}"><div class="tl-dot">${esc(m.emoji || '🌟')}</div><div class="tl-body"><div class="num" style="font-size:11.5px;color:var(--faint)">${fmt(pdate(m.date), { weekday: 'short', day: 'numeric', month: 'long' })}</div><div style="font-weight:600;word-break:break-word">${esc(m.text)}</div></div><button class="icon-btn danger" onclick="delMoment('${m.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div>`).join('')}</div></section>` : `<section class="card empty">${t('yNoMoments')}</section>`);
+}
+const suggestVerdict = (g, y) => { const p = goalProg(g, y).p; return p >= 100 ? 'achieved' : p >= 50 ? 'partial' : 'missed'; };
+function reviewView(y, d) {
+  const r = d.review, goals = d.goals, step = r.step, steps = [['yR1', '🏆'], ['yR2', '🔍'], ['yR3', '💡'], ['yR4', '✨']];
+  if (!goals.length) return `<section class="card empty">${t('yNoNoGoals')}</section>`;
+  goals.forEach(g => { if (!r.verdict[g.id]) r.verdict[g.id] = suggestVerdict(g, y); if (!r.decision[g.id]) r.decision[g.id] = 'carry'; });
+  const notDone = goals.filter(g => r.verdict[g.id] !== 'achieved'), carry = notDone.filter(g => r.decision[g.id] === 'carry');
+  const bar = `<div class="steps">${steps.map(([k, e], i) => `<button class="step ${i === step ? 'on' : ''} ${i < step ? 'past' : ''}" onclick="setRStep(${i})"><span class="step-n">${i < step ? '✓' : e}</span><span>${t(k)}</span></button>`).join('')}</div>`;
+  let body = '';
+  if (step === 0) body = `<p class="rsub">${t('yR1s')}</p>${goals.map(g => { const a = AREA[g.area] || AREA.self, pr = goalProg(g, y); return `<div class="rrow"><div class="row-main"><div style="font-weight:700;word-break:break-word">${a.e} ${esc(g.title)}</div><div class="bar" style="height:6px;margin-top:6px;max-width:260px"><div style="width:${pr.p}%;background:${a.c}"></div></div></div><div class="seg">${['achieved', 'partial', 'missed'].map(v => `<button class="${r.verdict[g.id] === v ? 'on' : ''}" onclick="setVerdict('${g.id}','${v}')">${{ achieved: '🏆', partial: '🌓', missed: '⏳' }[v]} ${t('gs_' + v)}</button>`).join('')}</div></div>`; }).join('')}`;
+  if (step === 1) body = `<p class="rsub">${t('yR2s')}</p>` + (notDone.length ? notDone.map(g => `<div class="rrow" style="flex-wrap:wrap"><div style="flex:1 1 220px;min-width:0"><div style="font-weight:700;word-break:break-word">${(AREA[g.area] || AREA.self).e} ${esc(g.title)}</div><input type="text" maxlength="200" style="margin-top:8px" placeholder="${t('yReason')}" value="${esc(r.reason[g.id] || '')}" oninput="setRv('reason','${g.id}',this.value)"></div><div class="seg">${['carry', 'drop'].map(v => `<button class="${r.decision[g.id] === v ? 'on' : ''}" onclick="setDecision('${g.id}','${v}')">${v === 'carry' ? '↪ ' + t('yCarry') : '✕ ' + t('yDrop')}</button>`).join('')}</div></div>`).join('') : `<div class="empty">🎉 ${t('yAllDone')}</div>`);
+  if (step === 2) body = `<p class="rsub">${t('yR3s')}</p><div class="grid g3" style="margin-bottom:12px">${[0, 1, 2].map(i => `<div class="field"><label>${t('yLesson')} ${i + 1}</label><textarea rows="3" maxlength="300" oninput="setLesson(${i},this.value)">${esc(r.lessons[i] || '')}</textarea></div>`).join('')}</div><div class="field"><label>⭐ ${t('yBest')}</label><input type="text" maxlength="200" value="${esc(r.best || '')}" oninput="setRf('best',this.value)"></div><div class="grid g2" style="margin:0"><div class="field"><label>✅ ${t('yKeep')}</label><textarea rows="2" maxlength="300" oninput="setRf('keep',this.value)">${esc(r.keep || '')}</textarea></div><div class="field"><label>🛑 ${t('yStop')}</label><textarea rows="2" maxlength="300" oninput="setRf('stop',this.value)">${esc(r.stop || '')}</textarea></div></div>`;
+  if (step === 3) { const c = v => goals.filter(g => r.verdict[g.id] === v).length;
+    body = `<p class="rsub">${t('yR4s')}</p><div class="grid g3">${[['achieved', '🏆'], ['partial', '🌓'], ['missed', '⏳']].map(([v, e]) => `<section class="card" style="text-align:center"><div style="font-size:30px">${e}</div><div class="kpi num" style="color:${GSTAT[v]}">${c(v)}</div><div class="kpi-label">${t('gs_' + v)}</div></section>`).join('')}</div>
+    ${carry.length ? `<div class="card-title" style="margin:6px 0 10px">↪ ${carry.length} ${t('yToCarry')} ${y + 1}</div><div class="chips" style="margin-bottom:16px">${carry.map(g => `<span class="chip">${(AREA[g.area] || AREA.self).e} ${esc(g.title)}</span>`).join('')}</div>` : ''}
+    ${r.lessons.some(Boolean) ? `<div class="card-title" style="margin:6px 0 10px">💡 ${t('yR3')}</div>${r.lessons.filter(Boolean).map(l => `<div class="lrow">💡 <span>${esc(l)}</span></div>`).join('')}` : ''}
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap"><button class="btn btn-primary" onclick="finishReview()">✨ ${r.done ? t('yRedo') : t('yFinish') + ' ' + (y + 1)}</button><button class="btn btn-ghost" onclick="openWrapped(${y})">🎬 ${t('yWatch')}</button></div>`; }
+  const nav = `<div style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn btn-ghost" ${step === 0 ? 'disabled style="visibility:hidden"' : ''} onclick="setRStep(${step - 1})">${t('yBack')}</button>${step < 3 ? `<button class="btn btn-primary" onclick="setRStep(${step + 1})">${t('yNext')}</button>` : ''}</div>`;
+  return (r.done ? `<section class="card" style="margin-bottom:16px;border-color:var(--green);text-align:center;font-weight:800;color:var(--green)">✅ ${t('yReviewDone')}</section>` : y >= curYear() && new Date().getMonth() < 10 ? `<section class="card" style="margin-bottom:16px;color:var(--muted);font-size:13px">🗓️ ${t('yReviewEarly')}</section>` : '') + bar + `<section class="card rcard" key="${step}">${body}${nav}</section>`;
+}
+
+PAGES.year = function () {
+  const y = yearSel, d = yData(y), goals = d.goals;
+  const ys = `<div class="seg">${yearsList().map(v => `<button class="${v === y ? 'on' : ''}" onclick="setYear(${v})">${v}</button>`).join('')}</div>`;
+  const tabs = `<div class="seg ytabs">${[['goals', '🎯', 'yGoals'], ['moments', '🌟', 'yMoments'], ['review', '🏁', 'yReview']].map(([v, e, l]) => `<button class="${yearTab === v ? 'on' : ''}" onclick="setYearTab('${v}')">${e} ${t(l)}</button>`).join('')}</div>`;
+  const word = `<button class="yword" onclick="editWord()" title="${t('yWord')}">${d.word ? `<span class="yword-txt">${esc(d.word)}</span>` : `<span style="color:var(--faint);font-size:14px">✍️ ${t('yWordPh')}</span>`}</button>`;
+  const actions = ys + `<button class="btn btn-ghost" onclick="openWrapped(${y})">🎬 ${t('yWrapped')}</button><button class="btn btn-primary" onclick="addGoal()">${ic('plus')}${t('yAddGoal')}</button>`;
+  const ach = goals.filter(g => g.status === 'achieved' || goalProg(g, y).p >= 100).length;
+  let body = '';
+  if (yearTab === 'goals') {
+    const side = card('☸️ ' + t('yWheel'), `<div style="color:var(--muted);font-size:12px;margin:-8px 0 8px">${t('yWheelSub')}</div>${wheel(goals)}`) + midCard(y, d) + letterCard(y, d);
+    const list = [...goals].sort((a, b) => (AREAS.findIndex(x => x[0] === a.area) - AREAS.findIndex(x => x[0] === b.area)) || a.ts - b.ts);
+    body = `<div class="grid g4">${kpiCard('🎯 ' + t('yGoals'), goals.length, t('records'), 'var(--accent)')}${kpiCard('🏆 ' + t('gs_achieved'), ach, `${pct(ach, goals.length)}%`, 'var(--green)', pct(ach, goals.length))}${kpiCard('📈 ' + t('yGoalsAvg'), goalsAvg(goals, y) + '%', t('yProgress'), 'var(--blue)', goalsAvg(goals, y))}${kpiCard('⏳ ' + t('yYearDone'), yearElapsed(y) + '%', String(y), 'var(--purple)', yearElapsed(y))}</div>
+    <div class="grid g21"><div>${goals.length ? `<div class="goals">${list.map(g => goalCard(g, y)).join('')}</div>` : `<section class="card empty">${t('yNoGoals')}<div style="margin-top:12px"><button class="btn btn-primary" onclick="addGoal()">${ic('plus')}${t('yAddGoal')}</button></div></section>`}</div><div>${side}</div></div>`;
+  } else if (yearTab === 'moments') body = momentsView(y, d);
+  else body = reviewView(y, d);
+  return hero(`${t('year')} ${y}`, t('ySub'), actions, yearArt(y, d), []).replace('<div class="actions"', word + '<div class="actions"') + `<div style="margin-bottom:16px">${tabs}</div>` + body;
+};
+
+function setYear(v) { yearSel = v; animNext = true; render(); }
+function setYearTab(v) { yearTab = v; animNext = true; render(); }
+function editWord() { const d = yData(); openForm({ title: t('yWord') + ' ' + yearSel, fields: [{ name: 'w', label: t('yWordPh'), value: d.word, max: 30 }], onSubmit: v => { d.word = v.w; animNext = true; commit(); } }); }
+function goalForm(g) {
+  const d = yData();
+  openForm({ title: t(g ? 'edit' : 'yAddGoal'), submit: t(g ? 'save' : 'add'), fields: [
+    { name: 'title', label: t('yGoalTitle'), value: g ? g.title : '', required: true, max: 140 },
+    { name: 'area', label: t('yArea'), type: 'select', value: g ? g.area : 'self', options: AREAS.map(([k, e]) => [k, `${e} ${t('a_' + k)}`]) },
+    { name: 'metric', label: t('yMetric'), type: 'select', value: g ? g.metric : 'manual', options: METRICS.map(m => [m, t('m_' + m)]) },
+    { name: 'target', label: t('yTargetN'), type: 'number', value: g && g.target ? String(g.target) : '', showIf: ['metric', ['travel', 'savings', 'habit']] },
+    { name: 'habit', label: t('yHabit'), type: 'select', value: g && g.metric === 'habit' ? g.ref : (S.habits[0] || {}).id, options: S.habits.map(h => [h.id, `${h.emoji} ${h.name}`]), showIf: ['metric', ['habit']] },
+    { name: 'project', label: t('yProject'), type: 'select', value: g && g.metric === 'project' ? g.ref : (S.projects[0] || {}).id, options: S.projects.map(p => [p.id, p.name]), showIf: ['metric', ['project']] },
+    { name: 'why', label: t('yWhy'), type: 'textarea', value: g ? g.why : '', max: 500 },
+    ...[0, 1, 2, 3].map(i => ({ name: 'q' + i, label: `${t('yQph')} Q${i + 1}`, value: g ? (g.quarters || [])[i] || '' : '', max: 120 }))],
+    onSubmit: v => {
+      if (!v.title) return;
+      const ref = v.metric === 'habit' ? v.habit : v.metric === 'project' ? v.project : '';
+      if ((v.metric === 'habit' || v.metric === 'project') && !ref) return t('yNone');
+      const dd = { title: v.title, area: v.area, metric: v.metric, target: Math.max(0, Number(v.target) || 0), ref, why: v.why, quarters: [v.q0, v.q1, v.q2, v.q3] };
+      if (g) Object.assign(g, dd); else { const id = uid(); fx.flash = id; d.goals.push({ id, ts: Date.now(), status: 'active', progress: 0, qdone: [false, false, false, false], ...dd }); }
+      commit();
+    } });
+}
+function addGoal() { goalForm(null); }
+const findGoal = id => yData().goals.find(g => g.id === id);
+function editGoal(id) { const g = findGoal(id); if (g) goalForm(g); }
+function delGoal(id) { confirmDel(() => { const d = yData(); d.goals = d.goals.filter(g => g.id !== id); }); }
+function setGoalProg(id, v, el) { const g = findGoal(id); if (!g) return; g.progress = Number(v); const c = el.closest('.goal'); c.querySelector('.gbar').style.width = v + '%'; c.querySelector('.gpct').textContent = v + '%'; c.querySelector('.glabel').textContent = v + '%'; save(); }
+function goalProgDone(id) { const g = findGoal(id); if (g && g.progress >= 100) { confetti(); render(); } }
+function toggleQ(id, i) { const g = findGoal(id); if (!g) return; if (!Array.isArray(g.qdone)) g.qdone = [false, false, false, false]; g.qdone[i] = !g.qdone[i]; commit(); if (g.qdone[i]) confetti(24); }
+function setLetter(v) { yData().letter.text = v; save(); }
+function sealLetter() { const L = yData().letter; if (!L.text.trim()) { const el = $('yLetterTxt'); if (el) el.focus(); return; } L.sealed = Date.now(); L.opened = 0; commit(); }
+function openLetter(early) { const L = yData().letter, go2 = () => { L.opened = Date.now(); commit(); setTimeout(() => confetti(40), 350); }; if (early) openForm({ title: '✉️ ' + t('yLetter'), text: t('yOpenEarlyQ'), submit: t('yOpen'), onSubmit: go2 }); else go2(); }
+function doMid() { const m = yData().mid; openForm({ title: '🧭 ' + t('yMid'), fields: [{ name: 'good', label: t('yMidGood'), type: 'textarea', value: m.good || '', max: 1000 }, { name: 'adjust', label: t('yMidAdjust'), type: 'textarea', value: m.adjust || '', max: 1000 }], onSubmit: v => { Object.assign(m, { good: v.good, adjust: v.adjust, done: true, ts: Date.now() }); commit(); } }); }
+function addMoment() { const tx = $('mText'), v = (tx.value || '').trim(); if (!v) return; const id = uid(); fx.flash = id; yData().moments.push({ id, text: v, emoji: $('mEmoji').value.trim() || '🌟', date: $('mDate').value || today(), ts: Date.now() }); commit(); const el = $('mText'); if (el) el.focus(); }
+function delMoment(id) { confirmDel(() => { const d = yData(); d.moments = d.moments.filter(m => m.id !== id); }); }
+function setRStep(i) { yData().review.step = Math.max(0, Math.min(3, i)); animNext = true; commit(); }
+function setVerdict(id, v) { yData().review.verdict[id] = v; commit(); }
+function setDecision(id, v) { yData().review.decision[id] = v; commit(); }
+function setRv(f, id, v) { yData().review[f][id] = v; save(); }
+function setLesson(i, v) { yData().review.lessons[i] = v; save(); }
+function setRf(f, v) { yData().review[f] = v; save(); }
+function finishReview() {
+  const y = yearSel, d = yData(y), r = d.review, nd = yData(y + 1);
+  d.goals.forEach(g => {
+    const v = r.verdict[g.id] || suggestVerdict(g, y); g.status = v; g.reason = r.reason[g.id] || '';
+    const carry = v !== 'achieved' && r.decision[g.id] === 'carry'; g.carried = carry;
+    const ex = nd.goals.find(x => x.fromGoal === g.id);
+    if (carry && !ex) nd.goals.push({ id: uid(), ts: Date.now(), title: g.title, area: g.area, metric: g.metric, target: g.target, ref: g.ref, why: g.why, quarters: ['', '', '', ''], qdone: [false, false, false, false], progress: 0, status: 'active', fromYear: y, fromGoal: g.id });
+    if (!carry && ex && ex.progress === 0) nd.goals = nd.goals.filter(x => x !== ex);
+  });
+  r.done = Date.now(); commit(); confetti(90);
+  setTimeout(() => openWrapped(y), 900);
+}
+
+/* Wrapped */
+function wrappedSlides(y) {
+  const d = yData(y), goals = d.goals, ach = goals.filter(g => g.status === 'achieved' || goalProg(g, y).p >= 100).length;
+  const ds = yearDays(y), hAvg = avgPct(ds), checks = Object.entries(S.habitLog).filter(([k]) => k.slice(0, 4) === String(y)).reduce((n, [, a]) => n + a.length, 0);
+  let best = 0, run = 0; ds.forEach(k => { if (habitsDoneCount(k)) { run++; best = Math.max(best, run); } else run = 0; });
+  const trips = S.life.travel.filter(x => x.status === 'visited' && String(x.year) === String(y)), inc = sum(txYear('income', y)), exp = sum(txYear('expense', y));
+  const so = y >= curYear() ? ` · ${t('ySoFar')}` : '', big = (v, c) => `<div class="w-big num" style="color:${c}">${v}</div>`;
+  const s = [{ g: ['#ff6b35', '#9b6dff'], h: `<div class="w-eyebrow">${t('yw_intro')}${so}</div>${big(y, '#fff')}${d.word ? `<div class="w-word">« ${esc(d.word)} »</div>` : ''}` },
+    { g: ['#10d9a0', '#4a9eff'], h: `<div style="font-size:54px" class="w-pop">🏆</div>${big(`${ach}<small>/${goals.length}</small>`, '#fff')}<div class="w-lab">${t('yw_goals')}</div><div class="w-list">${goals.filter(g => g.status === 'achieved' || goalProg(g, y).p >= 100).slice(0, 5).map(g => `<span>${(AREA[g.area] || AREA.self).e} ${esc(g.title)}</span>`).join('')}</div>` },
+    { g: ['#9b6dff', '#ff6b9d'], h: `<div style="font-size:54px" class="w-pop">🔥</div>${big(hAvg + '%', '#fff')}<div class="w-lab">${t('yw_habits')}</div><div class="w-row"><div><b class="num">${checks}</b><span>${t('yw_checks')}</span></div><div><b class="num">${best}</b><span>${t('yw_streak')}</span></div></div>` }];
+  if (trips.length) s.push({ g: ['#2dd4bf', '#4a9eff'], h: `<div style="font-size:54px" class="w-pop">✈️</div>${big(trips.length, '#fff')}<div class="w-lab">${t('yw_travel')}</div><div class="w-flags">${trips.map((x, i) => `<span style="animation-delay:${.4 + i * .15}s">${flagImg(x, 54)}<small>${esc(tripName(x))}</small></span>`).join('')}</div>` });
+  if (inc || exp) s.push({ g: ['#ffd166', '#ff6b35'], h: `<div style="font-size:54px" class="w-pop">💰</div>${big(compact(inc - exp), '#fff')}<div class="w-lab">${t('yw_money')}</div><div class="w-row"><div><b class="num">${compact(inc)}</b><span>▲ ${t('income')}</span></div><div><b class="num">${compact(exp)}</b><span>▼ ${t('expense')}</span></div></div>` });
+  if (d.moments.length) s.push({ g: ['#ff6b9d', '#ffd166'], h: `<div style="font-size:54px" class="w-pop">🌟</div>${big(d.moments.length, '#fff')}<div class="w-lab">${t('yw_moments')}</div><div class="w-list">${[...d.moments].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4).map(m => `<span>${esc(m.emoji)} ${esc(m.text)}</span>`).join('')}</div>` });
+  const ls = d.review.lessons.filter(Boolean); if (ls.length || d.review.best) s.push({ g: ['#4a9eff', '#9b6dff'], h: `<div style="font-size:54px" class="w-pop">💡</div><div class="w-eyebrow" style="margin-top:10px">${t('yw_lessons')}</div><div class="w-list w-lessons">${ls.map(l => `<span>${esc(l)}</span>`).join('')}${d.review.best ? `<span>⭐ ${esc(d.review.best)}</span>` : ''}</div>` });
+  s.push({ g: ['#ff6b35', '#ff6b9d'], h: `<div class="w-eyebrow">${t('yw_outro')}</div>${big(y + 1, '#fff')}<div class="w-lab">${t('yw_ready')}</div><button class="btn w-cta" onclick="closeWrapped();setYear(${y + 1})">${t('year')} ${y + 1} →</button>`, end: true });
+  return s;
+}
+function openWrapped(y) { wrapState = { y, i: 0, slides: wrappedSlides(y) }; let el = $('wrapRoot'); if (!el) { el = document.createElement('div'); el.id = 'wrapRoot'; document.body.appendChild(el); } renderWrapped(); }
+function closeWrapped() { clearTimeout(wrapState && wrapState.timer); wrapState = null; const el = $('wrapRoot'); if (el) el.innerHTML = ''; }
+function wrapGo(n) { if (!wrapState) return; const i = wrapState.i + n; if (i < 0) return; if (i >= wrapState.slides.length) { closeWrapped(); return; } wrapState.i = i; renderWrapped(); }
+function renderWrapped() {
+  const w = wrapState; clearTimeout(w.timer); const s = w.slides[w.i], rtl = LANGS[lang].dir === 'rtl';
+  $('wrapRoot').innerHTML = `<div class="wrap" style="--g1:${s.g[0]};--g2:${s.g[1]}" role="dialog" aria-modal="true"><div class="wrap-bg"></div><div class="wrap-orbs"><i></i><i></i><i></i></div>
+    <div class="wrap-bars">${w.slides.map((_, i) => `<div><i class="${i < w.i ? 'full' : i === w.i ? (RM ? 'full' : 'run') : ''}"></i></div>`).join('')}</div>
+    <button class="wrap-x" onclick="closeWrapped()" aria-label="${t('yClose')}">✕</button>
+    <div class="wrap-slide">${s.h}</div>
+    <button class="wrap-nav prev" onclick="wrapGo(-1)" aria-label="${t('yBack')}">${ic(rtl ? 'next' : 'prev')}</button><button class="wrap-nav next" onclick="wrapGo(1)" aria-label="${t('yNext')}">${ic(rtl ? 'prev' : 'next')}</button></div>`;
+  if (s.end) setTimeout(() => confetti(80), 400);
+  if (!RM && !s.end) w.timer = setTimeout(() => wrapGo(1), 6000);
+}
+document.addEventListener('keydown', e => { if (!wrapState) return; const rtl = LANGS[lang].dir === 'rtl'; if (e.key === 'Escape') closeWrapped(); if (e.key === 'ArrowRight') wrapGo(rtl ? -1 : 1); if (e.key === 'ArrowLeft') wrapGo(rtl ? 1 : -1); });
+
+function yearDash() {
+  const y = curYear(), d = yData(y), ga = goalsAvg(d.goals, y), el = yearElapsed(y);
+  return card(`🎯 ${t('year')} ${y}`, `<div style="display:flex;gap:16px;align-items:center"><svg viewBox="-60 -60 120 120" width="110" height="110" class="ring-mini">${ring(el, 50, 'var(--accent)', 8)}${ring(ga, 36, 'var(--green)', 8)}<text y="5" text-anchor="middle" font-size="16" font-weight="800" fill="var(--text)">${ga}%</text></svg><div style="min-width:0">${d.word ? `<div style="font-weight:800;font-size:18px;color:var(--accent)">« ${esc(d.word)} »</div>` : ''}<div style="font-size:13px;color:var(--muted)"><span style="color:var(--accent)">●</span> ${el}% ${t('yYearDone')}</div><div style="font-size:13px;color:var(--muted)"><span style="color:var(--green)">●</span> ${ga}% ${t('yGoalsAvg')} · ${d.goals.length} ${t('yGoals')}</div></div></div>`, `<button class="link" onclick="go('year')">${t('all')}</button>`);
+}
 
 /* ───────── Start ───────── */
 applyChrome();
