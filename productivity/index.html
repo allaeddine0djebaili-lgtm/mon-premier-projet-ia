@@ -221,6 +221,29 @@ table.wk td:first-child, table.wk th:first-child { text-align: start; font-size:
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
 
 .menu-toggle { position: fixed; bottom: 18px; inset-inline-end: 18px; width: 50px; height: 50px; border-radius: 50%; background: var(--accent); color: #fff; border: none; cursor: pointer; display: none; z-index: 300; place-items: center; box-shadow: var(--shadow); }
+/* Dreams & goals */
+.tagbtn { border: none; cursor: pointer; font-family: inherit; }
+.star { font-size: 17px; line-height: 1; color: var(--faint); }
+.star.on { color: var(--yellow); }
+.quad { border-top: 3px solid; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 5px 11px; font-size: 12.5px; font-weight: 600; cursor: pointer; max-width: 100%; }
+.chip:hover { border-color: var(--accent); }
+.chip.done { text-decoration: line-through; color: var(--faint); }
+.dump { display: flex; gap: 8px; }
+.dump select { max-width: 150px; }
+.mm-wrap { overflow-x: auto; }
+.mm { width: 100%; min-width: 760px; height: auto; display: block; }
+.mm .n { cursor: pointer; }
+.mm .n:hover circle { stroke-width: 3; }
+.mm .n:hover text.lb { fill: var(--accent); }
+.trips { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.trip { display: flex; flex-direction: column; gap: 10px; }
+.trip-top { display: flex; gap: 12px; align-items: flex-start; }
+.trip-flag { font-size: 34px; line-height: 1; }
+.trip-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; color: var(--muted); }
+.lrow { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.lrow:last-child { border-bottom: none; }
 @media (max-width: 1100px) { .g4 { grid-template-columns: repeat(2, 1fr); } .week { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 900px) {
   [dir="rtl"] .sidebar { transform: translateX(100%); } [dir="ltr"] .sidebar { transform: translateX(-100%); }
@@ -257,6 +280,7 @@ const T = {
 ar: {
   prevDay: 'اليوم السابق', nextDay: 'اليوم التالي', todayBtn: 'اليوم', weekStrip: 'أيام الأسبوع', dayProgress: 'تقدم اليوم', completed: 'مكتمل', notCompleted: 'غير مكتمل', dayTasks: 'مهام اليوم', dayTaskPh: 'أضف مهمة لهذا اليوم…', noDayTasks: 'لا توجد مهام لهذا اليوم.', mindset: 'الحالة الذهنية', energy: 'الطاقة', focus: 'التركيز', motivation: 'الحماس', mindScore: 'المؤشر', mindWeek: 'الحالة الذهنية خلال الأسبوع', edit: 'تعديل', monthGrid: 'متتبع الشهر', progress: 'التقدم', completedHabits: 'عادات مكتملة',
   searchNotes: 'بحث في الملاحظات…', noMatch: 'لا توجد نتائج مطابقة.', color: 'اللون', saveClose: 'حفظ وإغلاق', pickNote: 'اختر ملاحظة من القائمة أو أنشئ واحدة جديدة.',
+  nLife: 'أحلامي وأهدافي', ideas: 'بنك الأفكار', mindmap: 'الخريطة الذهنية', travel: 'السفر', ideasSub: 'فرّغ ذهنك هنا، ثم صنّف ورتّب حسب الأثر والجهد', lDumpPh: 'تفريغ الذهن: اكتب أي فكرة واضغط Enter…', lAddIdea: 'فكرة جديدة', lIdea: 'الفكرة', lType: 'النوع', lStatus: 'الحالة', lImpact: 'الأثر', lEffort: 'الجهد', lTarget: 'الموعد المستهدف', lCost: 'التكلفة التقديرية', lNotes: 'ملاحظات', lUnrated: 'غير مقيّم', lFocus: 'تركيز هذا العام', lFocusSub: 'اختر من 3 إلى 5 أشياء فقط', lFocusMax: 'لديك 5 أفكار في التركيز. أزل واحدة قبل إضافة أخرى.', lFocusTip: 'ضع في التركيز', lTotal: 'كل الأفكار', lList: 'قائمة', lMatrix: 'مصفوفة الأولوية', it_project: 'مشروع', it_skill: 'مهارة', it_experience: 'تجربة', it_personal: 'شخصي', it_other: 'أخرى', is_idea: 'فكرة', is_planning: 'تخطيط', is_doing: 'قيد التنفيذ', is_done: 'تم', qWins: 'مكاسب سريعة', qWinsSub: 'أثر عالٍ · جهد قليل: ابدأ هنا', qBig: 'مشاريع كبرى', qBigSub: 'أثر عالٍ · جهد كبير: خطّط لها', qFill: 'أشياء بسيطة', qFillSub: 'أثر قليل · جهد قليل: عند وقت الفراغ', qLater: 'أعد التفكير', qLaterSub: 'أثر قليل · جهد كبير: أجّلها', qUnrated: 'تحتاج تقييماً', qUnratedSub: 'حدّد الأثر والجهد لتظهر في المصفوفة', lToProject: 'تحويل إلى مشروع', lOpenProject: 'فتح المشروع', noIdeas: 'لا توجد أفكار بعد. ابدأ بكتابة كل ما يخطر ببالك في الحقل أعلاه.', lEmptyQ: 'لا شيء هنا', mmCenter: 'حياتي', mmSub: 'تُبنى تلقائياً من أفكارك ووجهات سفرك. اضغط على أي عنصر لتعديله، أو على فرع لإضافة عنصر إليه.', lShowDone: 'إظهار المنجز', lHideDone: 'إخفاء المنجز', lAddTrip: 'وجهة جديدة', lCountry: 'الدولة', lFlag: 'العلم (إيموجي)', lCities: 'المدن والأماكن', lContinent: 'القارة', lSeason: 'أفضل موسم', lYear: 'السنة المستهدفة', lBudget: 'الميزانية التقديرية', ts_wish: 'حلم', ts_planned: 'مخطط لها', ts_visited: 'زرتها', c_africa: 'إفريقيا', c_mideast: 'الشرق الأوسط', c_europe: 'أوروبا', c_asia: 'آسيا', c_americas: 'الأمريكيتان', c_oceania: 'أوقيانوسيا', noTrips: 'لم تضف أي وجهة بعد. أضف الدول التي تحلم بزيارتها.', lTripBudget: 'ميزانية الرحلات القادمة', lByCont: 'حسب القارة', lExplored: 'تقدّم الاستكشاف', lDest: 'وجهة', lNextTrip: 'الرحلة القادمة', lNoFocus: 'ضع نجمة ★ على 3 إلى 5 أفكار في بنك الأفكار لتظهر هنا.', lNoNext: 'لا توجد رحلة قادمة بعد.',
   nFin: 'المالية', fin: 'النظرة المالية', income: 'المداخيل', expense: 'المصاريف', matrix: 'المصفوفة السنوية', fincats: 'التصنيفات المالية', finSub: 'كل الأرقام للفترة', totalIncome: 'إجمالي المداخيل', totalExpenses: 'إجمالي المصاريف', netBalance: 'الرصيد الصافي', surplus: '▲ فائض', deficit: '▼ عجز', avgExpense: 'متوسط المصروف الشهري', perMonth: 'شهرياً خلال الفترة', monthlyChart: 'المداخيل مقابل المصاريف شهرياً', net: 'الصافي', expDist: 'توزيع المصاريف', byGroup: 'حسب المجموعة الرئيسية', newIncome: 'دخل جديد', newExpense: 'مصروف جديد', exportCsv: 'تصدير CSV', date: 'التاريخ', mainGroup: 'المجموعة الرئيسية', subCat: 'التصنيف الفرعي', amount: 'المبلغ', notesCol: 'ملاحظات', records: 'سجل', totalLbl: 'الإجمالي', searchTx: 'بحث في المجموعة، التصنيف، الملاحظات…', noTx: 'لا توجد معاملات في هذه الفترة.', matrixSub: 'جدول محوري شهري للأرباح والخسائر', allTypes: 'كل الأنواع', grandTotal: 'المجموع الكلي', addCat: 'تصنيف جديد', type: 'النوع', catCount: 'تصنيفات فرعية', groupsCount: 'مجموعات رئيسية', noCats: 'لا توجد تصنيفات. أضف تصنيفاً أولاً.', needCat: 'أضف تصنيفاً من هذا النوع أولاً.', from: 'من', to: 'إلى', errAmount: 'أدخل مبلغاً أكبر من صفر.',
   app: 'إنتاجيتي', tagline: 'نظام الإنتاجية المتكامل',
   signin: 'تسجيل الدخول', signup: 'إنشاء حساب', signinSub: 'مرحباً بعودتك. ادخل إلى حسابك للمتابعة.', signupSub: 'أنشئ حسابك وابدأ بتنظيم يومك.',
@@ -283,6 +307,7 @@ ar: {
 fr: {
   prevDay: 'Jour précédent', nextDay: 'Jour suivant', todayBtn: 'Aujourd’hui', weekStrip: 'Jours de la semaine', dayProgress: 'Progression du jour', completed: 'Terminé', notCompleted: 'Restant', dayTasks: 'Tâches du jour', dayTaskPh: 'Ajouter une tâche pour ce jour…', noDayTasks: 'Aucune tâche pour ce jour.', mindset: 'État d’esprit', energy: 'Énergie', focus: 'Concentration', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'État d’esprit sur la semaine', edit: 'Modifier', monthGrid: 'Suivi du mois', progress: 'Progression', completedHabits: 'habitudes cochées',
   searchNotes: 'Rechercher dans les notes…', noMatch: 'Aucun résultat.', color: 'Couleur', saveClose: 'Enregistrer et fermer', pickNote: 'Choisissez une note dans la liste ou créez-en une.',
+  nLife: 'Rêves & objectifs', ideas: 'Banque d\'idées', mindmap: 'Carte mentale', travel: 'Voyages', ideasSub: 'Videz votre tête ici, puis classez selon l\'impact et l\'effort', lDumpPh: 'Vide-tête : écrivez une idée et appuyez sur Entrée…', lAddIdea: 'Nouvelle idée', lIdea: 'Idée', lType: 'Type', lStatus: 'Statut', lImpact: 'Impact', lEffort: 'Effort', lTarget: 'Date visée', lCost: 'Coût estimé', lNotes: 'Notes', lUnrated: 'Non évalué', lFocus: 'Focus de l\'année', lFocusSub: 'Choisissez 3 à 5 éléments seulement', lFocusMax: 'Vous avez déjà 5 idées en focus. Retirez-en une d\'abord.', lFocusTip: 'Mettre en focus', lTotal: 'Toutes les idées', lList: 'Liste', lMatrix: 'Matrice de priorité', it_project: 'Projet', it_skill: 'Compétence', it_experience: 'Expérience', it_personal: 'Personnel', it_other: 'Autre', is_idea: 'Idée', is_planning: 'Planification', is_doing: 'En cours', is_done: 'Fait', qWins: 'Gains rapides', qWinsSub: 'Fort impact · peu d\'effort : commencez ici', qBig: 'Grands projets', qBigSub: 'Fort impact · gros effort : planifiez', qFill: 'Petites choses', qFillSub: 'Faible impact · peu d\'effort : temps libre', qLater: 'À repenser', qLaterSub: 'Faible impact · gros effort : à reporter', qUnrated: 'À évaluer', qUnratedSub: 'Indiquez impact et effort pour les placer', lToProject: 'Convertir en projet', lOpenProject: 'Ouvrir le projet', noIdeas: 'Aucune idée pour l\'instant. Notez tout ce qui vous passe par la tête ci-dessus.', lEmptyQ: 'Rien ici', mmCenter: 'Ma vie', mmSub: 'Générée à partir de vos idées et destinations. Cliquez sur un élément pour le modifier, ou sur une branche pour y ajouter.', lShowDone: 'Afficher terminés', lHideDone: 'Masquer terminés', lAddTrip: 'Nouvelle destination', lCountry: 'Pays', lFlag: 'Drapeau (emoji)', lCities: 'Villes et lieux', lContinent: 'Continent', lSeason: 'Meilleure saison', lYear: 'Année visée', lBudget: 'Budget estimé', ts_wish: 'Rêve', ts_planned: 'Prévu', ts_visited: 'Visité', c_africa: 'Afrique', c_mideast: 'Moyen-Orient', c_europe: 'Europe', c_asia: 'Asie', c_americas: 'Amériques', c_oceania: 'Océanie', noTrips: 'Aucune destination. Ajoutez les pays que vous rêvez de visiter.', lTripBudget: 'Budget des prochains voyages', lByCont: 'Par continent', lExplored: 'Progression', lDest: 'destinations', lNextTrip: 'Prochain voyage', lNoFocus: 'Mettez une étoile ★ sur 3 à 5 idées pour les voir ici.', lNoNext: 'Aucun voyage prévu.',
   nFin: 'Finances', fin: 'Vue financière', income: 'Revenus', expense: 'Dépenses', matrix: 'Matrice annuelle', fincats: 'Catégories', finSub: 'Tous les chiffres pour la période', totalIncome: 'Total des revenus', totalExpenses: 'Total des dépenses', netBalance: 'Solde net', surplus: '▲ Excédent', deficit: '▼ Déficit', avgExpense: 'Dépense mensuelle moyenne', perMonth: 'par mois sur la période', monthlyChart: 'Revenus et dépenses par mois', net: 'Net', expDist: 'Répartition des dépenses', byGroup: 'Par groupe principal', newIncome: 'Nouveau revenu', newExpense: 'Nouvelle dépense', exportCsv: 'Exporter CSV', date: 'Date', mainGroup: 'Groupe principal', subCat: 'Sous-catégorie', amount: 'Montant', notesCol: 'Notes', records: 'lignes', totalLbl: 'Total', searchTx: 'Rechercher groupe, catégorie, notes…', noTx: 'Aucune transaction sur cette période.', matrixSub: 'Tableau croisé mensuel des revenus et dépenses', allTypes: 'Tous les types', grandTotal: 'Total général', addCat: 'Nouvelle catégorie', type: 'Type', catCount: 'sous-catégories', groupsCount: 'groupes principaux', noCats: 'Aucune catégorie. Ajoutez-en une d’abord.', needCat: 'Ajoutez d’abord une catégorie de ce type.', from: 'Du', to: 'Au', errAmount: 'Saisissez un montant supérieur à zéro.',
   app: 'Intajiyati', tagline: 'Système de productivité complet',
   signin: 'Se connecter', signup: 'Créer un compte', signinSub: 'Bon retour. Connectez-vous pour continuer.', signupSub: 'Créez votre compte et organisez vos journées.',
@@ -309,6 +334,7 @@ fr: {
 en: {
   prevDay: 'Previous day', nextDay: 'Next day', todayBtn: 'Today', weekStrip: 'Days of the week', dayProgress: 'Day progress', completed: 'Completed', notCompleted: 'Not completed', dayTasks: 'Tasks for the day', dayTaskPh: 'Add a task for this day…', noDayTasks: 'No tasks for this day.', mindset: 'Mindset check-in', energy: 'Energy', focus: 'Focus', motivation: 'Motivation', mindScore: 'Score', mindWeek: 'Mindset across the week', edit: 'Edit', monthGrid: 'Month tracker', progress: 'Progress', completedHabits: 'habits completed',
   searchNotes: 'Search notes…', noMatch: 'No matching notes.', color: 'Colour', saveClose: 'Save and close', pickNote: 'Pick a note from the list or create a new one.',
+  nLife: 'Dreams & goals', ideas: 'Idea bank', mindmap: 'Mind map', travel: 'Travel', ideasSub: 'Dump everything here, then sort it by impact and effort', lDumpPh: 'Brain dump: type an idea and press Enter…', lAddIdea: 'New idea', lIdea: 'Idea', lType: 'Type', lStatus: 'Status', lImpact: 'Impact', lEffort: 'Effort', lTarget: 'Target date', lCost: 'Estimated cost', lNotes: 'Notes', lUnrated: 'Unrated', lFocus: 'Focus this year', lFocusSub: 'Pick 3 to 5 things only', lFocusMax: 'You already have 5 ideas in focus. Remove one first.', lFocusTip: 'Add to focus', lTotal: 'All ideas', lList: 'List', lMatrix: 'Priority matrix', it_project: 'Project', it_skill: 'Skill', it_experience: 'Experience', it_personal: 'Personal', it_other: 'Other', is_idea: 'Idea', is_planning: 'Planning', is_doing: 'In progress', is_done: 'Done', qWins: 'Quick wins', qWinsSub: 'High impact · low effort: start here', qBig: 'Big bets', qBigSub: 'High impact · high effort: plan them', qFill: 'Fill-ins', qFillSub: 'Low impact · low effort: spare time', qLater: 'Rethink', qLaterSub: 'Low impact · high effort: postpone', qUnrated: 'Needs rating', qUnratedSub: 'Set impact and effort to place them', lToProject: 'Turn into project', lOpenProject: 'Open project', noIdeas: 'No ideas yet. Write down everything on your mind in the field above.', lEmptyQ: 'Nothing here', mmCenter: 'My life', mmSub: 'Built from your ideas and destinations. Click an item to edit it, or a branch to add to it.', lShowDone: 'Show done', lHideDone: 'Hide done', lAddTrip: 'New destination', lCountry: 'Country', lFlag: 'Flag (emoji)', lCities: 'Cities and places', lContinent: 'Continent', lSeason: 'Best season', lYear: 'Target year', lBudget: 'Estimated budget', ts_wish: 'Dream', ts_planned: 'Planned', ts_visited: 'Visited', c_africa: 'Africa', c_mideast: 'Middle East', c_europe: 'Europe', c_asia: 'Asia', c_americas: 'Americas', c_oceania: 'Oceania', noTrips: 'No destinations yet. Add the countries you dream of visiting.', lTripBudget: 'Upcoming trips budget', lByCont: 'By continent', lExplored: 'Exploration', lDest: 'destinations', lNextTrip: 'Next trip', lNoFocus: 'Star ★ 3 to 5 ideas in the idea bank to see them here.', lNoNext: 'No upcoming trip yet.',
   nFin: 'Finance', fin: 'Financial overview', income: 'Incomes', expense: 'Expenses', matrix: 'Annual matrix', fincats: 'Categories', finSub: 'All figures for', totalIncome: 'Total income', totalExpenses: 'Total expenses', netBalance: 'Net balance', surplus: '▲ Surplus', deficit: '▼ Deficit', avgExpense: 'Avg monthly expense', perMonth: 'per month in period', monthlyChart: 'Monthly income vs expenses', net: 'Net', expDist: 'Expense distribution', byGroup: 'By main group', newIncome: 'New income', newExpense: 'New expense', exportCsv: 'Export CSV', date: 'Date', mainGroup: 'Main group', subCat: 'Sub category', amount: 'Amount', notesCol: 'Notes', records: 'records', totalLbl: 'Total', searchTx: 'Search group, category, notes…', noTx: 'No transactions in this period.', matrixSub: 'P&L pivot, monthly breakdown', allTypes: 'All types', grandTotal: 'Grand total', addCat: 'Add category', type: 'Type', catCount: 'sub-categories', groupsCount: 'main groups', noCats: 'No categories yet. Add one first.', needCat: 'Add a category of this type first.', from: 'From', to: 'To', errAmount: 'Enter an amount greater than zero.',
   app: 'Intajiyati', tagline: 'All-in-one productivity system',
   signin: 'Sign in', signup: 'Create account', signinSub: 'Welcome back. Sign in to continue.', signupSub: 'Create your account and start organising your day.',
@@ -369,6 +395,7 @@ const ICONS = {
   settings: '<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="18" r="2"/>',
   logout: '<path d="M9 4H5v16h4M15 8l4 4-4 4M19 12H9"/>', plus: '<path d="M12 5v14M5 12h14"/>', trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>', prev: '<path d="M15 6l-6 6 6 6"/>', next: '<path d="M9 6l6 6-6 6"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', edit: '<path d="M4 20h4l10-10-4-4L4 16z"/><path d="M13 7l4 4"/>',
   fin: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/>', income: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>', expense: '<path d="M3 7l6 6 4-4 8 8M15 17h6v-6"/>',
+  ideas: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>', mindmap: '<circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M9.6 10.2L5.5 6.4M14.4 10.2l4.1-3.8M9.6 13.8l-4.1 3.8M14.4 13.8l4.1 3.8"/>', travel: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3z"/>',
   matrix: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>', fincats: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="8" cy="8" r="1.5"/>', download: '<path d="M12 4v11M7 11l5 5 5-5M4 20h16"/>',
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -381,7 +408,7 @@ function seedState() {
   return { v: 1, start: today(), ts: Date.now(),
     habits: s.habits.map(([emoji, name], i) => ({ id: uid(), emoji, name, color: PALETTE[i % PALETTE.length] })),
     habitLog: {}, routine: { morning: mk(s.morning), evening: mk(s.evening) }, routineLog: {},
-    projects: [], tasks: [], notes: [], weeks: {}, mood: {}, dayTasks: {}, mind: {}, fin: { tx: [], cats: [] } };
+    projects: [], tasks: [], notes: [], weeks: {}, mood: {}, dayTasks: {}, mind: {}, fin: { tx: [], cats: [] }, life: { ideas: [], travel: [] } };
 }
 function normalize(s) {
   const d = seedState();
@@ -391,6 +418,7 @@ function normalize(s) {
   for (const w of Object.values(s.weeks)) if (w && w.plans) { for (const [dk, arr] of Object.entries(w.plans)) (arr || []).forEach(p => (s.dayTasks[dk] || (s.dayTasks[dk] = [])).push({ id: uid(), title: String(p), done: false })); delete w.plans; }
   if (!s.routine || !Array.isArray(s.routine.morning) || !Array.isArray(s.routine.evening)) s.routine = d.routine;
   if (!s.fin || typeof s.fin !== 'object') s.fin = {}; if (!Array.isArray(s.fin.tx)) s.fin.tx = []; if (!Array.isArray(s.fin.cats)) s.fin.cats = [];
+  if (!s.life || typeof s.life !== 'object') s.life = {}; for (const k of ['ideas', 'travel']) if (!Array.isArray(s.life[k])) s.life[k] = [];
   if (!s.start) s.start = today();
   return s;
 }
@@ -438,7 +466,7 @@ function weekData(off = weekOffset) { const k = weekKeyOf(off); if (!S.weeks[k])
 function closeModal() { $('modalRoot').innerHTML = ''; }
 function openForm({ title, fields = [], text = '', submit = t('save'), danger = false, onSubmit }) {
   $('modalRoot').innerHTML = `<div class="overlay" id="ov"><form class="modal" id="mf" role="dialog" aria-modal="true"><h3>${esc(title)}</h3>${text ? `<p style="color:var(--muted);font-size:13px">${esc(text)}</p>` : ''}
-    ${fields.map(f => `<div class="field"><label for="f_${f.name}">${esc(f.label)}</label>${f.type === 'select'
+    ${fields.map(f => `<div class="field"><label for="f_${f.name}">${esc(f.label)}</label>${f.type === 'textarea' ? `<textarea id="f_${f.name}" rows="3" ${f.max ? `maxlength="${f.max}"` : ''}>${esc(f.value || '')}</textarea>` : f.type === 'select'
       ? `<select id="f_${f.name}">${f.options.map(([v, l]) => `<option value="${esc(v)}" ${v === f.value ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`
       : `<input id="f_${f.name}" type="${f.type || 'text'}" value="${esc(f.value || '')}" ${f.required ? 'required' : ''} ${f.max ? `maxlength="${f.max}"` : ''} ${f.min ? `minlength="${f.min}"` : ''}>`}</div>`).join('')}
     <div class="msg err hidden" id="mErr"></div>
@@ -495,7 +523,7 @@ async function onSession(session, event) {
 }
 
 /* ───────── Shell ───────── */
-const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nFin', ['fin', 'income', 'expense', 'matrix', 'fincats']], ['nAccount', ['settings']]];
+const NAV = [['nMain', ['dashboard']], ['nPlan', ['weekly', 'daily']], ['nTrack', ['habits', 'analytics']], ['nWork', ['projects', 'notes']], ['nLife', ['ideas', 'mindmap', 'travel']], ['nFin', ['fin', 'income', 'expense', 'matrix', 'fincats']], ['nAccount', ['settings']]];
 function go(p) { if (page === 'notes' && p !== 'notes' && S) { const n = S.notes.length; S.notes = S.notes.filter(x => x.title || x.body); if (S.notes.length !== n) save(); noteSel = null; } page = p; $('sidebar').classList.remove('open'); render(); window.scrollTo(0, 0); }
 function render() {
   if (!user || !S) return; applyChrome();
@@ -584,7 +612,7 @@ dashboard() {
   ${card(t('todayHabits'), S.habits.length ? S.habits.slice(0, 6).map(h => habitRow(h, k, false)).join('') : `<div class="empty">${t('noHabits')}</div>`, `<button class="link" onclick="go('habits')">${t('all')}</button>`)}</div>
   <div class="grid g3">${card(t('heat'), `<div class="legend">${t('less')} <i style="background:var(--surface3)"></i><i style="background:var(--hm1)"></i><i style="background:var(--hm2)"></i><i style="background:var(--hm3)"></i><i style="background:var(--hm4)"></i> ${t('more')}</div><div class="heat">${heat}</div>`)}
   ${card(t('projProgress'), S.projects.length ? S.projects.map(p => { const s = projStats(p.id); return `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:6px"><span style="display:flex;align-items:center;gap:8px;font-weight:600"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}</span><span class="num" style="font-size:12px;color:var(--muted)">${s.done}/${s.total} · ${s.p}%</span></div><div class="bar" style="height:8px"><div style="width:${s.p}%;background:${p.color}"></div></div></div>`; }).join('') : `<div class="empty">${t('noProjects')}</div>`)}
-  ${card(t('mood'), `<div style="text-align:center;font-size:44px;margin-bottom:12px">${MOODS[S.mood[k] ?? 3]}</div><div class="mood">${MOODS.map((m, i) => `<button class="${S.mood[k] === i ? 'on' : ''}" onclick="setMood(${i})" aria-pressed="${S.mood[k] === i}">${m}</button>`).join('')}</div>`)}</div>`;
+  ${card(t('mood'), `<div style="text-align:center;font-size:44px;margin-bottom:12px">${MOODS[S.mood[k] ?? 3]}</div><div class="mood">${MOODS.map((m, i) => `<button class="${S.mood[k] === i ? 'on' : ''}" onclick="setMood(${i})" aria-pressed="${S.mood[k] === i}">${m}</button>`).join('')}</div>`)}</div>` + lifeDash();
 },
 weekly() {
   const ws = addDays(weekStart(new Date()), weekOffset * 7), w = weekData(), k = today();
@@ -737,6 +765,130 @@ function downloadCsv(name, rows) { const csv = '﻿' + rows.map(r => r.map(v => 
 function exportTx(type) { downloadCsv(`${type}-${finRange.from}_${finRange.to}.csv`, [[t('date'), t('mainGroup'), t('subCat'), t('amount'), t('notesCol')], ...txIn(type).sort((a, b) => b.date.localeCompare(a.date)).map(x => [x.date, x.group, x.sub, x.amount, x.notes || ''])]); }
 function exportMatrix() { const year = finRange.from.slice(0, 4), tx = S.fin.tx.filter(x => x.date.slice(0, 4) === year && (matrixType === 'all' || x.type === matrixType)), keys = [...new Set(tx.map(x => [x.type, x.group, x.sub].join('␟')))].sort(); downloadCsv(`matrix-${year}.csv`, [[t('type'), t('mainGroup'), t('subCat'), ...[...Array(12)].map((_, i) => i + 1), t('totalLbl')], ...keys.map(k => { const [ty, g, sb2] = k.split('␟'), l = tx.filter(x => x.type === ty && x.group === g && x.sub === sb2); return [ty, g, sb2, ...[...Array(12)].map((_, i) => sum(l.filter(x => Number(x.date.slice(5, 7)) === i + 1))), sum(l)]; })]); }
 function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' })); a.download = `intajiyati-${today()}.json`; a.click(); URL.revokeObjectURL(a.href); }
+
+/* ───────── Dreams & goals: ideas, mind map, travel ───────── */
+const IDEA_TYPES = [['project', '🚀', '#ff6b35'], ['skill', '🎓', '#10d9a0'], ['experience', '✨', '#9b6dff'], ['personal', '🌱', '#2dd4bf'], ['other', '💡', '#ffd166']];
+const ITYPE = Object.fromEntries(IDEA_TYPES.map(([k, e, c]) => [k, { e, c }]));
+const ISTAT = { idea: 'var(--faint)', planning: 'var(--blue)', doing: 'var(--yellow)', done: 'var(--green)' };
+const TSTAT = { wish: 'var(--purple)', planned: 'var(--blue)', visited: 'var(--green)' };
+const CONTS = ['africa', 'mideast', 'europe', 'asia', 'americas', 'oceania'];
+const CONT_C = { africa: '#ffd166', mideast: '#ff6b35', europe: '#4a9eff', asia: '#ff6b9d', americas: '#10d9a0', oceania: '#2dd4bf' };
+let ideaView = 'list', ideaType = 'all', ideaStat = 'all', tripStat = 'all', mmDone = true;
+const ideaScore = x => (x.impact || 0) * 2 - (x.effort || 0);
+const stTag = (label, color, onclick = '') => `<${onclick ? 'button' : 'span'} class="tag ${onclick ? 'tagbtn' : ''}" style="background:color-mix(in srgb, ${color} 18%, transparent);color:${color}" ${onclick ? `onclick="${onclick}" title="${t('lStatus')}"` : ''}>${esc(label)}</${onclick ? 'button' : 'span'}>`;
+const dots = n => n ? `<span class="num" style="letter-spacing:1px;color:var(--accent)">${'●'.repeat(n)}<span style="color:var(--surface3)">${'●'.repeat(5 - n)}</span></span>` : `<span style="color:var(--faint);font-size:12px">${t('lUnrated')}</span>`;
+const typeTag = k => { const o = ITYPE[k] || ITYPE.other; return stTag(`${o.e} ${t('it_' + (ITYPE[k] ? k : 'other'))}`, o.c); };
+const linkedProject = x => x.projectId && S.projects.find(p => p.id === x.projectId);
+
+function lifeDash() {
+  const f = S.life.ideas.filter(x => x.focus), order = { planned: 0, wish: 1 };
+  const next = S.life.travel.filter(x => x.status !== 'visited').sort((a, b) => order[a.status] - order[b.status] || (Number(a.year) || 9999) - (Number(b.year) || 9999))[0];
+  return `<div class="grid g21">${card('★ ' + t('lFocus'), f.length ? f.map(x => `<div class="lrow"><span style="font-size:18px">${(ITYPE[x.type] || ITYPE.other).e}</span><button class="link row-main" style="color:var(--text);text-align:start" onclick="editIdea('${x.id}')"><span class="row-title ${x.status === 'done' ? 'done' : ''}">${esc(x.title)}</span></button>${stTag(t('is_' + x.status), ISTAT[x.status])}</div>`).join('') : `<div class="empty">${t('lNoFocus')}</div>`, `<button class="link" onclick="go('ideas')">${t('all')}</button>`)}
+  ${card(t('lNextTrip'), next ? `<div style="text-align:center"><div style="font-size:52px;line-height:1.1">${esc(next.flag || '🌍')}</div><div style="font-weight:800;font-size:18px;margin-top:6px">${esc(next.country)}</div><div style="color:var(--muted);font-size:13px">${esc(next.cities || '')}</div><div class="trip-meta" style="justify-content:center;margin-top:10px">${stTag(t('ts_' + next.status), TSTAT[next.status])}${next.year ? `<span class="badge num">${esc(next.year)}</span>` : ''}${next.budget ? `<span class="badge num">${money(next.budget)}</span>` : ''}</div></div>` : `<div class="empty">${t('lNoNext')}</div>`, `<button class="link" onclick="go('travel')">${t('all')}</button>`)}</div>`;
+}
+
+Object.assign(PAGES, {
+ideas() {
+  const L = S.life.ideas, focusN = L.filter(x => x.focus).length;
+  const list = L.filter(x => (ideaType === 'all' || x.type === ideaType) && (ideaStat === 'all' || x.status === ideaStat)).sort((a, b) => (b.focus ? 1 : 0) - (a.focus ? 1 : 0) || (a.status === 'done') - (b.status === 'done') || ideaScore(b) - ideaScore(a) || b.ts - a.ts);
+  const seg = `<div class="seg">${[['list', 'lList'], ['matrix', 'lMatrix']].map(([v, l]) => `<button class="${ideaView === v ? 'on' : ''}" onclick="setIdeaView('${v}')">${t(l)}</button>`).join('')}</div>`;
+  const dump = `<section class="card" style="margin-bottom:16px"><form class="dump" onsubmit="event.preventDefault();quickIdea()"><select id="qType" aria-label="${t('lType')}">${IDEA_TYPES.map(([k, e]) => `<option value="${k}" ${k === (ideaType === 'all' ? 'other' : ideaType) ? 'selected' : ''}>${e} ${t('it_' + k)}</option>`).join('')}</select><input type="text" id="qIdea" maxlength="140" placeholder="${t('lDumpPh')}" aria-label="${t('lDumpPh')}"><button class="btn btn-primary" aria-label="${t('add')}">${ic('plus')}</button></form></section>`;
+  const kpis = `<div class="grid g4">${kpiCard(t('lTotal'), L.length, t('records'), 'var(--accent)')}${kpiCard('★ ' + t('lFocus'), `${focusN}/5`, t('lFocusSub'), 'var(--yellow)', pct(focusN, 5))}${kpiCard(t('is_doing'), L.filter(x => x.status === 'doing').length, t('records'), 'var(--blue)')}${kpiCard(t('is_done'), L.filter(x => x.status === 'done').length, `${pct(L.filter(x => x.status === 'done').length, L.length)}%`, 'var(--green)', pct(L.filter(x => x.status === 'done').length, L.length))}</div>`;
+  const filters = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"><div class="seg" style="flex-wrap:wrap">${[['all', t('all')], ...IDEA_TYPES.map(([k, e]) => [k, `${e} ${t('it_' + k)}`])].map(([v, l]) => `<button class="${ideaType === v ? 'on' : ''}" onclick="setIdeaType('${v}')">${esc(l)}</button>`).join('')}</div><div class="seg" style="flex-wrap:wrap">${['all', ...Object.keys(ISTAT)].map(v => `<button class="${ideaStat === v ? 'on' : ''}" onclick="setIdeaStat('${v}')">${v === 'all' ? t('all') : t('is_' + v)}</button>`).join('')}</div></div>`;
+  let body;
+  if (!L.length) body = `<section class="card empty">${t('noIdeas')}</section>`;
+  else if (ideaView === 'list') body = `<section class="card">${filters}${list.length ? `<div style="overflow-x:auto"><table class="ft"><thead><tr><th></th><th>${t('lIdea')}</th><th>${t('lType')}</th><th>${t('lStatus')}</th><th>${t('lImpact')}</th><th>${t('lEffort')}</th><th>${t('lTarget')}</th><th>${t('lCost')}</th><th></th></tr></thead><tbody>${list.map(x => { const lp = linkedProject(x); return `<tr><td><button class="icon-btn star ${x.focus ? 'on' : ''}" onclick="toggleFocus('${x.id}')" aria-pressed="${!!x.focus}" title="${t('lFocusTip')}" aria-label="${t('lFocusTip')}">${x.focus ? '★' : '☆'}</button></td><td style="max-width:300px"><div class="row-title ${x.status === 'done' ? 'done' : ''}" style="word-break:break-word">${esc(x.title)}</div>${x.notes ? `<div style="color:var(--muted);font-size:12px;white-space:pre-line;word-break:break-word">${esc(x.notes)}</div>` : ''}</td><td>${typeTag(x.type)}</td><td>${stTag(t('is_' + x.status), ISTAT[x.status], `cycleIdea('${x.id}')`)}</td><td>${dots(x.impact)}</td><td>${dots(x.effort)}</td><td class="num" style="white-space:nowrap">${x.target ? fmt(pdate(x.target), { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td><td class="num" style="white-space:nowrap">${x.cost ? money(x.cost) : '—'}</td><td style="white-space:nowrap;text-align:end"><button class="icon-btn" onclick="ideaToProject('${x.id}')" title="${t(lp ? 'lOpenProject' : 'lToProject')}" aria-label="${t(lp ? 'lOpenProject' : 'lToProject')}" style="${lp ? 'color:var(--accent)' : ''}">${ic('projects')}</button><button class="icon-btn" onclick="editIdea('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delIdea('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></td></tr>`; }).join('')}</tbody></table></div>` : `<div class="empty">${t('noMatch')}</div>`}</section>`;
+  else {
+    const open = list.filter(x => x.status !== 'done'), rated = open.filter(x => x.impact && x.effort), hi = x => x.impact >= 3, he = x => x.effort >= 3;
+    const chips = a => a.length ? `<div class="chips">${a.map(x => `<button class="chip" onclick="editIdea('${x.id}')">${x.focus ? '<span style="color:var(--yellow)">★</span>' : ''}${(ITYPE[x.type] || ITYPE.other).e} <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.title)}</span></button>`).join('')}</div>` : `<div class="empty" style="padding:14px">${t('lEmptyQ')}</div>`;
+    const q = (title, sub, color, a) => `<section class="card quad" style="border-top-color:${color}"><div class="card-head"><div><div style="font-weight:800;color:${color}">${title}</div><div style="font-size:12px;color:var(--muted)">${sub}</div></div><span class="badge num">${a.length}</span></div>${chips(a)}</section>`;
+    const un = open.filter(x => !(x.impact && x.effort));
+    body = `<section class="card" style="margin-bottom:16px;padding-bottom:6px">${filters}</section><div class="grid g2">${q(t('qWins'), t('qWinsSub'), 'var(--green)', rated.filter(x => hi(x) && !he(x)))}${q(t('qBig'), t('qBigSub'), 'var(--blue)', rated.filter(x => hi(x) && he(x)))}${q(t('qFill'), t('qFillSub'), 'var(--yellow)', rated.filter(x => !hi(x) && !he(x)))}${q(t('qLater'), t('qLaterSub'), 'var(--pink)', rated.filter(x => !hi(x) && he(x)))}</div>${un.length ? q(t('qUnrated'), t('qUnratedSub'), 'var(--faint)', un) : ''}`;
+  }
+  return header(t('ideas'), t('ideasSub'), seg + `<button class="btn btn-primary" onclick="addIdea()">${ic('plus')}${t('lAddIdea')}</button>`) + dump + kpis + body;
+},
+mindmap() {
+  const groups = [{ add: 'addTrip()', e: '✈️', c: '#4a9eff', label: t('travel'), items: S.life.travel.map(x => ({ fn: `editTrip('${x.id}')`, label: `${x.flag || ''} ${x.country}`.trim(), done: x.status === 'visited', focus: x.status === 'planned' })) },
+    ...IDEA_TYPES.map(([k, e, c]) => ({ add: `addIdea('${k}')`, e, c, label: t('it_' + k), items: S.life.ideas.filter(i => (ITYPE[i.type] ? i.type : 'other') === k).sort((a, b) => (b.focus ? 1 : 0) - (a.focus ? 1 : 0) || ideaScore(b) - ideaScore(a)).map(i => ({ fn: `editIdea('${i.id}')`, label: i.title, done: i.status === 'done', focus: i.focus })) }))];
+  groups.forEach(g => { g.total = g.items.length; if (!mmDone) g.items = g.items.filter(i => !i.done); });
+  const W = 1200, H = 780, cx = W / 2, cy = H / 2, KX = 1.5, R1 = 150, R2 = 262, MAX = 9, G = groups.length, sector = Math.PI * 2 / G;
+  const cut = (s, n = 22) => s.length > n ? s.slice(0, n - 1) + '…' + (/[\u0590-\u08ff]/.test(s) ? '\u200f' : '') : s, P = (a, r, k = KX) => [cx + Math.cos(a) * r * k, cy + Math.sin(a) * r];
+  let links = '', nodes = '';
+  groups.forEach((g, gi) => {
+    const a = -Math.PI / 2 + gi * sector, [bx, by] = P(a, R1), shown = g.items.slice(0, MAX), extra = g.items.length - shown.length, leaves = extra > 0 ? [...shown, { label: `+${extra}`, fn: g.add.startsWith('addTrip') ? "go('travel')" : "go('ideas')", more: true }] : shown;
+    const step = Math.min(0.26, sector * 0.92 / Math.max(1, leaves.length - 1));
+    links += `<path d="M${cx} ${cy} Q${P(a, R1 * 0.5)[0]} ${P(a, R1 * 0.5)[1] + 0} ${bx} ${by}" stroke="${g.c}" stroke-width="4" fill="none" stroke-linecap="round" opacity=".75"/>`;
+    leaves.forEach((it, j) => {
+      const la = a + (j - (leaves.length - 1) / 2) * step, r = R2 + (j % 2) * 54, [lx, ly] = P(la, r), [qx, qy] = P(a, (R1 + r) / 2), right = Math.cos(la) >= -0.02, op = it.done ? .45 : 1;
+      links += `<path d="M${bx} ${by} Q${qx} ${qy} ${lx} ${ly}" stroke="${g.c}" stroke-width="1.6" fill="none" opacity="${.45 * op}"/>`;
+      nodes += `<g class="n" onclick="${it.fn}" opacity="${op}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){${it.fn}}"><title>${esc(it.label)}</title><circle cx="${lx}" cy="${ly}" r="${it.focus ? 7 : 5.5}" fill="${it.done ? 'var(--surface3)' : g.c}" stroke="${it.focus ? 'var(--yellow)' : g.c}" stroke-width="${it.focus ? 2.5 : 1.5}"/><text class="lb" x="${lx + (right ? 11 : -11)}" y="${ly + 4.5}" text-anchor="${right ? 'start' : 'end'}" font-size="13" font-weight="${it.focus ? 800 : 600}" fill="${it.more ? 'var(--muted)' : 'var(--text)'}" ${it.done ? 'text-decoration="line-through"' : ''}>${esc(cut(it.label))}</text></g>`;
+    });
+    nodes += `<g class="n" onclick="${g.add}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){${g.add}}"><title>${esc(g.label)} · ${t('add')}</title><circle cx="${bx}" cy="${by}" r="36" fill="color-mix(in srgb, ${g.c} 20%, var(--surface))" stroke="${g.c}" stroke-width="2"/><text x="${bx}" y="${by + 8}" text-anchor="middle" font-size="24">${g.e}</text><text class="lb" x="${bx}" y="${by + 56}" text-anchor="middle" font-size="13.5" font-weight="800" fill="${g.c}">${esc(g.label)} · ${g.total}</text></g>`;
+  });
+  const total = groups.reduce((n, g) => n + g.total, 0);
+  const svg = `<svg class="mm" viewBox="0 0 ${W} ${H}" direction="ltr" style="direction:ltr" font-family="inherit" role="img" aria-label="${t('mindmap')}">${links}<circle cx="${cx}" cy="${cy}" r="64" fill="var(--accent)"/><circle cx="${cx}" cy="${cy}" r="74" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".35"/><text x="${cx}" y="${cy + 2}" text-anchor="middle" font-size="21" font-weight="800" fill="#fff">${esc(t('mmCenter'))}</text><text x="${cx}" y="${cy + 24}" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffffcc">${total}</text>${nodes}</svg>`;
+  return header(t('mindmap'), t('mmSub'), `<button class="btn btn-ghost" onclick="toggleMmDone()">${t(mmDone ? 'lHideDone' : 'lShowDone')}</button><button class="btn btn-ghost" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button><button class="btn btn-primary" onclick="addIdea()">${ic('plus')}${t('lAddIdea')}</button>`) + `<section class="card mm-wrap">${svg}</section>`;
+},
+travel() {
+  const L = S.life.travel, n = s => L.filter(x => x.status === s).length, order = { planned: 0, wish: 1, visited: 2 };
+  const list = L.filter(x => tripStat === 'all' || x.status === tripStat).sort((a, b) => order[a.status] - order[b.status] || (Number(a.year) || 9999) - (Number(b.year) || 9999) || a.country.localeCompare(b.country));
+  const budget = L.filter(x => x.status !== 'visited').reduce((s2, x) => s2 + (Number(x.budget) || 0), 0), vp = pct(n('visited'), L.length);
+  const kpis = `<div class="grid g4">${kpiCard(t('ts_visited'), n('visited'), `${vp}% · ${L.length} ${t('lDest')}`, 'var(--green)', vp)}${kpiCard(t('ts_planned'), n('planned'), t('lDest'), 'var(--blue)')}${kpiCard(t('ts_wish'), n('wish'), t('lDest'), 'var(--purple)')}${kpiCard(t('lTripBudget'), compact(budget), `${t('ts_planned')} + ${t('ts_wish')}`, 'var(--yellow)')}</div>`;
+  const seg = `<div class="seg" style="flex-wrap:wrap">${['all', ...Object.keys(TSTAT)].map(v => `<button class="${tripStat === v ? 'on' : ''}" onclick="setTripStat('${v}')">${v === 'all' ? t('all') : t('ts_' + v)}</button>`).join('')}</div>`;
+  const cards = list.length ? `<div class="trips">${list.map(x => `<section class="card trip" style="border-top:3px solid ${TSTAT[x.status]}"><div class="trip-top"><div class="trip-flag">${esc(x.flag || '🌍')}</div><div class="row-main"><div style="font-weight:800;font-size:15px;word-break:break-word">${esc(x.country)}</div><div style="color:var(--muted);font-size:12.5px;word-break:break-word">${esc(x.cities || '')}</div></div><span style="display:flex"><button class="icon-btn" onclick="editTrip('${x.id}')" aria-label="${t('edit')}">${ic('edit')}</button><button class="icon-btn danger" onclick="delTrip('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div><div class="trip-meta">${stTag(t('ts_' + x.status), TSTAT[x.status], `cycleTrip('${x.id}')`)}${x.continent ? `<span class="badge">${t('c_' + x.continent)}</span>` : ''}${x.year ? `<span class="badge num">📅 ${esc(x.year)}</span>` : ''}${x.season ? `<span class="badge">☀️ ${esc(x.season)}</span>` : ''}${x.budget ? `<span class="badge num">💰 ${money(x.budget)}</span>` : ''}</div>${x.notes ? `<div style="font-size:12.5px;color:var(--muted);white-space:pre-line;word-break:break-word">${esc(x.notes)}</div>` : ''}</section>`).join('')}</div>` : `<section class="card empty">${t(L.length ? 'noMatch' : 'noTrips')}<div style="margin-top:12px"><button class="btn btn-primary" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button></div></section>`;
+  const conts = CONTS.map(c => { const a = L.filter(x => x.continent === c), v = a.filter(x => x.status === 'visited').length; return a.length ? `<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px"><span style="font-weight:600">${t('c_' + c)}</span><span class="num" style="color:var(--muted)">${v}/${a.length}</span></div><div class="bar" style="height:8px"><div style="width:${pct(v, a.length)}%;background:${CONT_C[c]}"></div></div></div>` : ''; }).join('');
+  const side = card(t('lExplored'), `<div style="display:grid;place-items:center;margin-bottom:18px">${donut(vp, 'var(--green)', 110, 20)}</div><div class="card-title" style="margin-bottom:12px">${t('lByCont')}</div>${conts || `<div class="empty" style="padding:10px">—</div>`}`);
+  return header(t('travel'), `${L.length} ${t('lDest')}`, seg + `<button class="btn btn-primary" onclick="addTrip()">${ic('plus')}${t('lAddTrip')}</button>`) + kpis + `<div class="grid g21"><div>${cards}</div>${side}</div>`;
+},
+});
+
+function setIdeaView(v) { ideaView = v; render(); }
+function setIdeaType(v) { ideaType = v; render(); }
+function setIdeaStat(v) { ideaStat = v; render(); }
+function setTripStat(v) { tripStat = v; render(); }
+function toggleMmDone() { mmDone = !mmDone; render(); }
+function quickIdea() { const el = $('qIdea'), v = (el.value || '').trim(); if (!v) return; S.life.ideas.push({ id: uid(), title: v, type: $('qType').value, status: 'idea', impact: 0, effort: 0, focus: false, target: '', cost: 0, notes: '', ts: Date.now() }); commit(); const q = $('qIdea'); if (q) q.focus(); }
+const RATE_OPTS = () => [['0', '— ' + t('lUnrated')], ...[1, 2, 3, 4, 5].map(i => [String(i), '●'.repeat(i) + ' ' + i + '/5'])];
+function ideaForm(x, type) {
+  openForm({ title: t(x ? 'edit' : 'lAddIdea'), submit: t(x ? 'save' : 'add'), fields: [
+    { name: 'title', label: t('lIdea'), value: x ? x.title : '', required: true, max: 140 },
+    { name: 'type', label: t('lType'), type: 'select', value: x ? x.type : (type || (ideaType === 'all' ? 'project' : ideaType)), options: IDEA_TYPES.map(([k, e]) => [k, `${e} ${t('it_' + k)}`]) },
+    { name: 'status', label: t('lStatus'), type: 'select', value: x ? x.status : 'idea', options: Object.keys(ISTAT).map(k => [k, t('is_' + k)]) },
+    { name: 'impact', label: t('lImpact'), type: 'select', value: String(x ? x.impact || 0 : 3), options: RATE_OPTS() },
+    { name: 'effort', label: t('lEffort'), type: 'select', value: String(x ? x.effort || 0 : 3), options: RATE_OPTS() },
+    { name: 'target', label: t('lTarget'), type: 'date', value: x ? x.target : '' },
+    { name: 'cost', label: `${t('lCost')} (${CUR})`, type: 'number', value: x && x.cost ? String(x.cost) : '' },
+    { name: 'notes', label: t('lNotes'), type: 'textarea', value: x ? x.notes : '', max: 1000 }],
+    onSubmit: v => { if (!v.title) return; const d = { title: v.title, type: v.type, status: v.status, impact: Number(v.impact) || 0, effort: Number(v.effort) || 0, target: v.target, cost: Math.max(0, Number(v.cost) || 0), notes: v.notes }; if (x) Object.assign(x, d); else S.life.ideas.push({ id: uid(), focus: false, ts: Date.now(), ...d }); commit(); } });
+}
+function addIdea(type) { ideaForm(null, type); }
+function editIdea(id) { const x = S.life.ideas.find(q => q.id === id); if (x) ideaForm(x); }
+function delIdea(id) { confirmDel(() => { S.life.ideas = S.life.ideas.filter(x => x.id !== id); }); }
+function cycleIdea(id) { const x = S.life.ideas.find(q => q.id === id); if (!x) return; const k = Object.keys(ISTAT); x.status = k[(k.indexOf(x.status) + 1) % k.length]; commit(); }
+function toggleFocus(id) { const x = S.life.ideas.find(q => q.id === id); if (!x) return; if (!x.focus && S.life.ideas.filter(q => q.focus).length >= 5) { openForm({ title: '★ ' + t('lFocus'), text: t('lFocusMax'), submit: 'OK', onSubmit: () => {} }); return; } x.focus = !x.focus; commit(); }
+function ideaToProject(id) {
+  const x = S.life.ideas.find(q => q.id === id); if (!x) return;
+  let p = linkedProject(x);
+  if (!p) { p = { id: uid(), name: x.title.slice(0, 60), color: PALETTE[S.projects.length % PALETTE.length] }; S.projects.push(p); x.projectId = p.id; if (x.status === 'idea' || x.status === 'planning') x.status = 'doing'; save(); }
+  projFilter = p.id; go('projects');
+}
+function tripForm(x) {
+  openForm({ title: t(x ? 'edit' : 'lAddTrip'), submit: t(x ? 'save' : 'add'), fields: [
+    { name: 'country', label: t('lCountry'), value: x ? x.country : '', required: true, max: 60 },
+    { name: 'flag', label: t('lFlag'), value: x ? x.flag : '', max: 8 },
+    { name: 'cities', label: t('lCities'), value: x ? x.cities : '', max: 120 },
+    { name: 'continent', label: t('lContinent'), type: 'select', value: x ? x.continent : 'europe', options: CONTS.map(c => [c, t('c_' + c)]) },
+    { name: 'status', label: t('lStatus'), type: 'select', value: x ? x.status : 'wish', options: Object.keys(TSTAT).map(k => [k, t('ts_' + k)]) },
+    { name: 'season', label: t('lSeason'), value: x ? x.season : '', max: 40 },
+    { name: 'year', label: t('lYear'), type: 'number', value: x && x.year ? String(x.year) : '' },
+    { name: 'budget', label: `${t('lBudget')} (${CUR})`, type: 'number', value: x && x.budget ? String(x.budget) : '' },
+    { name: 'notes', label: t('lNotes'), type: 'textarea', value: x ? x.notes : '', max: 1000 }],
+    onSubmit: v => { if (!v.country) return; const d = { country: v.country, flag: v.flag, cities: v.cities, continent: v.continent, status: v.status, season: v.season, year: v.year ? String(Math.round(Number(v.year)) || '') : '', budget: Math.max(0, Number(v.budget) || 0), notes: v.notes }; if (x) Object.assign(x, d); else S.life.travel.push({ id: uid(), ts: Date.now(), ...d }); commit(); } });
+}
+function addTrip() { tripForm(null); }
+function editTrip(id) { const x = S.life.travel.find(q => q.id === id); if (x) tripForm(x); }
+function delTrip(id) { confirmDel(() => { S.life.travel = S.life.travel.filter(x => x.id !== id); }); }
+function cycleTrip(id) { const x = S.life.travel.find(q => q.id === id); if (!x) return; const k = Object.keys(TSTAT); x.status = k[(k.indexOf(x.status) + 1) % k.length]; commit(); }
 
 /* ───────── Start ───────── */
 applyChrome();
