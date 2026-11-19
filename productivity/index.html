@@ -971,7 +971,7 @@ habits() {
 
     const chartCard = card(t('hTrend'), habitTrendChart(days, k), '', 'margin-top:16px');
 
-    body = navCard + card(t('monthGrid'), tableInner + (S.habits.length ? `<button class="btn btn-ghost btn-block" style="margin-top:12px" onclick="addHabit()">${ic('plus')}${t('addHabit')}</button>` : '') + sugBlock, `<span class="badge num">${total} ${t('completedHabits')}</span>`, 'margin-top:16px') + pctCard + chartCard;
+    body = navCard + card(t('monthGrid'), tableInner + sugBlock, `<span class="badge num">${total} ${t('completedHabits')}</span>`, 'margin-top:16px') + pctCard + chartCard;
   }
   return header(t('habits'), fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long' }), seg + `<button class="btn btn-primary" onclick="addHabit()">${ic('plus')}${t('addHabit')}</button>`) + body;
 },
