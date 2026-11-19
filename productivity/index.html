@@ -53,7 +53,7 @@ svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-wid
 .msg.ok { background: #10d9a01c; color: var(--green); border: 1px solid #10d9a040; }
 
 /* Inputs & buttons */
-input[type=text], input[type=email], input[type=password], input[type=time], input[type=date], input[type=number], select, textarea {
+input[type=text], input[type=email], input[type=password], input[type=time], input[type=date], input[type=month], input[type=number], select, textarea {
   width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--r2);
   padding: 10px 12px; outline: none; transition: border-color .15s, box-shadow .15s; resize: vertical;
 }
@@ -154,6 +154,13 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
 table.mg { border-collapse: collapse; font-size: 11px; }
 table.mg th { padding: 3px 2px; color: var(--faint); font-weight: 600; min-width: 25px; }
 table.mg th.now { color: var(--accent); }
+.hkpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.hkpis > div { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; text-align: center; }
+.hkpis b { display: block; font-size: 22px; font-weight: 800; }
+.hkpis span { font-size: 11.5px; color: var(--muted); }
+@media (max-width: 640px) { .hkpis { grid-template-columns: repeat(2, 1fr); } }
+table.mg tfoot tr.hf td { border-top: 0; padding-top: 2px; }
+table.mg th.wkband { border-radius: 6px 6px 0 0; padding: 5px 2px; font-size: 10px; font-weight: 700; letter-spacing: .01em; }
 table.mg td { padding: 3px 2px; text-align: center; }
 table.mg tr > :first-child { position: sticky; inset-inline-start: 0; background: var(--surface); text-align: start; white-space: nowrap; padding-inline-end: 12px; font-size: 12.5px; font-weight: 600; z-index: 1; color: var(--text); }
 table.mg tfoot td { color: var(--muted); border-top: 1px solid var(--border); padding-top: 8px; font-size: 9.5px; }
@@ -532,7 +539,7 @@ ar: {
   vDay: 'اليوم', vWeek: 'الأسبوع', vMonth: 'الشهر', addHabit: 'عادة جديدة', habitName: 'اسم العادة', emoji: 'رمز تعبيري', doneToday: 'مكتملة اليوم', total: 'إجمالي العادات', bestStreak: 'أعلى سلسلة', rateToday: 'معدل اليوم', habit: 'العادة',
   addProject: 'مشروع جديد', projectName: 'اسم المشروع', addTask: 'مهمة جديدة', taskTitle: 'عنوان المهمة', project: 'المشروع', none: 'بدون مشروع', priority: 'الأولوية', high: 'عالية', med: 'متوسطة', low: 'منخفضة', todo: 'للعمل عليه', doing: 'جارٍ العمل', doneCol: 'مكتمل', board: 'لوحة المهام', activeProjects: 'مشاريع نشطة', tasksDone: 'مهام منجزة', move: 'نقل',
   addNote: 'ملاحظة جديدة', all: 'الكل', book: 'كتب', podcast: 'بودكاست', idea: 'أفكار', review: 'مراجعات', editNote: 'تحرير الملاحظة', noteTitle: 'عنوان الملاحظة…', noteBody: 'اكتب ملاحظاتك هنا…', category: 'التصنيف', untitled: 'بدون عنوان',
-  aRate: 'معدل 30 يوماً', aRateSub: 'متوسط الالتزام', aBestDay: 'أفضل يوم', aBestDaySub: 'أعلى التزام', aBest: 'أفضل عادة', aWorst: 'أضعف عادة', aHabits: 'أداء العادات (30 يوماً)', aWeeks: 'مقارنة آخر 4 أسابيع', aAch: 'الإنجازات', wk: 'أسبوع',
+  aRate: 'معدل 30 يوماً', aRateSub: 'متوسط الالتزام', aBestDay: 'أفضل يوم', aBestDaySub: 'أعلى التزام', aBest: 'أفضل عادة', aWorst: 'أضعف عادة', aHabits: 'أداء العادات (30 يوماً)', aWeeks: 'مقارنة آخر 4 أسابيع', aAch: 'الإنجازات', wk: 'أسبوع', hPct: 'نسبة الالتزام بكل عادة', hPctSub: 'لهذا الشهر', hTrend: 'التحليل البياني لهذا الشهر', hTrendSub: 'نسبة إنجاز العادات يوماً بيوم', hGoToday: 'الشهر الحالي', hDone: 'تم', hNotDone: 'لم يتم', hDays: 'أيام الشهر', hDoneTotal: 'إنجازات الشهر', hPick: 'اختر الشهر', hSug: 'عادات مقترحة', hSugSub: 'اضغط لإضافتها مباشرة', hLegHi: '\u206670%\u2069 فأكثر', hLegMid: 'من \u206640–69%\u2069', hLegLo: 'أقل من \u206640%\u2069',
   ach1: 'سلسلة 7 أيام', ach2: 'سلسلة 30 يوماً', ach3: 'يوم مثالي', ach4: '10 مهام منجزة', ach5: '5 ملاحظات', achSub1: 'عادة واحدة 7 أيام متتالية', achSub2: 'عادة واحدة 30 يوماً متتالياً', achSub3: 'كل العادات في يوم واحد', achSub4: 'في لوحة المهام', achSub5: 'في الأرشيف',
   language: 'اللغة', languageSub: 'لغة واجهة التطبيق', theme: 'المظهر', themeSub: 'داكن أو فاتح', dark: 'داكن', light: 'فاتح', account: 'الحساب', exportData: 'تصدير البيانات', exportSub: 'تنزيل نسخة JSON من بياناتك', export: 'تصدير', changePw: 'تغيير كلمة المرور', changePwSub: 'تعيين كلمة مرور جديدة لحسابك', change: 'تغيير',
   save: 'حفظ', cancel: 'إلغاء', add: 'إضافة', delete: 'حذف', confirmDel: 'هل تريد حذف هذا العنصر؟ لا يمكن التراجع.', confirm: 'تأكيد', loading: 'جارٍ التحميل…', libMissing: 'تعذّر تحميل مكتبة الاتصال. تحقق من الإنترنت وأعد تحميل الصفحة.',
@@ -562,7 +569,7 @@ fr: {
   vDay: 'Jour', vWeek: 'Semaine', vMonth: 'Mois', addHabit: 'Nouvelle habitude', habitName: 'Nom de l’habitude', emoji: 'Emoji', doneToday: 'Terminées aujourd’hui', total: 'Total des habitudes', bestStreak: 'Plus longue série', rateToday: 'Taux du jour', habit: 'Habitude',
   addProject: 'Nouveau projet', projectName: 'Nom du projet', addTask: 'Nouvelle tâche', taskTitle: 'Titre de la tâche', project: 'Projet', none: 'Sans projet', priority: 'Priorité', high: 'Haute', med: 'Moyenne', low: 'Basse', todo: 'À faire', doing: 'En cours', doneCol: 'Terminé', board: 'Tableau des tâches', activeProjects: 'projets actifs', tasksDone: 'tâches terminées', move: 'Déplacer',
   addNote: 'Nouvelle note', all: 'Tout', book: 'Livres', podcast: 'Podcasts', idea: 'Idées', review: 'Bilans', editNote: 'Modifier la note', noteTitle: 'Titre de la note…', noteBody: 'Écrivez vos notes ici…', category: 'Catégorie', untitled: 'Sans titre',
-  aRate: 'Taux sur 30 jours', aRateSub: 'régularité moyenne', aBestDay: 'Meilleur jour', aBestDaySub: 'régularité la plus haute', aBest: 'Meilleure habitude', aWorst: 'Habitude la plus faible', aHabits: 'Habitudes (30 jours)', aWeeks: 'Les 4 dernières semaines', aAch: 'Succès', wk: 'Sem.',
+  aRate: 'Taux sur 30 jours', aRateSub: 'régularité moyenne', aBestDay: 'Meilleur jour', aBestDaySub: 'régularité la plus haute', aBest: 'Meilleure habitude', aWorst: 'Habitude la plus faible', aHabits: 'Habitudes (30 jours)', aWeeks: 'Les 4 dernières semaines', aAch: 'Succès', wk: 'Sem.', hPct: 'Taux de régularité par habitude', hPctSub: 'pour ce mois-ci', hTrend: 'Analyse graphique du mois', hTrendSub: 'Taux d\'habitudes complétées, jour par jour', hGoToday: 'Mois actuel', hDone: 'Fait', hNotDone: 'Pas fait', hDays: 'Jours du mois', hDoneTotal: 'Cochées ce mois', hPick: 'Choisir le mois', hSug: 'Habitudes suggérées', hSugSub: 'Touchez pour ajouter', hLegHi: '70 % et plus', hLegMid: '40 à 69 %', hLegLo: 'moins de 40 %',
   ach1: 'Série de 7 jours', ach2: 'Série de 30 jours', ach3: 'Journée parfaite', ach4: '10 tâches terminées', ach5: '5 notes', achSub1: 'une habitude 7 jours de suite', achSub2: 'une habitude 30 jours de suite', achSub3: 'toutes les habitudes en un jour', achSub4: 'dans le tableau des tâches', achSub5: 'dans vos archives',
   language: 'Langue', languageSub: 'Langue de l’interface', theme: 'Apparence', themeSub: 'Sombre ou clair', dark: 'Sombre', light: 'Clair', account: 'Compte', exportData: 'Exporter les données', exportSub: 'Télécharger une copie JSON de vos données', export: 'Exporter', changePw: 'Changer le mot de passe', changePwSub: 'Définir un nouveau mot de passe', change: 'Changer',
   save: 'Enregistrer', cancel: 'Annuler', add: 'Ajouter', delete: 'Supprimer', confirmDel: 'Supprimer cet élément ? Cette action est irréversible.', confirm: 'Confirmer', loading: 'Chargement…', libMissing: 'Impossible de charger la bibliothèque de connexion. Vérifiez votre réseau et rechargez la page.',
@@ -592,7 +599,7 @@ en: {
   vDay: 'Day', vWeek: 'Week', vMonth: 'Month', addHabit: 'New habit', habitName: 'Habit name', emoji: 'Emoji', doneToday: 'Done today', total: 'Total habits', bestStreak: 'Longest streak', rateToday: 'Today’s rate', habit: 'Habit',
   addProject: 'New project', projectName: 'Project name', addTask: 'New task', taskTitle: 'Task title', project: 'Project', none: 'No project', priority: 'Priority', high: 'High', med: 'Medium', low: 'Low', todo: 'To do', doing: 'In progress', doneCol: 'Done', board: 'Task board', activeProjects: 'active projects', tasksDone: 'tasks done', move: 'Move',
   addNote: 'New note', all: 'All', book: 'Books', podcast: 'Podcasts', idea: 'Ideas', review: 'Reviews', editNote: 'Edit note', noteTitle: 'Note title…', noteBody: 'Write your notes here…', category: 'Category', untitled: 'Untitled',
-  aRate: '30-day rate', aRateSub: 'average consistency', aBestDay: 'Best day', aBestDaySub: 'highest consistency', aBest: 'Strongest habit', aWorst: 'Weakest habit', aHabits: 'Habits (30 days)', aWeeks: 'Last 4 weeks', aAch: 'Achievements', wk: 'Wk',
+  aRate: '30-day rate', aRateSub: 'average consistency', aBestDay: 'Best day', aBestDaySub: 'highest consistency', aBest: 'Strongest habit', aWorst: 'Weakest habit', aHabits: 'Habits (30 days)', aWeeks: 'Last 4 weeks', aAch: 'Achievements', wk: 'Wk', hPct: 'Consistency rate per habit', hPctSub: 'for this month', hTrend: 'Monthly trend analysis', hTrendSub: 'Daily habit completion rate', hGoToday: 'Current month', hDone: 'Done', hNotDone: 'Not done', hDays: 'Days in month', hDoneTotal: 'Check-ins this month', hPick: 'Pick a month', hSug: 'Suggested habits', hSugSub: 'Tap to add', hLegHi: '70% and up', hLegMid: '40 to 69%', hLegLo: 'below 40%',
   ach1: '7-day streak', ach2: '30-day streak', ach3: 'Perfect day', ach4: '10 tasks done', ach5: '5 notes', achSub1: 'one habit, 7 days in a row', achSub2: 'one habit, 30 days in a row', achSub3: 'every habit in one day', achSub4: 'on the task board', achSub5: 'in your archive',
   language: 'Language', languageSub: 'Interface language', theme: 'Appearance', themeSub: 'Dark or light', dark: 'Dark', light: 'Light', account: 'Account', exportData: 'Export data', exportSub: 'Download a JSON copy of your data', export: 'Export', changePw: 'Change password', changePwSub: 'Set a new password for your account', change: 'Change',
   save: 'Save', cancel: 'Cancel', add: 'Add', delete: 'Delete', confirmDel: 'Delete this item? This can’t be undone.', confirm: 'Confirm', loading: 'Loading…', libMissing: 'Couldn’t load the connection library. Check your network and reload the page.',
@@ -641,6 +648,25 @@ const ICONS = {
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 const donut = (p, color, size = 72, fs = 13, label = null) => `<div class="donut" style="width:${size}px;height:${size}px"><svg viewBox="0 0 36 36" width="${size}" height="${size}"><circle cx="18" cy="18" r="15.9155" fill="none" stroke="var(--surface3)" stroke-width="3.6"/><circle cx="18" cy="18" r="15.9155" fill="none" stroke="${color}" stroke-width="3.6" stroke-linecap="round" stroke-dasharray="${p} ${100 - p}"/></svg><span class="num" style="font-size:${fs}px;color:${color}">${label ?? p + '%'}</span></div>`;
+
+const hClr = p => p >= 70 ? 'var(--green)' : p >= 40 ? 'var(--yellow)' : '#ef4444';
+const HSUG = [['🌅', 'الاستيقاظ المبكر', 'Réveil matinal', 'Early start'], ['🏋️', 'رياضة أو حركة', 'Sport ou mouvement', 'Gym or movement'], ['🧠', 'تعلّم شيء جديد', 'Apprendre quelque chose', 'Learn something'], ['📋', 'تخطيط أهم 3 مهام', 'Planifier mon top 3', 'Plan top 3'], ['📊', 'تتبّع المصاريف', 'Suivre mon argent', 'Track money'], ['🎧', 'عمل عميق', 'Travail en profondeur', 'Deep work'], ['📵', 'بدون شبكات اجتماعية صباحاً', 'Pas de réseaux le matin', 'No socials in the morning'], ['✍️', 'كتابة اليوميات', 'Écrire mon journal', 'Journal'], ['❄️', 'دش بارد', 'Douche froide', 'Cold shower']];
+const hSugList = () => { const L = { ar: 1, fr: 2, en: 3 }[lang] || 3, have = new Set(S.habits.map(h => h.name.trim().toLowerCase())); return HSUG.map((x, i) => ({ i, e: x[0], name: x[L] })).filter(x => !have.has(x.name.toLowerCase())); };
+function addSugHabit(i) { const x = HSUG[i], L = { ar: 1, fr: 2, en: 3 }[lang] || 3; if (!x) return; S.habits.push({ id: uid(), name: x[L], emoji: x[0], color: PALETTE[S.habits.length % PALETTE.length] }); commit(); }
+function pickMonth(v) { const m = /^(\d{4})-(\d{2})$/.exec(v || ''); if (!m) return; const now = new Date(); monthOffset = (Number(m[1]) - now.getFullYear()) * 12 + (Number(m[2]) - 1 - now.getMonth()); render(); }
+function habitTrendChart(days, k) {
+  const W = 760, H = 160, L = 30, R = 10, Tp = 10, B = 22, n = days.length;
+  const pts = days.map((d, i) => { const dk = dkey(d), fut = dk > k, p = fut ? null : habitPct(dk); const x = L + (W - L - R) * (n > 1 ? i / (n - 1) : 0); const y = p === null ? null : Tp + (100 - p) / 100 * (H - Tp - B); return { x, y, p, d }; });
+  const valid = pts.filter(p => p.y !== null);
+  const line = valid.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  const area = valid.length ? `M${valid[0].x.toFixed(1)},${(H - B).toFixed(1)} L${valid.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L')} L${valid[valid.length - 1].x.toFixed(1)},${(H - B).toFixed(1)} Z` : '';
+  const gridY = [0, 25, 50, 75, 100].map(v => { const y = Tp + (100 - v) / 100 * (H - Tp - B); return `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-width="1"/><text x="${L - 6}" y="${(y + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--faint)">${v}</text>`; }).join('');
+  const everyX = Math.max(1, Math.ceil(n / 10));
+  const xLabels = days.map((d, i) => (i % everyX === 0 || i === n - 1) ? `<text x="${pts[i].x.toFixed(1)}" y="${H - 5}" text-anchor="middle" font-size="9" fill="var(--faint)">${d.getDate()}</text>` : '').join('');
+  const dots = valid.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.2" fill="var(--teal)"><title>${fmt(p.d, { day: 'numeric', month: 'short' })}: ${p.p}%</title></circle>`).join('');
+  return valid.length ? `<svg class="chart" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;direction:ltr" role="img" aria-label="${t('hTrend')}">${gridY}<path d="${area}" fill="var(--teal)" fill-opacity="0.16"/><polyline points="${line}" fill="none" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}${xLabels}</svg>` : `<div class="empty">${t('noHabits')}</div>`;
+}
+
 
 /* ───────── State ───────── */
 let user = null, S = null, page = 'dashboard', habitView = 'day', weekOffset = 0, noteFilter = 'all', noteSel = null, saveTimer = null, syncState = 'saved', selDay = null, monthOffset = 0, noteQuery = '', projFilter = '', finQuery = '', matrixType = 'all', catType = 'all', finRange = { from: new Date().getFullYear() + '-01-01', to: new Date().getFullYear() + '-12-31' };
@@ -900,8 +926,52 @@ habits() {
   else {
     const base = new Date(), first = new Date(base.getFullYear(), base.getMonth() + monthOffset, 1), n = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate(), days = [...Array(n)].map((_, i) => new Date(first.getFullYear(), first.getMonth(), i + 1)), rtl = LANGS[lang].dir === 'rtl';
     const total = days.reduce((a, d) => a + habitsDoneCount(dkey(d)), 0), cells = S.habits.length * n;
-    const nav = `<span style="display:flex;gap:6px;align-items:center"><span class="badge num">${total} ${t('completedHabits')} · ${pct(total, cells)}%</span><button class="icon-btn" onclick="shiftMonth(-1)" aria-label="${t('prevWeek')}">${ic(rtl ? 'next' : 'prev')}</button><button class="icon-btn" onclick="shiftMonth(1)" aria-label="${t('nextWeek')}">${ic(rtl ? 'prev' : 'next')}</button></span>`;
-    body = card(`${t('monthGrid')} · ${fmt(first, { month: 'long', year: 'numeric' })}`, S.habits.length ? `<div style="overflow-x:auto"><table class="mg"><thead><tr><th>${t('habit')}</th>${days.map(d => `<th class="${dkey(d) === k ? 'now' : ''}">${fmt(d, { weekday: 'narrow' })}<br><span class="num">${d.getDate()}</span></th>`).join('')}<th>%</th></tr></thead><tbody>${S.habits.map(h => { let c = 0; return `<tr><td>${esc(h.emoji)} ${esc(h.name)}</td>${days.map(d => { const dk = dkey(d), on = habitDone(dk, h.id), fut = dk > k; if (on) c++; return `<td><button class="check sm ${on ? 'on' : ''}" style="${on ? `background:${h.color};border-color:${h.color};` : ''}${fut ? 'opacity:.3;cursor:default' : ''}" ${fut ? 'disabled' : `onclick="toggleHabit('${h.id}','${dk}')"`} role="checkbox" aria-checked="${on}" aria-label="${esc(h.name)} ${dk}">${on ? '✓' : ''}</button></td>`; }).join('')}<td class="num" style="font-weight:700;color:${h.color};padding-inline-start:10px">${pct(c, n)}%</td></tr>`; }).join('')}</tbody><tfoot><tr><td>${t('progress')}</td>${days.map(d => `<td class="num">${dkey(d) > k ? '' : habitPct(dkey(d)) + '%'}</td>`).join('')}<td></td></tr></tfoot></table></div>` : none, nav);
+    const WK = ['var(--purple)', 'var(--blue)', 'var(--teal)', 'var(--pink)', 'var(--green)'];
+    const weeks = []; for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
+    const hstats = S.habits.map(h => { let c = 0; days.forEach(d => { if (habitDone(dkey(d), h.id)) c++; }); return { h, c, p: pct(c, n) }; }).sort((a, b) => b.p - a.p);
+
+    const navCard = card(fmt(first, { month: 'long', year: 'numeric' }), `
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin:4px 0 14px">
+        <button class="icon-btn" onclick="shiftMonth(-1)" aria-label="${t('prevWeek')}">${ic(rtl ? 'next' : 'prev')}</button>
+        <div style="text-align:center;min-width:120px">
+          <div style="font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent">${fmt(first, { month: 'long' })}</div>
+          <div class="num" style="font-size:12px;color:var(--muted)">${first.getFullYear()}</div>
+        </div>
+        <button class="icon-btn" onclick="shiftMonth(1)" aria-label="${t('nextWeek')}">${ic(rtl ? 'prev' : 'next')}</button>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+        <input type="month" value="${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, '0')}" onchange="pickMonth(this.value)" aria-label="${t('hPick')}" style="width:auto;max-width:190px">
+        ${monthOffset !== 0 ? `<button class="btn btn-ghost" onclick="resetMonth()">${t('hGoToday')}</button>` : ''}
+      </div>
+      <div class="hkpis">
+        <div><b class="num" style="color:var(--accent)">${S.habits.length}</b><span>${t('total')}</span></div>
+        <div><b class="num" style="color:var(--blue)">${total}</b><span>${t('hDoneTotal')}</span></div>
+        <div><b class="num" style="color:var(--purple)">${n}</b><span>${t('hDays')}</span></div>
+        <div><b class="num" style="color:${hClr(pct(total, cells))}">${pct(total, cells)}%</b><span>${t('progress')}</span></div>
+      </div>
+      <div class="bar" style="margin-top:14px;height:10px"><div style="width:${pct(total, cells)}%;background:var(--yellow)"></div></div>
+    `);
+
+    const tableInner = S.habits.length ? `<div style="overflow-x:auto"><table class="mg">
+      <thead>
+        <tr><th rowspan="2"></th>${weeks.map((wdays, wi) => `<th class="wkband" colspan="${wdays.length}" style="background:color-mix(in srgb,${WK[wi % WK.length]} 18%,transparent);color:${WK[wi % WK.length]};border-bottom:2px solid ${WK[wi % WK.length]}">${t('vWeek')} ${wi + 1}</th>`).join('')}<th rowspan="2">%</th></tr>
+        <tr>${days.map(d => `<th class="${dkey(d) === k ? 'now' : ''}">${fmt(d, { weekday: 'narrow' })}<br><span class="num">${d.getDate()}</span></th>`).join('')}</tr>
+      </thead>
+      <tbody>${S.habits.map(h => { let c = 0; const rowCells = weeks.map((wdays, wi) => wdays.map(d => { const dk = dkey(d), on = habitDone(dk, h.id), fut = dk > k; if (on) c++; return `<td><button class="check sm ${on ? 'on' : ''}" style="${on ? `background:${WK[wi % WK.length]};border-color:${WK[wi % WK.length]};` : ''}${fut ? 'opacity:.3;cursor:default' : ''}" ${fut ? 'disabled' : `onclick="toggleHabit('${h.id}','${dk}')"`} role="checkbox" aria-checked="${on}" aria-label="${esc(h.name)} ${dk}">${on ? '✓' : ''}</button></td>`; }).join('')).join(''); return `<tr><td>${esc(h.emoji)} ${esc(h.name)}</td>${rowCells}<td class="num" style="font-weight:700;color:${hClr(pct(c, n))};padding-inline-start:10px">${pct(c, n)}%</td></tr>`; }).join('')}</tbody>
+      <tfoot>
+        <tr><td>${t('progress')}</td>${days.map(d => { const dk = dkey(d); if (dk > k) return '<td></td>'; const p = habitPct(dk); return `<td class="num" style="color:${hClr(p)};font-weight:700">${p}%</td>`; }).join('')}<td></td></tr>
+        <tr class="hf"><td>${t('hDone')}</td>${days.map(d => { const dk = dkey(d); return `<td class="num">${dk > k ? '' : habitsDoneCount(dk)}</td>`; }).join('')}<td></td></tr>
+        <tr class="hf"><td>${t('hNotDone')}</td>${days.map(d => { const dk = dkey(d); return `<td class="num">${dk > k ? '' : S.habits.length - habitsDoneCount(dk)}</td>`; }).join('')}<td></td></tr>
+      </tfoot>
+    </table></div>` : none;
+    const sugs = hSugList();
+    const sugBlock = sugs.length ? `<div style="margin-top:16px"><div style="font-size:12.5px;font-weight:700;margin-bottom:2px">💡 ${t('hSug')}</div><div style="font-size:11.5px;color:var(--muted);margin-bottom:8px">${t('hSugSub')}</div><div class="chips">${sugs.map(x => `<button class="chip" onclick="addSugHabit(${x.i})">${x.e} ${esc(x.name)} <span style="color:var(--accent)">+</span></button>`).join('')}</div></div>` : '';
+
+    const pctCard = card(t('hPct'), hstats.length ? hstats.map(({ h, p }) => `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12.5px"><span style="font-weight:600">${esc(h.emoji)} ${esc(h.name)}</span><span class="num" style="color:${hClr(p)};font-weight:700">${p}%</span></div><div class="bar"><div style="width:${p}%;background:${hClr(p)}"></div></div></div>`).join('') + `<div class="legend" style="justify-content:center;gap:14px;font-size:11px;margin:12px 0 0"><span><i style="background:var(--green)"></i> ${t('hLegHi')}</span><span><i style="background:var(--yellow)"></i> ${t('hLegMid')}</span><span><i style="background:#ef4444"></i> ${t('hLegLo')}</span></div>` : none, '', 'margin-top:16px');
+
+    const chartCard = card(t('hTrend'), habitTrendChart(days, k), '', 'margin-top:16px');
+
+    body = navCard + card(t('monthGrid'), tableInner + sugBlock, `<span class="badge num">${total} ${t('completedHabits')}</span>`, 'margin-top:16px') + pctCard + chartCard;
   }
   return header(t('habits'), fmt(new Date(), { weekday: 'long', day: 'numeric', month: 'long' }), seg + `<button class="btn btn-primary" onclick="addHabit()">${ic('plus')}${t('addHabit')}</button>`) + body;
 },
@@ -964,6 +1034,7 @@ function delDayTask(dk, id) { S.dayTasks[dk] = dayTasks(dk).filter(q => q.id !==
 function setDay(k) { selDay = k && k !== today() ? k : null; render(); }
 function shiftDay(n) { setDay(dkey(addDays(pdate(selDay || today()), n))); }
 function shiftMonth(n) { monthOffset += n; render(); }
+function resetMonth() { monthOffset = 0; render(); }
 function setMind(f, v, el) { const k = selDay || today(), m = S.mind[k] || (S.mind[k] = { e: 5, f: 5, m: 5 }); m[f] = Number(v); if (el) el.nextElementSibling.textContent = v; save(); }
 function editHabit(id) { const h = S.habits.find(q => q.id === id); if (!h) return; openForm({ title: t('edit'), fields: [{ name: 'name', label: t('habitName'), value: h.name, required: true, max: 60 }, { name: 'emoji', label: t('emoji'), value: h.emoji, max: 8 }], onSubmit: v => { if (!v.name) return; h.name = v.name; h.emoji = v.emoji || h.emoji; commit(); } }); }
 function editRoutine(part, id) { const r = S.routine[part].find(q => q.id === id); if (!r) return; openForm({ title: t('edit'), fields: [{ name: 'time', label: t('time'), type: 'time', value: r.time, required: true }, { name: 'task', label: t('task'), value: r.task, required: true, max: 80 }, { name: 'emoji', label: t('emoji'), value: r.emoji, max: 8 }], onSubmit: v => { if (!v.task) return; r.time = v.time || r.time; r.task = v.task; r.emoji = v.emoji || r.emoji; S.routine[part].sort((a, b) => a.time.localeCompare(b.time)); commit(); } }); }
