@@ -494,6 +494,48 @@ tr.flash td, .chip.flash { animation: flash 1.8s ease-out; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
 
 </style>
+<style id="lifemap-style">
+/* ───────── Life Map add-on ───────── */
+.lm-txt { margin: 6px 0 0; font-size: 13px; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+.lm-ph { margin: 6px 0 0; font-size: 13px; color: var(--faint); }
+.lm-note { margin: 12px 0 0; font-size: 12px; line-height: 1.7; color: var(--muted); background: var(--surface2); border-radius: var(--r2); padding: 9px 12px; }
+.lm-note.warn { color: var(--pink); background: color-mix(in srgb, var(--pink) 12%, transparent); }
+.lm-note.good { color: var(--green); background: color-mix(in srgb, var(--green) 12%, transparent); }
+.lm-item { border: 1px solid var(--border); border-radius: var(--r2); padding: 12px 14px; margin-bottom: 10px; background: var(--surface2); }
+.lm-item:last-child { margin-bottom: 0; }
+.lm-item.todo { border-style: dashed; }
+.lm-item-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.lm-item-h b { font-size: 13.5px; min-width: 0; word-break: break-word; }
+.lm-item-h > span { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.lm-two, .lm-three { display: grid; gap: 14px; margin-top: 10px; }
+.lm-two { grid-template-columns: 1fr 1fr; }
+.lm-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lm-two small, .lm-three small { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
+.lm-chip-big { display: inline-block; font-weight: 800; font-size: 20px; letter-spacing: 2px; background: var(--accent-soft); color: var(--accent); border-radius: var(--r2); padding: 7px 16px; }
+.lm-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+.lm-sep { margin: 14px 0 8px; border-top: 1px solid var(--border); padding-top: 10px; }
+.lm-sep small { color: var(--muted); font-size: 11.5px; font-weight: 700; }
+.lm-x { background: none; border: none; cursor: pointer; color: var(--faint); font-size: 12px; padding: 0 2px; line-height: 1; }
+.lm-x:hover { color: var(--accent); }
+.lm-rv { display: flex; flex-direction: column; gap: 6px; }
+.lm-rv label { font-size: 11.5px; font-weight: 700; }
+.lm-rv textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--r2); padding: 9px 11px; color: var(--text); font: inherit; font-size: 13px; resize: vertical; }
+.lm-rv textarea:focus { outline: none; border-color: var(--accent); }
+.lm-ks { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.lm-ks > div:nth-child(2) { flex: 1; }
+.chip.on { border-color: var(--accent); }
+.ei-q { border-top: 3px solid var(--q, var(--border2)); }
+/* تتبّع الوقت */
+.tl-picker { margin-bottom: 12px; }
+.tl-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.tl-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 5px; }
+.tl-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; padding: 0; transition: transform .12s, border-color .15s; }
+.tl-cell:hover { transform: translateY(-2px); border-color: var(--accent); }
+.tl-h { font-size: 10px; font-weight: 700; color: var(--muted); }
+.tl-e { font-size: 13px; line-height: 1; }
+@media (max-width: 900px) { .lm-three { grid-template-columns: 1fr; } .tl-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .lm-two { grid-template-columns: 1fr; } .tl-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+</style>
 </head>
 <body>
 <div id="auth" class="auth hidden"></div>
@@ -1871,6 +1913,616 @@ applyChrome();
 if (!sb) renderAuth();
 else { sb.auth.onAuthStateChange((event, session) => { setTimeout(() => onSession(session, event), 0); }); }
 window.addEventListener('beforeunload', () => { if (user && syncState === 'saving') pushState(); });
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   خارطة الحياة — Life Map add-on
+   أين أنا؟ · تتبّع الوقت · خطة الأهداف · مصفوفة أيزنهاور ·
+   المعيقات · المحاسبة اليومية · العادة المركزية
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ───────── الترجمات ───────── */
+const TX = {
+  nSelf: ['الخارطة', 'Ma carte', 'My map'],
+  whereami: ['أين أنا؟', 'Où suis-je ?', 'Where am I?'],
+  timelog: ['تتبّع الوقت', 'Audit du temps', 'Time audit'],
+  eisen: ['مصفوفة الأولويات', 'Matrice des priorités', 'Priority matrix'],
+  obstacles: ['المعيقات', 'Obstacles', 'Obstacles'],
+
+  /* أين أنا؟ */
+  waSub: ['اعرف نقطة انطلاقك قبل أن ترسم الطريق', 'Connaissez votre point de départ avant de tracer la route', 'Know your starting point before drawing the road'],
+  waDone: ['اكتمال الملف', 'Profil complété', 'Profile complete'],
+  waUpdated: ['آخر تحديث', 'Dernière mise à jour', 'Last updated'],
+  waNever: ['لم يُحدَّث بعد', 'Jamais', 'Never'],
+  waPers: ['الشخصية', 'Personnalité', 'Personality'],
+  waPersType: ['نمط الشخصية', 'Type de personnalité', 'Personality type'],
+  waPersPh: ['مثال: INFJ', 'ex. : INFJ', 'e.g. INFJ'],
+  waPersNote: ['ما تعلّمته عن نفسك', 'Ce que vous avez appris sur vous', 'What you learned about yourself'],
+  waPersHint: ['الاختبارات إرشادية لا تؤطّرك — خذها نقطة انطلاق لا قالبًا', 'Les tests sont indicatifs, pas des cases — un point de départ, pas un moule', 'Tests are indicative, not boxes — a starting point, not a mould'],
+  waSw: ['نقاط القوة والضعف', 'Forces et faiblesses', 'Strengths and weaknesses'],
+  waStr: ['نقاط القوة', 'Forces', 'Strengths'],
+  waWk: ['نقاط الضعف', 'Faiblesses', 'Weaknesses'],
+  waAdvice: ['الاستنصاح', 'Retours des proches', 'Ask those around you'],
+  waAdviceSub: ['اسأل من حولك: ثلاث مزايا وثلاثة عيوب', 'Demandez trois qualités et trois défauts', 'Ask for three strengths and three flaws'],
+  waPerson: ['الشخص', 'Personne', 'Person'],
+  waPros: ['مزايا', 'Qualités', 'Strengths'],
+  waCons: ['عيوب', 'Défauts', 'Flaws'],
+  waAddAdvice: ['إضافة رأي', 'Ajouter un retour', 'Add feedback'],
+  waNoAdvice: ['لم تسأل أحدًا بعد. المؤمن مرآة أخيه.', 'Personne ne vous a encore répondu.', 'Nobody has given you feedback yet.'],
+  waSkills: ['جرد المهارات', 'Inventaire des compétences', 'Skills inventory'],
+  waSkill: ['المهارة', 'Compétence', 'Skill'],
+  waLevel: ['المستوى (0–5)', 'Niveau (0–5)', 'Level (0–5)'],
+  waAddSkill: ['إضافة مهارة', 'Ajouter', 'Add skill'],
+  waNoSkills: ['أضف مهاراتك: التعلّم، التلخيص، البحث، اللغة، الحاسوب…', 'Ajoutez vos compétences : apprentissage, synthèse, recherche, langue…', 'Add your skills: learning, summarising, research, languages…'],
+  waInner: ['الصحة النفسية والقلبية', 'Santé intérieure', 'Inner health'],
+  waInnerHint: ['تقييم ذاتي للتنبيه فقط، وليس تشخيصًا طبيًا. إن كان الأمر ثقيلًا فاستشر مختصًا.', 'Auto-évaluation, pas un diagnostic. Si c\'est lourd, consultez un professionnel.', 'Self-rating, not a diagnosis. If it feels heavy, see a professional.'],
+  i_procrast: ['التسويف', 'Procrastination', 'Procrastination'],
+  i_discipline: ['ضعف الانضباط', 'Manque de discipline', 'Weak discipline'],
+  i_perfect: ['وهم الكمال', 'Perfectionnisme', 'Perfectionism'],
+  i_fear: ['الخوف من الفشل', 'Peur de l\'échec', 'Fear of failure'],
+  i_ujb: ['العُجب والاغترار', 'Vanité', 'Self-conceit'],
+  i_blame: ['جلد الذات', 'Autoflagellation', 'Self-blame'],
+  waRes: ['الموارد المتاحة', 'Ressources disponibles', 'Available resources'],
+  waHours: ['ساعات متاحة يوميًا', 'Heures libres par jour', 'Free hours per day'],
+  waMoney: ['ما يمكن استثماره شهريًا', 'Investissable par mois', 'Investable per month'],
+  waResNote: ['مسؤولياتي وقيودي', 'Mes responsabilités et contraintes', 'My responsibilities and constraints'],
+  waReview: ['راجع هذه الصفحة كل ستة أشهر', 'Revoyez cette page tous les six mois', 'Review this page every six months'],
+
+  /* تتبّع الوقت */
+  tlSub: ['ما لا يُتتبَّع يُهدَر — سجّل ساعاتك سبعة أيام', 'Ce qui n\'est pas suivi se perd — notez vos heures sept jours', 'What is not tracked is wasted — log your hours for seven days'],
+  tlPick: ['اختر فئة ثم المس الساعات', 'Choisissez une catégorie puis touchez les heures', 'Pick a category then tap the hours'],
+  tlErase: ['مسح', 'Effacer', 'Erase'],
+  tlDayGrid: ['ساعات اليوم', 'Heures du jour', 'Hours of the day'],
+  tlCats: ['الفئات', 'Catégories', 'Categories'],
+  tlAddCat: ['فئة جديدة', 'Nouvelle catégorie', 'New category'],
+  tlCatName: ['اسم الفئة', 'Nom', 'Name'],
+  tlKind: ['التصنيف', 'Classement', 'Class'],
+  tlInvest: ['استثمار', 'Investissement', 'Investment'],
+  tlNeutral: ['ضروري', 'Nécessaire', 'Necessary'],
+  tlWaste: ['هدر', 'Gaspillage', 'Waste'],
+  tlReport: ['تقرير الوقت', 'Rapport du temps', 'Time report'],
+  tlTracked: ['أيام مسجّلة', 'Jours suivis', 'Days logged'],
+  tlFree: ['وقتك الحر فعليًا', 'Temps libre réel', 'Real free time'],
+  tlPerDay: ['ساعة/يوم', 'h/jour', 'h/day'],
+  tlWasted: ['المهدور', 'Gaspillé', 'Wasted'],
+  tlInvested: ['المستثمَر', 'Investi', 'Invested'],
+  tlNoData: ['سجّل ساعاتك أولًا ليظهر التقرير.', 'Enregistrez vos heures pour voir le rapport.', 'Log your hours to see the report.'],
+  tlBreak: ['توزيع الساعات', 'Répartition des heures', 'Hour breakdown'],
+  tlCapacity: ['هل خططك أكبر من طاقتك؟', 'Vos plans dépassent-ils votre capacité ?', 'Are your plans bigger than your capacity?'],
+  tlNeeded: ['تحتاجه عاداتك', 'Requis par vos habitudes', 'Needed by your habits'],
+  tlAvail: ['المتاح فعلًا', 'Réellement disponible', 'Actually available'],
+  tlMin: ['دقائق لكل عادة', 'Minutes par habitude', 'Minutes per habit'],
+  tlOver: ['خططك تتجاوز وقتك المتاح. اخفض العدد أو قلّل الطموح لكل عادة — لا تحمّل نفسك فوق طاقتها.', 'Vos plans dépassent votre temps libre. Réduisez le nombre ou l\'ambition — ne vous surchargez pas.', 'Your plans exceed your free time. Cut the count or the ambition — do not overload yourself.'],
+  tlOk: ['خططك داخل طاقتك. استمر بهدوء.', 'Vos plans tiennent dans votre capacité. Continuez calmement.', 'Your plans fit your capacity. Keep going calmly.'],
+  tlHabitsN: ['عدد العادات اليومية', 'Nombre d\'habitudes', 'Daily habits'],
+
+  /* خطة الأهداف */
+  gpTitle: ['خطة الأهداف · لماذا · ماذا · الخطوة الأولى', 'Plan des objectifs · Pourquoi · Quoi · Première étape', 'Goal plan · Why · What · First step'],
+  gpWhy: ['لماذا', 'Pourquoi', 'Why'],
+  gpWhat: ['ماذا — متى أقول: تمّ؟', 'Quoi — quand puis-je dire : fait ?', 'What — when can I say: done?'],
+  gpFirst: ['الخطوة الأولى بالتفصيل', 'Première étape en détail', 'First step in detail'],
+  gpFirstPh: ['أي كتاب؟ كم صفحة؟ كم ساعة؟', 'Quel livre ? Combien de pages ? Combien d\'heures ?', 'Which book? How many pages? How many hours?'],
+  gpEdit: ['تحرير الخطة', 'Modifier le plan', 'Edit plan'],
+  gpEmpty: ['لا أهداف لهذه السنة بعد.', 'Aucun objectif pour cette année.', 'No goals for this year yet.'],
+  gpMissing: ['بلا خطة', 'Sans plan', 'No plan'],
+  gpHint: ['لا تقفز إلى «كيف» قبل أن تجيب «لماذا» و«ماذا».', 'Ne sautez pas au « comment » avant « pourquoi » et « quoi ».', 'Do not jump to "how" before answering "why" and "what".'],
+
+  /* مصفوفة أيزنهاور */
+  eiSub: ['رتّب مهامك: ما دخل وقته فهو أولى', 'Classez vos tâches : ce dont l\'heure est venue passe en premier', 'Sort your tasks: what is due comes first'],
+  ei_q1: ['مهم وعاجل', 'Important et urgent', 'Important and urgent'],
+  ei_q2: ['مهم وغير عاجل', 'Important, non urgent', 'Important, not urgent'],
+  ei_q3: ['غير مهم وعاجل', 'Urgent, pas important', 'Urgent, not important'],
+  ei_q4: ['غير مهم وغير عاجل', 'Ni important ni urgent', 'Neither important nor urgent'],
+  ei_q1h: ['أنجزه الآن', 'Faites-le maintenant', 'Do it now'],
+  ei_q2h: ['أخطر مربّع: بلا موعد نهائي فيُهمل. احجز له وقتًا ثابتًا.', 'Le plus risqué : sans échéance, il est négligé. Bloquez-lui un créneau fixe.', 'The riskiest square: no deadline, so it is neglected. Block a fixed slot.'],
+  ei_q3h: ['فوّضه أو أجّله', 'Déléguez ou reportez', 'Delegate or postpone'],
+  ei_q4h: ['احذفه', 'Supprimez', 'Drop it'],
+  eiMeta: ['تصنيف المهمة', 'Classer la tâche', 'Classify task'],
+  eiImp: ['مهمة', 'Importante', 'Important'],
+  eiUrg: ['عاجلة', 'Urgente', 'Urgent'],
+  eiRule: ['الحكم', 'Règle', 'Rule'],
+  eiNeed: ['الدافع', 'Motif', 'Motive'],
+  r_none: ['غير محدّد', 'Non défini', 'Unset'],
+  r_duty: ['واجب', 'Obligation', 'Duty'],
+  r_nafl: ['نافلة', 'Surérogatoire', 'Optional'],
+  n_need: ['احتياج', 'Besoin', 'Need'],
+  n_want: ['رغبة', 'Envie', 'Want'],
+  eiFilter: ['أظهر أولًا', 'Afficher d\'abord', 'Show first'],
+  eiAll: ['الكل', 'Tout', 'All'],
+  eiNoTasks: ['لا مهام مفتوحة. أضفها من صفحة المشاريع.', 'Aucune tâche ouverte. Ajoutez-en depuis Projets.', 'No open tasks. Add them from Projects.'],
+  eiLegend: ['الواجب يُقدَّم على النافلة، والاحتياج على الرغبة، ودفع الضرر على جلب المنفعة.', 'L\'obligation avant le surérogatoire, le besoin avant l\'envie, écarter le mal avant chercher le bien.', 'Duty before optional, need before want, averting harm before seeking benefit.'],
+
+  /* المعيقات */
+  obSub: ['اعرف ما يعترضك قبل أن يعترضك', 'Connaissez vos obstacles avant qu\'ils ne vous arrêtent', 'Know your obstacles before they stop you'],
+  obAdd: ['معيق جديد', 'Nouvel obstacle', 'New obstacle'],
+  obWhat: ['المعيق', 'Obstacle', 'Obstacle'],
+  obType: ['النوع', 'Type', 'Type'],
+  obTrigger: ['متى يظهر؟', 'Quand apparaît-il ?', 'When does it show up?'],
+  obPlan: ['ماذا أفعل حين يظهر؟', 'Que faire quand il apparaît ?', 'What do I do when it shows up?'],
+  ob_rush: ['الاستعجال', 'Précipitation', 'Rushing'],
+  ob_perfect: ['وهم الكمال', 'Perfectionnisme', 'Perfectionism'],
+  ob_side: ['بُنيّات الطريق', 'Détours séduisants', 'Tempting detours'],
+  ob_concept: ['تصوّر مغلوط', 'Idée fausse', 'False belief'],
+  ob_fear: ['الخوف من الفشل', 'Peur de l\'échec', 'Fear of failure'],
+  ob_noplan: ['الانغماس في التخطيط', 'Trop planifier', 'Over-planning'],
+  ob_other: ['أخرى', 'Autre', 'Other'],
+  obNone: ['لم تسجّل معيقًا بعد.', 'Aucun obstacle enregistré.', 'No obstacles logged yet.'],
+  obPark: ['بُنيّات الطريق', 'Détours mis de côté', 'Parked detours'],
+  obParkSub: ['فرص نافعة لكنها ليست طريقك الآن — ليس كل نافع ينفعك', 'Des occasions utiles, mais pas votre route — tout ce qui est utile ne vous sert pas', 'Useful opportunities, but not your road — not everything useful serves you'],
+  obParkBtn: ['نحّها جانبًا', 'Mettre de côté', 'Park it'],
+  obUnpark: ['أعدها', 'Remettre', 'Unpark'],
+  obNoIdeas: ['لا أفكار في بنك الأفكار بعد.', 'Aucune idée dans la banque.', 'No ideas in the bank yet.'],
+  obActive: ['أفكار نشطة', 'Idées actives', 'Active ideas'],
+
+  /* المحاسبة اليومية */
+  rvTitle: ['محاسبة اليوم', 'Bilan du jour', 'Daily reckoning'],
+  rvGood: ['ما أحسنتُ فيه', 'Ce que j\'ai bien fait', 'What I did well'],
+  rvBad: ['ما قصّرتُ فيه', 'Où j\'ai failli', 'Where I fell short'],
+  rvFix: ['ماذا أُصلح غدًا؟', 'Que corriger demain ?', 'What do I fix tomorrow?'],
+  rvHint: ['سطر واحد يكفي. المكتوب نصف محلول.', 'Une ligne suffit. Un problème écrit est à moitié résolu.', 'One line is enough. A written problem is half solved.'],
+
+  /* العادة المركزية */
+  ksTitle: ['العادة المركزية', 'Habitude pivot', 'Keystone habit'],
+  ksSub: ['العادة التي إذا انضبطت انضبط بقية يومك', 'L\'habitude qui, une fois tenue, entraîne le reste', 'The habit that, once kept, pulls the rest along'],
+  ksOn: ['في الأيام التي التزمت بها', 'Les jours où vous l\'avez tenue', 'On days you kept it'],
+  ksOff: ['في الأيام التي تركتها', 'Les jours où vous l\'avez laissée', 'On days you skipped it'],
+  ksGap: ['الفارق', 'Écart', 'Gap'],
+  ksNone: ['تحتاج بيانات أسبوعين على الأقل ليظهر التحليل.', 'Il faut au moins deux semaines de données.', 'At least two weeks of data are needed.'],
+  ksTop: ['أقوى ثلاث عادات أثرًا', 'Les trois habitudes les plus influentes', 'The three most influential habits'],
+  ksLine: ['حين تلتزم بهذه العادة يرتفع إنجاز يومك', 'Quand vous tenez cette habitude, votre journée progresse de', 'When you keep this habit your day rises by'],
+
+  /* مشترك */
+  lmEdit: ['تحرير', 'Modifier', 'Edit'],
+  lmSave: ['حفظ', 'Enregistrer', 'Save'],
+  lmHours: ['ساعة', 'h', 'h'],
+  tc_concept: ['تصوّر', 'Concept', 'Concept'],
+};
+['ar', 'fr', 'en'].forEach((L, i) => { for (const k in TX) T[L][k] = TX[k][i]; });
+
+/* ───────── الأيقونات ───────── */
+ICONS.whereami = '<circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.5 8 12 8 12s8-6.5 8-12a8 8 0 0 0-8-8z"/>';
+ICONS.timelog = '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>';
+ICONS.eisen = '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18M3 12h18"/>';
+ICONS.obstacles = '<path d="M12 3l9 16H3l9-16z"/><path d="M12 10v4M12 17h.01"/>';
+
+/* ───────── القائمة الجانبية ───────── */
+(() => {
+  const track = NAV.find(g => g[0] === 'nTrack'); if (track && !track[1].includes('timelog')) track[1].splice(1, 0, 'timelog');
+  const work = NAV.find(g => g[0] === 'nWork'); if (work && !work[1].includes('eisen')) work[1].splice(0, 0, 'eisen');
+  const life = NAV.find(g => g[0] === 'nLife'); if (life && !life[1].includes('obstacles')) life[1].push('obstacles');
+  if (!NAV.some(g => g[0] === 'nSelf')) NAV.splice(1, 0, ['nSelf', ['whereami']]);
+})();
+
+/* ───────── حالة إضافية (جداول جانبية لا تمسّ البيانات القائمة) ───────── */
+const TL_SEED = [
+  ['🕌', ['عبادة', 'Adoration', 'Worship'], 'invest', '#2dd4bf'],
+  ['🧠', ['عمل عميق', 'Travail profond', 'Deep work'], 'invest', '#ff6b35'],
+  ['📚', ['تعلّم', 'Apprentissage', 'Learning'], 'invest', '#9b6dff'],
+  ['👪', ['أسرة', 'Famille', 'Family'], 'invest', '#ff6b9d'],
+  ['💼', ['شغل أو دراسة', 'Travail ou études', 'Job or studies'], 'neutral', '#4a9eff'],
+  ['😴', ['نوم', 'Sommeil', 'Sleep'], 'neutral', '#64748b'],
+  ['🍽️', ['ضروريات', 'Nécessités', 'Necessities'], 'neutral', '#94a3b8'],
+  ['📱', ['شاشات', 'Écrans', 'Screens'], 'waste', '#ef4444'],
+  ['⏳', ['متفرّق', 'Dispersé', 'Scattered'], 'waste', '#f59e0b'],
+];
+const lx = i => ({ ar: 0, fr: 1, en: 2 }[lang] ?? 2);
+function seedTimeCats() { const i = lx(); return TL_SEED.map(([e, n, kind, color]) => ({ id: uid(), emoji: e, name: n[i], kind, color })); }
+
+const INNER_KEYS = ['procrast', 'discipline', 'perfect', 'fear', 'ujb', 'blame'];
+const OB_TYPES = ['rush', 'perfect', 'side', 'concept', 'fear', 'noplan', 'other'];
+
+function lmNormalize(s) {
+  if (!s.self || typeof s.self !== 'object') s.self = {};
+  const sf = s.self;
+  for (const k of ['mbti', 'mbtiNote', 'strengths', 'weaknesses', 'resNote', 'updated']) if (typeof sf[k] !== 'string') sf[k] = '';
+  if (!Array.isArray(sf.advice)) sf.advice = [];
+  if (!Array.isArray(sf.skills)) sf.skills = [];
+  if (!sf.inner || typeof sf.inner !== 'object') sf.inner = {};
+  INNER_KEYS.forEach(k => { if (typeof sf.inner[k] !== 'number') sf.inner[k] = 0; });
+  if (typeof sf.hours !== 'number') sf.hours = 0;
+  if (typeof sf.money !== 'number') sf.money = 0;
+
+  if (!s.timelog || typeof s.timelog !== 'object') s.timelog = {};
+  if (!Array.isArray(s.timelog.cats) || !s.timelog.cats.length) s.timelog.cats = seedTimeCats();
+  if (!s.timelog.log || typeof s.timelog.log !== 'object') s.timelog.log = {};
+  if (typeof s.timelog.minPerHabit !== 'number') s.timelog.minPerHabit = 15;
+
+  if (!s.goalPlan || typeof s.goalPlan !== 'object') s.goalPlan = {};
+  if (!s.taskMeta || typeof s.taskMeta !== 'object') s.taskMeta = {};
+  if (!Array.isArray(s.obstacles)) s.obstacles = [];
+  if (!s.review || typeof s.review !== 'object') s.review = {};
+  if (!s.ideaPark || typeof s.ideaPark !== 'object') s.ideaPark = {};
+  if (typeof s.keystone !== 'string') s.keystone = '';
+  return s;
+}
+const __normalize0 = normalize;
+normalize = function (s) { return lmNormalize(__normalize0(s)); };
+
+/* ───────── مساعدات ───────── */
+const lmTouch = () => { S.self.updated = today(); };
+const lmPct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const lmBar = (p, c) => `<div class="bar"><div style="width:${Math.max(0, Math.min(100, p))}%;background:${c}"></div></div>`;
+const lmNum = v => Math.max(0, Number(v) || 0);
+
+/* ═══════════ 1) صفحة «أين أنا؟» ═══════════ */
+function selfScore() {
+  const sf = S.self, c = [!!sf.mbti, !!sf.strengths, !!sf.weaknesses, sf.advice.length > 0, sf.skills.length > 0,
+    INNER_KEYS.some(k => sf.inner[k] > 0), sf.hours > 0, !!sf.resNote];
+  return lmPct(c.filter(Boolean).length, c.length);
+}
+function editSelfPers() {
+  openForm({
+    title: t('waPers'), fields: [
+      { name: 'mbti', label: t('waPersType'), value: S.self.mbti, ph: t('waPersPh'), max: 40 },
+      { name: 'note', label: t('waPersNote'), type: 'textarea', rows: 4, value: S.self.mbtiNote, max: 800 }],
+    onSubmit: v => { S.self.mbti = v.mbti; S.self.mbtiNote = v.note; lmTouch(); commit(); }
+  });
+}
+function editSelfSW() {
+  openForm({
+    title: t('waSw'), fields: [
+      { name: 'st', label: t('waStr'), type: 'textarea', rows: 4, value: S.self.strengths, max: 900 },
+      { name: 'wk', label: t('waWk'), type: 'textarea', rows: 4, value: S.self.weaknesses, max: 900 }],
+    onSubmit: v => { S.self.strengths = v.st; S.self.weaknesses = v.wk; lmTouch(); commit(); }
+  });
+}
+function adviceForm(x) {
+  openForm({
+    title: x ? t('lmEdit') : t('waAddAdvice'), submit: t(x ? 'lmSave' : 'add'), text: t('waAdviceSub'), fields: [
+      { name: 'person', label: t('waPerson'), value: x ? x.person : '', required: true, max: 60 },
+      { name: 'pros', label: t('waPros'), type: 'textarea', rows: 3, value: x ? x.pros : '', max: 500 },
+      { name: 'cons', label: t('waCons'), type: 'textarea', rows: 3, value: x ? x.cons : '', max: 500 }],
+    onSubmit: v => {
+      if (!v.person) return;
+      if (x) Object.assign(x, { person: v.person, pros: v.pros, cons: v.cons });
+      else S.self.advice.push({ id: uid(), person: v.person, pros: v.pros, cons: v.cons, ts: Date.now() });
+      lmTouch(); commit();
+    }
+  });
+}
+const addAdvice = () => adviceForm(null);
+const editAdvice = id => { const x = S.self.advice.find(q => q.id === id); if (x) adviceForm(x); };
+const delAdvice = id => confirmDel(() => { S.self.advice = S.self.advice.filter(q => q.id !== id); });
+
+function skillForm(x) {
+  openForm({
+    title: x ? t('lmEdit') : t('waAddSkill'), submit: t(x ? 'lmSave' : 'add'), fields: [
+      { name: 'name', label: t('waSkill'), value: x ? x.name : '', required: true, max: 60 },
+      { name: 'level', label: t('waLevel'), type: 'select', value: String(x ? x.level : 2), options: [0, 1, 2, 3, 4, 5].map(n => [String(n), String(n)]) }],
+    onSubmit: v => {
+      if (!v.name) return;
+      const lvl = Math.max(0, Math.min(5, Number(v.level) || 0));
+      if (x) Object.assign(x, { name: v.name, level: lvl });
+      else S.self.skills.push({ id: uid(), name: v.name, level: lvl });
+      lmTouch(); commit();
+    }
+  });
+}
+const addSkill = () => skillForm(null);
+const editSkill = id => { const x = S.self.skills.find(q => q.id === id); if (x) skillForm(x); };
+const delSkill = id => confirmDel(() => { S.self.skills = S.self.skills.filter(q => q.id !== id); });
+
+function setInner(k, v, el) { S.self.inner[k] = Math.max(0, Math.min(10, Number(v) || 0)); lmTouch(); if (el && el.nextElementSibling) el.nextElementSibling.textContent = S.self.inner[k]; save(); }
+function editRes() {
+  openForm({
+    title: t('waRes'), fields: [
+      { name: 'hours', label: t('waHours'), type: 'number', step: '0.5', value: S.self.hours ? String(S.self.hours) : '' },
+      { name: 'money', label: t('waMoney'), type: 'number', step: '1', value: S.self.money ? String(S.self.money) : '' },
+      { name: 'note', label: t('waResNote'), type: 'textarea', rows: 3, value: S.self.resNote, max: 600 }],
+    onSubmit: v => { S.self.hours = lmNum(v.hours); S.self.money = lmNum(v.money); S.self.resNote = v.note; lmTouch(); commit(); }
+  });
+}
+const lmEditBtn = fn => `<button class="icon-btn" onclick="${fn}" aria-label="${t('lmEdit')}">${ic('edit')}</button>`;
+const lmTextBlock = (txt, ph) => txt ? `<p class="lm-txt">${esc(txt)}</p>` : `<p class="lm-ph">${esc(ph)}</p>`;
+
+PAGES.whereami = function () {
+  const sf = S.self, sc = selfScore();
+  const advice = sf.advice.length ? sf.advice.map(x => `<div class="lm-item"><div class="lm-item-h"><b>${esc(x.person)}</b><span>${lmEditBtn(`editAdvice('${x.id}')`)}<button class="icon-btn" onclick="delAdvice('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div>
+      <div class="lm-two"><div><small style="color:var(--green)">${t('waPros')}</small>${lmTextBlock(x.pros, '—')}</div><div><small style="color:var(--pink)">${t('waCons')}</small>${lmTextBlock(x.cons, '—')}</div></div></div>`).join('')
+    : `<div class="empty">${t('waNoAdvice')}</div>`;
+
+  const skills = sf.skills.length ? sf.skills.map(x => `<div class="row"><div class="row-main"><div class="row-title">${esc(x.name)}</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:5px">${lmBar(x.level * 20, PALETTE[x.level % PALETTE.length])}<span class="num" style="font-size:11px;color:var(--muted);min-width:28px">${x.level}/5</span></div></div>
+      ${lmEditBtn(`editSkill('${x.id}')`)}<button class="icon-btn" onclick="delSkill('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></div>`).join('')
+    : `<div class="empty">${t('waNoSkills')}</div>`;
+
+  const inner = INNER_KEYS.map(k => `<div class="slider"><label for="in_${k}">${t('i_' + k)}</label>
+      <input id="in_${k}" type="range" min="0" max="10" step="1" value="${sf.inner[k]}" style="accent-color:${sf.inner[k] >= 7 ? 'var(--pink)' : sf.inner[k] >= 4 ? 'var(--yellow)' : 'var(--green)'}" oninput="setInner('${k}',this.value,this)" onchange="render()"><output class="num">${sf.inner[k]}</output></div>`).join('');
+
+  return header(t('whereami'), t('waSub')) +
+    `<div class="grid g4">
+      ${kpiCard(t('waDone'), sc + '%', t('waReview'), 'var(--accent)', sc)}
+      ${kpiCard(t('waUpdated'), sf.updated || '—', sf.updated ? '' : t('waNever'), 'var(--blue)')}
+      ${kpiCard(t('waAdvice'), String(sf.advice.length), t('waAdviceSub'), 'var(--green)')}
+      ${kpiCard(t('waSkills'), String(sf.skills.length), t('waSkill'), 'var(--purple, #9b6dff)')}
+    </div>
+    <div class="grid g2" style="align-items:start">
+      ${card(t('waPers'), `${sf.mbti ? `<div class="lm-chip-big">${esc(sf.mbti)}</div>` : ''}${lmTextBlock(sf.mbtiNote, t('waPersNote'))}<p class="lm-note">${t('waPersHint')}</p>`, lmEditBtn('editSelfPers()'))}
+      ${card(t('waSw'), `<div class="lm-two"><div><small style="color:var(--green)">${t('waStr')}</small>${lmTextBlock(sf.strengths, '—')}</div><div><small style="color:var(--pink)">${t('waWk')}</small>${lmTextBlock(sf.weaknesses, '—')}</div></div>`, lmEditBtn('editSelfSW()'))}
+    </div>
+    ${card(t('waAdvice'), advice, `<button class="btn btn-ghost" onclick="addAdvice()">${ic('plus')}${t('waAddAdvice')}</button>`)}
+    <div class="grid g2" style="align-items:start">
+      ${card(t('waSkills'), skills, `<button class="btn btn-ghost" onclick="addSkill()">${ic('plus')}${t('waAddSkill')}</button>`)}
+      ${card(t('waInner'), inner + `<p class="lm-note">${t('waInnerHint')}</p>`)}
+    </div>
+    ${card(t('waRes'), `<div class="stat2" style="margin-top:0"><div><b class="num">${sf.hours || '—'}</b>${t('waHours')}</div><div><b class="num">${sf.money ? compact(sf.money) : '—'}</b>${t('waMoney')}</div></div>${lmTextBlock(sf.resNote, t('waResNote'))}`, lmEditBtn('editRes()'))}`;
+};
+
+/* ═══════════ 2) تتبّع الوقت ═══════════ */
+let tlDay = '', tlCat = null, tlWeek = 0;
+const tlKey = () => tlDay || today();
+const tlCats = () => S.timelog.cats;
+const tlCatOf = id => tlCats().find(c => c.id === id);
+const tlOf = (k, h) => (S.timelog.log[k] || {})[h];
+function setTlDay(k) { tlDay = k; render(); }
+function shiftTlWeek(n) { tlWeek += n; const ws = addDays(weekStart(new Date()), tlWeek * 7); tlDay = dkey(ws); render(); }
+function pickTlCat(id) { tlCat = tlCat === id ? null : id; render(); }
+function paintHour(h) {
+  if (!tlCat) return;
+  const k = tlKey(), day = S.timelog.log[k] || (S.timelog.log[k] = {});
+  if (tlCat === 'erase' || day[h] === tlCat) delete day[h]; else day[h] = tlCat;
+  if (!Object.keys(day).length) delete S.timelog.log[k];
+  commit();
+}
+function tlCatForm(x) {
+  openForm({
+    title: x ? t('lmEdit') : t('tlAddCat'), submit: t(x ? 'lmSave' : 'add'), fields: [
+      { name: 'emoji', label: 'Emoji', value: x ? x.emoji : '⏳', max: 4 },
+      { name: 'name', label: t('tlCatName'), value: x ? x.name : '', required: true, max: 40 },
+      { name: 'kind', label: t('tlKind'), type: 'select', value: x ? x.kind : 'neutral', options: [['invest', t('tlInvest')], ['neutral', t('tlNeutral')], ['waste', t('tlWaste')]] }],
+    onSubmit: v => {
+      if (!v.name) return;
+      if (x) Object.assign(x, { emoji: v.emoji || '⏳', name: v.name, kind: v.kind });
+      else tlCats().push({ id: uid(), emoji: v.emoji || '⏳', name: v.name, kind: v.kind, color: PALETTE[tlCats().length % PALETTE.length] });
+      commit();
+    }
+  });
+}
+const addTlCat = () => tlCatForm(null);
+const editTlCat = id => { const x = tlCatOf(id); if (x) tlCatForm(x); };
+const delTlCat = id => confirmDel(() => {
+  S.timelog.cats = tlCats().filter(c => c.id !== id);
+  for (const k in S.timelog.log) { for (const h in S.timelog.log[k]) if (S.timelog.log[k][h] === id) delete S.timelog.log[k][h]; if (!Object.keys(S.timelog.log[k]).length) delete S.timelog.log[k]; }
+  if (tlCat === id) tlCat = null;
+});
+function setMinPerHabit(v) { S.timelog.minPerHabit = Math.max(1, Math.min(240, Number(v) || 15)); commit(); }
+
+function tlReport(days = 14) {
+  const keys = Object.keys(S.timelog.log).sort().slice(-days);
+  const per = new Map(); let total = 0;
+  keys.forEach(k => Object.values(S.timelog.log[k]).forEach(id => { per.set(id, (per.get(id) || 0) + 1); total++; }));
+  const kind = { invest: 0, neutral: 0, waste: 0 };
+  per.forEach((n, id) => { const c = tlCatOf(id); if (c) kind[c.kind] = (kind[c.kind] || 0) + n; });
+  const d = keys.length || 1;
+  return { keys, per, total, kind, days: keys.length, free: (kind.invest + kind.waste) / d, wasted: kind.waste / d, invested: kind.invest / d };
+}
+
+PAGES.timelog = function () {
+  const k = tlKey(), d = pdate(k), ws = weekStart(d), rtl = LANGS[lang].dir === 'rtl', rep = tlReport();
+  const dayLog = S.timelog.log[k] || {};
+
+  const strip = [...Array(7)].map((_, i) => {
+    const x = addDays(ws, i), dk = dkey(x), n = Object.keys(S.timelog.log[dk] || {}).length;
+    return `<button class="${dk === k ? 'sel' : ''} ${dk === today() ? 'now' : ''}" onclick="setTlDay('${dk}')" aria-pressed="${dk === k}"><span class="dn">${fmt(x, { weekday: 'short' })}</span>${donut(lmPct(n, 24), n ? 'var(--accent)' : 'var(--surface3)', 46, 11, String(n))}<span class="num" style="font-size:10px">${fmt(x, { day: 'numeric' })}</span></button>`;
+  }).join('');
+
+  const picker = `<div class="chips tl-picker">${tlCats().map(c => `<button class="chip ${tlCat === c.id ? 'on' : ''}" onclick="pickTlCat('${c.id}')" style="${tlCat === c.id ? `border-color:${c.color};background:color-mix(in srgb, ${c.color} 22%, transparent)` : ''}"><i class="tl-dot" style="background:${c.color}"></i>${esc(c.emoji)} ${esc(c.name)}</button>`).join('')}
+    <button class="chip ${tlCat === 'erase' ? 'on' : ''}" onclick="pickTlCat('erase')">🧽 ${t('tlErase')}</button></div>`;
+
+  const grid = `<div class="tl-grid">${[...Array(24)].map((_, h) => {
+    const id = dayLog[h], c = id && tlCatOf(id);
+    return `<button class="tl-cell" onclick="paintHour(${h})" title="${c ? esc(c.name) : ''}" style="${c ? `background:color-mix(in srgb, ${c.color} 60%, transparent);border-color:${c.color}` : ''}">
+      <span class="tl-h num">${String(h).padStart(2, '0')}</span><span class="tl-e">${c ? esc(c.emoji) : ''}</span></button>`;
+  }).join('')}</div>`;
+
+  const breakdown = rep.total ? [...rep.per.entries()].sort((a, b) => b[1] - a[1]).map(([id, n]) => {
+    const c = tlCatOf(id); if (!c) return '';
+    return `<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12.5px"><span style="font-weight:600">${esc(c.emoji)} ${esc(c.name)}</span><span class="num" style="color:var(--muted)">${n} ${t('lmHours')} · ${lmPct(n, rep.total)}%</span></div>${lmBar(lmPct(n, rep.total), c.color)}</div>`;
+  }).join('') : `<div class="empty">${t('tlNoData')}</div>`;
+
+  const nH = S.habits.length, needH = nH * S.timelog.minPerHabit / 60, availH = rep.days ? rep.free : (S.self.hours || 0);
+  const over = rep.days || S.self.hours ? needH > availH : false;
+  const capacity = `<div class="stat2" style="margin-top:0">
+      <div><b class="num">${nH}</b>${t('tlHabitsN')}</div>
+      <div><b class="num" style="color:${over ? 'var(--pink)' : 'var(--green)'}">${needH.toFixed(1)}</b>${t('tlNeeded')} (${t('lmHours')})</div>
+      <div><b class="num">${availH ? availH.toFixed(1) : '—'}</b>${t('tlAvail')} (${t('lmHours')})</div>
+      <div><b class="num">${S.timelog.minPerHabit}</b>${t('tlMin')}</div></div>
+    <div class="slider" style="margin-top:14px"><label for="tlmin">${t('tlMin')}</label><input id="tlmin" type="range" min="5" max="60" step="5" value="${S.timelog.minPerHabit}" oninput="this.nextElementSibling.textContent=this.value" onchange="setMinPerHabit(this.value)"><output class="num">${S.timelog.minPerHabit}</output></div>
+    <p class="lm-note ${over ? 'warn' : 'good'}">${over ? t('tlOver') : t('tlOk')}</p>`;
+
+  const catsAdmin = `<div class="chips">${tlCats().map(c => `<span class="chip"><i class="tl-dot" style="background:${c.color}"></i>${esc(c.emoji)} ${esc(c.name)} <small style="color:var(--faint)">${t('tl' + c.kind.charAt(0).toUpperCase() + c.kind.slice(1))}</small>
+    <button class="lm-x" onclick="editTlCat('${c.id}')" aria-label="${t('lmEdit')}">✎</button><button class="lm-x" onclick="delTlCat('${c.id}')" aria-label="${t('delete')}">✕</button></span>`).join('')}</div>`;
+
+  return header(t('timelog'), t('tlSub'),
+    `<button class="btn btn-ghost" onclick="shiftTlWeek(-1)" aria-label="prev">${ic(rtl ? 'next' : 'prev')}</button><button class="btn btn-primary" onclick="setTlDay('${today()}')">${t('todayBtn')}</button><button class="btn btn-ghost" onclick="shiftTlWeek(1)" aria-label="next">${ic(rtl ? 'prev' : 'next')}</button>`) +
+    card(t('weekStrip'), `<div class="strip">${strip}</div>`, '', 'margin-bottom:16px') +
+    `<div class="grid g4">
+      ${kpiCard(t('tlTracked'), String(rep.days), t('tlTracked'), 'var(--blue)')}
+      ${kpiCard(t('tlFree'), rep.days ? rep.free.toFixed(1) : '—', t('tlPerDay'), 'var(--accent)')}
+      ${kpiCard(t('tlInvested'), rep.days ? rep.invested.toFixed(1) : '—', t('tlPerDay'), 'var(--green)')}
+      ${kpiCard(t('tlWasted'), rep.days ? rep.wasted.toFixed(1) : '—', t('tlPerDay'), 'var(--pink)')}
+    </div>
+    ${card(t('tlDayGrid') + ' · ' + fmt(d, { weekday: 'long', day: 'numeric', month: 'long' }), picker + grid + `<p class="lm-note">${t('tlPick')}</p>`)}
+    <div class="grid g2" style="align-items:start">
+      ${card(t('tlBreak'), breakdown)}
+      ${card(t('tlCapacity'), capacity)}
+    </div>
+    ${card(t('tlCats'), catsAdmin, `<button class="btn btn-ghost" onclick="addTlCat()">${ic('plus')}${t('tlAddCat')}</button>`)}`;
+};
+
+/* ═══════════ 3) خطة الأهداف: لماذا · ماذا · الخطوة الأولى ═══════════ */
+const gPlan = id => S.goalPlan[id] || { what: '', first: '', projectId: '' };
+const gPlanW = id => S.goalPlan[id] || (S.goalPlan[id] = { what: '', first: '', projectId: '' });
+function goalPlanForm(id) {
+  const d = yData(), g = (d.goals || []).find(x => x.id === id); if (!g) return;
+  const p = gPlanW(id);
+  openForm({
+    title: `${t('gpEdit')} · ${g.title}`, text: t('gpHint'), fields: [
+      { name: 'why', label: t('gpWhy'), type: 'textarea', rows: 3, value: g.why || '', max: 500 },
+      { name: 'what', label: t('gpWhat'), type: 'textarea', rows: 3, value: p.what, max: 500 },
+      { name: 'first', label: t('gpFirst'), type: 'textarea', rows: 3, value: p.first, ph: t('gpFirstPh'), max: 600 },
+      { name: 'project', label: t('yProject'), type: 'select', value: p.projectId || '', options: [['', t('none')], ...S.projects.map(x => [x.id, x.name])] }],
+    onSubmit: v => { g.why = v.why; p.what = v.what; p.first = v.first; p.projectId = v.project; commit(); }
+  });
+}
+function goalPlanCard() {
+  const d = yData(), goals = d.goals || [];
+  const body = goals.length ? goals.map(g => {
+    const p = gPlan(g.id), full = g.why && p.what && p.first, pr = S.projects.find(x => x.id === p.projectId);
+    return `<div class="lm-item ${full ? '' : 'todo'}"><div class="lm-item-h"><b>${esc(g.title)}</b>
+      <span>${full ? '' : `<span class="badge" style="color:var(--yellow)">${t('gpMissing')}</span>`}${pr ? `<span class="badge">${esc(pr.name)}</span>` : ''}${lmEditBtn(`goalPlanForm('${g.id}')`)}</span></div>
+      <div class="lm-three">
+        <div><small style="color:var(--blue)">${t('gpWhy')}</small>${lmTextBlock(g.why, '—')}</div>
+        <div><small style="color:var(--green)">${t('gpWhat')}</small>${lmTextBlock(p.what, '—')}</div>
+        <div><small style="color:var(--accent)">${t('gpFirst')}</small>${lmTextBlock(p.first, '—')}</div>
+      </div></div>`;
+  }).join('') : `<div class="empty">${t('gpEmpty')}</div>`;
+  return card(t('gpTitle'), body + `<p class="lm-note">${t('gpHint')}</p>`);
+}
+const __year0 = PAGES.year;
+PAGES.year = function () { return __year0.call(PAGES) + goalPlanCard(); };
+
+/* ═══════════ 4) مصفوفة الأولويات (أيزنهاور) ═══════════ */
+let eiFilter = 'all';
+function tMeta(id) {
+  if (S.taskMeta[id]) return S.taskMeta[id];
+  const task = S.tasks.find(x => x.id === id), pr = task ? task.priority : 'med';
+  return { imp: pr !== 'low', urg: pr === 'high', rule: 'none', need: 'none' };
+}
+const tMetaW = id => S.taskMeta[id] || (S.taskMeta[id] = tMeta(id));
+function taskMetaForm(id) {
+  const task = S.tasks.find(x => x.id === id); if (!task) return;
+  const m = tMetaW(id);
+  openForm({
+    title: `${t('eiMeta')} · ${task.title}`, fields: [
+      { name: 'imp', label: t('eiImp'), type: 'select', value: m.imp ? '1' : '0', options: [['1', '✓'], ['0', '✕']] },
+      { name: 'urg', label: t('eiUrg'), type: 'select', value: m.urg ? '1' : '0', options: [['1', '✓'], ['0', '✕']] },
+      { name: 'rule', label: t('eiRule'), type: 'select', value: m.rule, options: [['none', t('r_none')], ['duty', t('r_duty')], ['nafl', t('r_nafl')]] },
+      { name: 'need', label: t('eiNeed'), type: 'select', value: m.need, options: [['none', t('r_none')], ['need', t('n_need')], ['want', t('n_want')]] }],
+    onSubmit: v => { Object.assign(m, { imp: v.imp === '1', urg: v.urg === '1', rule: v.rule, need: v.need }); commit(); }
+  });
+}
+function toggleEi(id, f) { const m = tMetaW(id); m[f] = !m[f]; commit(); }
+function setEiFilter(v) { eiFilter = v; render(); }
+PAGES.eisen = function () {
+  const open = S.tasks.filter(x => x.status !== 'done');
+  const rank = x => { const m = tMeta(x.id); let s = 0; if (m.rule === 'duty') s += 2; if (m.need === 'need') s += 1; return -s; };
+  const pick = (imp, urg) => open.filter(x => { const m = tMeta(x.id); return m.imp === imp && m.urg === urg; })
+    .filter(x => { const m = tMeta(x.id); return eiFilter === 'all' || (eiFilter === 'duty' ? m.rule === 'duty' : m.need === 'need'); })
+    .sort((a, b) => rank(a) - rank(b));
+  const tag = m => `${m.rule !== 'none' ? `<span class="badge" style="color:var(--green)">${t('r_' + m.rule)}</span>` : ''}${m.need !== 'none' ? `<span class="badge" style="color:var(--blue)">${t('n_' + m.need)}</span>` : ''}`;
+  const quad = (key, imp, urg, color, hint) => {
+    const list = pick(imp, urg);
+    const body = list.length ? list.map(x => { const m = tMeta(x.id), pr = S.projects.find(p => p.id === x.projectId); return `<div class="row"><div class="row-main"><div class="row-title">${esc(x.title)}</div>
+        <div class="lm-tags">${pr ? `<span class="badge">${esc(pr.name)}</span>` : ''}${tag(m)}</div></div>${lmEditBtn(`taskMetaForm('${x.id}')`)}</div>`; }).join('')
+      : `<div class="empty">—</div>`;
+    return `<section class="card ei-q" style="--q:${color}"><div class="card-head"><span class="card-title" style="color:${color}">${t(key)}</span><span class="badge num">${list.length}</span></div><p class="lm-note">${hint}</p>${body}</section>`;
+  };
+  if (!open.length) return header(t('eisen'), t('eiSub')) + `<div class="card"><div class="empty">${t('eiNoTasks')}</div></div>`;
+  const seg = `<div class="seg">${[['all', t('eiAll')], ['duty', t('r_duty')], ['need', t('n_need')]].map(([v, l]) => `<button class="${eiFilter === v ? 'on' : ''}" onclick="setEiFilter('${v}')">${l}</button>`).join('')}</div>`;
+  return header(t('eisen'), t('eiSub'), seg) +
+    `<div class="grid g2" style="align-items:start">
+      ${quad('ei_q1', true, true, 'var(--pink)', t('ei_q1h'))}
+      ${quad('ei_q2', true, false, 'var(--green)', t('ei_q2h'))}
+      ${quad('ei_q3', false, true, 'var(--yellow)', t('ei_q3h'))}
+      ${quad('ei_q4', false, false, 'var(--faint)', t('ei_q4h'))}
+    </div>
+    <div class="card"><p class="lm-note good" style="margin:0">${t('eiLegend')}</p></div>`;
+};
+
+/* ═══════════ 5) المعيقات وبُنيّات الطريق ═══════════ */
+function obForm(x) {
+  openForm({
+    title: x ? t('lmEdit') : t('obAdd'), submit: t(x ? 'lmSave' : 'add'), fields: [
+      { name: 'title', label: t('obWhat'), value: x ? x.title : '', required: true, max: 120 },
+      { name: 'type', label: t('obType'), type: 'select', value: x ? x.type : 'rush', options: OB_TYPES.map(k => [k, t('ob_' + k)]) },
+      { name: 'trigger', label: t('obTrigger'), type: 'textarea', rows: 2, value: x ? x.trigger : '', max: 400 },
+      { name: 'plan', label: t('obPlan'), type: 'textarea', rows: 3, value: x ? x.plan : '', max: 600 }],
+    onSubmit: v => {
+      if (!v.title) return;
+      if (x) Object.assign(x, { title: v.title, type: v.type, trigger: v.trigger, plan: v.plan });
+      else S.obstacles.push({ id: uid(), title: v.title, type: v.type, trigger: v.trigger, plan: v.plan, ts: Date.now() });
+      commit();
+    }
+  });
+}
+const addObstacle = () => obForm(null);
+const editObstacle = id => { const x = S.obstacles.find(q => q.id === id); if (x) obForm(x); };
+const delObstacle = id => confirmDel(() => { S.obstacles = S.obstacles.filter(q => q.id !== id); });
+function togglePark(id) { if (S.ideaPark[id]) delete S.ideaPark[id]; else S.ideaPark[id] = true; commit(); }
+
+PAGES.obstacles = function () {
+  const OB_E = { rush: '⏩', perfect: '💎', side: '🛣️', concept: '🧩', fear: '😰', noplan: '🗺️', other: '📌' };
+  const list = S.obstacles.length ? S.obstacles.map(x => `<div class="lm-item"><div class="lm-item-h"><b>${OB_E[x.type] || '📌'} ${esc(x.title)}</b>
+      <span><span class="badge">${t('ob_' + x.type)}</span>${lmEditBtn(`editObstacle('${x.id}')`)}<button class="icon-btn" onclick="delObstacle('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div>
+      <div class="lm-two"><div><small style="color:var(--yellow)">${t('obTrigger')}</small>${lmTextBlock(x.trigger, '—')}</div><div><small style="color:var(--green)">${t('obPlan')}</small>${lmTextBlock(x.plan, '—')}</div></div></div>`).join('')
+    : `<div class="empty">${t('obNone')}</div>`;
+
+  const ideas = S.life.ideas || [];
+  const parked = ideas.filter(x => S.ideaPark[x.id]), active = ideas.filter(x => !S.ideaPark[x.id]);
+  const ideaRow = (x, on) => `<span class="chip ${on ? 'done' : ''}">${esc(x.title)}<button class="lm-x" onclick="togglePark('${x.id}')">${on ? '↩' : '⏸'}</button></span>`;
+  const parkBody = ideas.length
+    ? `<div class="chips">${parked.length ? parked.map(x => ideaRow(x, true)).join('') : `<span class="lm-ph">—</span>`}</div>
+       <div class="lm-sep"><small>${t('obActive')}</small></div><div class="chips">${active.map(x => ideaRow(x, false)).join('')}</div>`
+    : `<div class="empty">${t('obNoIdeas')}</div>`;
+
+  return header(t('obstacles'), t('obSub'), `<button class="btn btn-primary" onclick="addObstacle()">${ic('plus')}${t('obAdd')}</button>`) +
+    card(t('obstacles'), list) +
+    card(t('obPark'), parkBody + `<p class="lm-note">${t('obParkSub')}</p>`);
+};
+
+/* ═══════════ 6) المحاسبة اليومية ═══════════ */
+function setReview(k, f, v) { const r = S.review[k] || (S.review[k] = { good: '', bad: '', fix: '' }); r[f] = String(v || '').slice(0, 600); if (!r.good && !r.bad && !r.fix) delete S.review[k]; save(); }
+function reviewCard() {
+  const k = selDay || today(), r = S.review[k] || { good: '', bad: '', fix: '' };
+  const ta = (f, label, color) => `<div class="lm-rv"><label for="rv_${f}" style="color:${color}">${label}</label><textarea id="rv_${f}" rows="3" maxlength="600" onchange="setReview('${k}','${f}',this.value)" placeholder="—">${esc(r[f])}</textarea></div>`;
+  return card(t('rvTitle'), `<div class="lm-three">${ta('good', t('rvGood'), 'var(--green)')}${ta('bad', t('rvBad'), 'var(--pink)')}${ta('fix', t('rvFix'), 'var(--accent)')}</div><p class="lm-note">${t('rvHint')}</p>`);
+}
+const __daily0 = PAGES.daily;
+PAGES.daily = function () { return __daily0.call(PAGES) + reviewCard(); };
+
+/* ═══════════ 7) العادة المركزية ═══════════ */
+function keystoneStats() {
+  const ds = lastDays(60).filter(k => (S.habitLog[k] || []).length || (S.routineLog[k] || []).length);
+  if (ds.length < 10) return null;
+  const out = S.habits.map(h => {
+    const on = ds.filter(k => habitDone(k, h.id)), off = ds.filter(k => !habitDone(k, h.id));
+    if (on.length < 3 || off.length < 3) return null;
+    const a = avgPct(on), b = avgPct(off);
+    return { h, on: a, off: b, gap: a - b, nOn: on.length, nOff: off.length };
+  }).filter(Boolean).sort((x, y) => y.gap - x.gap);
+  return out.length ? out : null;
+}
+function setKeystone(id) { S.keystone = id; commit(); }
+function keystoneCard() {
+  const st = keystoneStats();
+  if (!st) return card(t('ksTitle'), `<div class="empty">${t('ksNone')}</div>`);
+  const sel = st.find(x => x.h.id === S.keystone) || st[0];
+  const top = st.slice(0, 3).map(x => `<button class="chip ${x.h.id === sel.h.id ? 'on' : ''}" onclick="setKeystone('${x.h.id}')" style="${x.h.id === sel.h.id ? `border-color:${x.h.color}` : ''}">${esc(x.h.emoji)} ${esc(x.h.name)} <b class="num" style="color:var(--green)">+${x.gap}%</b></button>`).join('');
+  return card(t('ksTitle'), `<div class="lm-ks"><div style="font-size:34px">${esc(sel.h.emoji)}</div><div style="min-width:0"><b>${esc(sel.h.name)}</b><div class="lm-note" style="margin:4px 0 0">${t('ksSub')}</div></div>
+      <div class="kpi num" style="color:var(--green);font-size:30px">+${sel.gap}%</div></div>
+    <div class="stat2"><div><b class="num" style="color:var(--green)">${sel.on}%</b>${t('ksOn')}</div><div><b class="num" style="color:var(--pink)">${sel.off}%</b>${t('ksOff')}</div></div>
+    <p class="lm-note good">${t('ksLine')} <b>+${sel.gap}%</b></p>
+    <div class="lm-sep"><small>${t('ksTop')}</small></div><div class="chips">${top}</div>`);
+}
+const __analytics0 = PAGES.analytics;
+PAGES.analytics = function () { return __analytics0.call(PAGES) + keystoneCard(); };
+
+/* ═══════════ 8) بطاقات تصحيح التصوّرات ═══════════ */
+TIP_C.concept = ['💡', '#4a9eff'];
+TIPS.push(
+  ['concept', 'الشغف لا يُكتشف بل يُصنع: لن تَشغف بشيء قبل أن تمارسه وتتقنه.', 'La passion ne se découvre pas, elle se fabrique : on n\'aime vraiment qu\'après avoir pratiqué.', 'Passion is not discovered but built: you love a thing only after you practise it.'],
+  ['concept', 'المستعجل يصل متأخرًا: يحمّل نفسه فوق طاقتها فينقطع، أو يسلك طريقًا خاطئًا.', 'Qui se précipite arrive en retard : il se surcharge et s\'arrête, ou prend la mauvaise route.', 'The one who rushes arrives late: overloads and stops, or takes the wrong road.'],
+  ['concept', 'ليس كل نافع ينفعك أنت. الفرصة الجميلة التي لا تخدم طريقك هي عائق لا مكسب.', 'Tout ce qui est utile ne vous sert pas : une belle occasion hors de votre route est un obstacle.', 'Not everything useful serves you: a fine chance off your road is an obstacle.'],
+  ['concept', 'الكمال يأتي بالاستكمال: ابدأ ناقصًا ومرتبكًا، فمن أراد الكمال ابتداءً لم يبدأ.', 'La perfection vient en avançant : commencez imparfait, sinon vous ne commencerez jamais.', 'Mastery comes by starting: begin imperfect, or you never begin at all.'],
+  ['concept', 'ما لا يُتتبَّع يُهدَر. تتبّع ساعاتك سبعة أيام وستُفاجأ بما تراه.', 'Ce qui n\'est pas suivi se perd. Notez vos heures sept jours : la surprise est garantie.', 'What is not tracked is wasted. Log your hours for seven days and be surprised.'],
+  ['concept', 'المتعة ليست شرطًا. حتى ما تحبه فيه ملل وكدّ، فلا تنتظر الحماس لتبدأ.', 'Le plaisir n\'est pas requis : même ce qu\'on aime a sa part d\'ennui. N\'attendez pas l\'envie.', 'Enjoyment is not required: even what you love has dull stretches. Do not wait for the mood.'],
+  ['concept', 'لا تجب عن «كيف» قبل أن تجيب عن «لماذا» و«ماذا».', 'Ne répondez pas au « comment » avant le « pourquoi » et le « quoi ».', 'Do not answer "how" before you answer "why" and "what".'],
+  ['concept', 'الأمور ذات القيمة تحتاج وقتًا. الاختصارات التي تصنعها اليوم هي مشاكل الغد.', 'Ce qui a de la valeur prend du temps : les raccourcis d\'aujourd\'hui sont les problèmes de demain.', 'Valuable things take time: today\'s shortcuts are tomorrow\'s problems.'],
+  ['concept', 'المشكلة المكتوبة مشكلة نصف محلولة. أخرجها من رأسك إلى الورق.', 'Un problème écrit est à moitié résolu : sortez-le de votre tête.', 'A written problem is half solved: get it out of your head.'],
+  ['concept', 'الواجب يُقدَّم على النافلة، والاحتياج على الرغبة.', 'L\'obligation avant le surérogatoire, le besoin avant l\'envie.', 'Duty before optional, need before want.'],
+);
+
 </script>
 </body>
 </html>
