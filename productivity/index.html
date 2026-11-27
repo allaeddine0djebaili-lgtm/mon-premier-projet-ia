@@ -536,6 +536,19 @@ tr.flash td, .chip.flash { animation: flash 1.8s ease-out; }
 @media (max-width: 900px) { .lm-three { grid-template-columns: 1fr; } .tl-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .lm-two { grid-template-columns: 1fr; } .tl-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 </style>
+<style id="lifemap-link-style">
+/* ───────── Life Map · طبقة الربط ───────── */
+.lk-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.lk-tile { display: flex; flex-direction: column; align-items: center; gap: 3px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2); padding: 12px 8px; cursor: pointer; text-align: center; transition: transform .15s, border-color .15s; }
+.lk-tile:hover { transform: translateY(-2px); border-color: var(--accent); }
+.lk-tile b { font-size: 22px; line-height: 1.1; }
+.lk-tile small { font-size: 10.5px; color: var(--faint); }
+.lk-lab { font-size: 11px; font-weight: 700; color: var(--muted); }
+.lk-next { margin-top: 14px; background: var(--surface2); border-radius: var(--r2); padding: 12px 14px; border-inline-start: 3px solid var(--accent); }
+.lk-next b { display: block; font-size: 13.5px; margin-top: 4px; }
+@media (max-width: 900px) { .lk-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .lk-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
 </head>
 <body>
 <div id="auth" class="auth hidden"></div>
@@ -2522,6 +2535,122 @@ TIPS.push(
   ['concept', 'المشكلة المكتوبة مشكلة نصف محلولة. أخرجها من رأسك إلى الورق.', 'Un problème écrit est à moitié résolu : sortez-le de votre tête.', 'A written problem is half solved: get it out of your head.'],
   ['concept', 'الواجب يُقدَّم على النافلة، والاحتياج على الرغبة.', 'L\'obligation avant le surérogatoire, le besoin avant l\'envie.', 'Duty before optional, need before want.'],
 );
+
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   طبقة الربط — تجعل الوحدات الجديدة والقديمة نظامًا واحدًا
+   ═══════════════════════════════════════════════════════════════════ */
+const TX2 = {
+  lkMap: ['خارطتك في سطر واحد', 'Votre carte en un coup d\'œil', 'Your map at a glance'],
+  lkSelf: ['ملف «أين أنا؟»', 'Profil « Où suis-je ? »', '"Where am I?" profile'],
+  lkFree: ['وقتك الحر', 'Temps libre', 'Free time'],
+  lkNoLog: ['غير مسجّل', 'Non suivi', 'Not logged'],
+  lkPlanless: ['أهداف بلا خطة', 'Objectifs sans plan', 'Goals with no plan'],
+  lkQ2: ['مهم وغير عاجل', 'Important, non urgent', 'Important, not urgent'],
+  lkReview: ['محاسبة اليوم', 'Bilan du jour', 'Today\'s reckoning'],
+  lkDone: ['مكتوبة', 'Écrit', 'Written'],
+  lkTodo: ['لم تُكتب', 'À écrire', 'Not written'],
+  lkNext: ['خطوتك التالية', 'Votre prochaine étape', 'Your next step'],
+  lkNextNone: ['حدّد الخطوة الأولى لأحد أهدافك لتظهر هنا.', 'Définissez la première étape d\'un objectif pour la voir ici.', 'Set the first step of a goal to see it here.'],
+  inSelf: ['أكمل ملف «أين أنا؟» — لا تُرسم الطريق قبل معرفة نقطة البداية', 'Complétez « Où suis-je ? » — pas de route sans point de départ', 'Complete "Where am I?" — no road without a starting point'],
+  inTime: ['لم تسجّل ساعاتك هذا الأسبوع — ما لا يُتتبَّع يُهدَر', 'Vous n\'avez pas suivi vos heures cette semaine — ce qui n\'est pas suivi se perd', 'You have not logged your hours this week — what is not tracked is wasted'],
+  inPlanless: ['أهداف بلا «لماذا» أو «الخطوة الأولى»', 'Des objectifs sans « pourquoi » ni première étape', 'Goals with no "why" or first step'],
+  inReview: ['اكتب محاسبة اليوم قبل النوم', 'Écrivez le bilan du jour avant de dormir', 'Write today\'s reckoning before bed'],
+  inOver: ['خططك أكبر من وقتك المتاح — راجع عدد عاداتك', 'Vos plans dépassent votre temps — revoyez vos habitudes', 'Your plans exceed your time — review your habits'],
+  lkGoalProj: ['الأهداف المرتبطة بمشاريعك', 'Objectifs liés à vos projets', 'Goals linked to your projects'],
+  lkNoLink: ['لا هدف مرتبط بمشروع بعد. افتح خطة الأهداف في صفحة السنة واربطها.', 'Aucun objectif lié à un projet. Ouvrez le plan des objectifs dans « Mon année ».', 'No goal linked to a project yet. Open the goal plan in "My year".'],
+  lkOpenGoal: ['الهدف', 'Objectif', 'Goal'],
+  lkOpenProj: ['المشروع', 'Projet', 'Project'],
+  lkParked: ['أفكار نحّيتها جانبًا', 'Idées mises de côté', 'Ideas you parked'],
+  lkParkedSub: ['ليست مرفوضة، بل مؤجَّلة لأنها لا تخدم طريقك الآن', 'Pas rejetées, mises en attente : elles ne servent pas votre route', 'Not rejected, just parked: they do not serve your road now'],
+  lkManage: ['إدارة', 'Gérer', 'Manage'],
+  lkLogHours: ['سجّل ساعات اليوم', 'Noter les heures du jour', 'Log today\'s hours'],
+  lkSeeHabits: ['افتح العادات', 'Voir les habitudes', 'Open habits'],
+};
+['ar', 'fr', 'en'].forEach((L, i) => { for (const k in TX2) T[L][k] = TX2[k][i]; });
+
+/* ───────── مقاييس مشتركة ───────── */
+const lkGoals = () => (yData(curYear()).goals || []);
+const lkPlanless = () => lkGoals().filter(g => { const p = gPlan(g.id); return !g.why || !p.what || !p.first; }).length;
+const lkQ2count = () => S.tasks.filter(x => x.status !== 'done').filter(x => { const m = tMeta(x.id); return m.imp && !m.urg; }).length;
+const lkLoggedThisWeek = () => { const ws = weekStart(new Date()); return [...Array(7)].some((_, i) => Object.keys(S.timelog.log[dkey(addDays(ws, i))] || {}).length); };
+const lkReviewDone = () => { const r = S.review[today()]; return !!(r && (r.good || r.bad || r.fix)); };
+function lkCapacity() {
+  const rep = tlReport(), need = S.habits.length * S.timelog.minPerHabit / 60;
+  const avail = rep.days ? rep.free : (S.self.hours || 0);
+  return { need, avail, over: avail > 0 && need > avail, tracked: rep.days };
+}
+function lkNextStep() {
+  for (const g of lkGoals()) { const p = gPlan(g.id); if (p.first) return { g, p }; }
+  return null;
+}
+
+/* ───────── بطاقة «خارطتك» في لوحة التحكم ───────── */
+function lmMapCard() {
+  const sc = selfScore(), rep = tlReport(), cap = lkCapacity(), pl = lkPlanless(), q2 = lkQ2count(), rv = lkReviewDone(), nx = lkNextStep();
+  const tile = (label, value, sub, color, pg) => `<button class="lk-tile" onclick="go('${pg}')"><span class="lk-lab">${label}</span><b class="num" style="color:${color}">${value}</b><small>${sub}</small></button>`;
+  const tiles = [
+    tile(t('lkSelf'), sc + '%', t('whereami'), sc >= 70 ? 'var(--green)' : sc >= 30 ? 'var(--yellow)' : 'var(--pink)', 'whereami'),
+    tile(t('lkFree'), rep.days ? rep.free.toFixed(1) : '—', rep.days ? t('tlPerDay') : t('lkNoLog'), cap.over ? 'var(--pink)' : 'var(--blue)', 'timelog'),
+    tile(t('lkPlanless'), String(pl), `${t('lkOpenGoal')} ${lkGoals().length}`, pl ? 'var(--yellow)' : 'var(--green)', 'year'),
+    tile(t('lkQ2'), String(q2), t('eisen'), 'var(--accent)', 'eisen'),
+    tile(t('lkReview'), rv ? '✓' : '—', rv ? t('lkDone') : t('lkTodo'), rv ? 'var(--green)' : 'var(--faint)', 'daily'),
+  ].join('');
+  const next = nx
+    ? `<div class="lk-next"><span class="lk-lab">${t('lkNext')}</span><b>${esc(nx.g.title)}</b><p class="lm-txt">${esc(nx.p.first)}</p></div>`
+    : `<div class="lk-next"><span class="lk-lab">${t('lkNext')}</span><p class="lm-ph">${t('lkNextNone')}</p></div>`;
+  return card(t('lkMap'), `<div class="lk-tiles">${tiles}</div>${next}`, `<button class="link" onclick="go('whereami')">${t('whereami')}</button>`, 'margin-bottom:16px');
+}
+const __dash0 = PAGES.dashboard;
+PAGES.dashboard = function () {
+  const html = __dash0.call(PAGES), marker = '<div class="grid g4">', i = html.indexOf(marker);
+  return i < 0 ? html + lmMapCard() : html.slice(0, i) + lmMapCard() + html.slice(i);
+};
+
+/* ───────── تنبيهات لوحة التحكم ───────── */
+function lkInsights() {
+  const out = [], hr = new Date().getHours(), cap = lkCapacity();
+  if (selfScore() < 50) out.push(['🧭', t('inSelf'), "go('whereami')"]);
+  if (!lkLoggedThisWeek()) out.push(['⏱️', t('inTime'), "go('timelog')"]);
+  if (cap.over) out.push(['⚖️', t('inOver'), "go('timelog')"]);
+  const pl = lkPlanless(); if (pl) out.push(['🧩', `${pl} ${t('inPlanless')}`, "go('year')"]);
+  if (hr >= 20 && !lkReviewDone()) out.push(['📝', t('inReview'), "go('daily')"]);
+  return out;
+}
+const __insights0 = insights;
+insights = function () { return [...__insights0(), ...lkInsights()].slice(0, 3); };
+
+/* ───────── الهدف ↔ المشروع ───────── */
+function lkGoalProjectCard() {
+  const pairs = lkGoals().map(g => ({ g, p: S.projects.find(x => x.id === gPlan(g.id).projectId) })).filter(x => x.p);
+  const body = pairs.length
+    ? pairs.map(({ g, p }) => { const st = projStats(p.id); return `<div class="row"><div class="row-main"><div class="row-title">🎯 ${esc(g.title)}</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:5px">${lmBar(st.p, 'var(--accent)')}<span class="num" style="font-size:11px;color:var(--muted);min-width:46px">${st.done}/${st.total}</span></div></div>
+        <button class="link" onclick="go('projects')">${t('lkOpenProj')}: ${esc(p.name)}</button></div>`; }).join('')
+    : `<div class="empty">${t('lkNoLink')}</div>`;
+  return card(t('lkGoalProj'), body, `<button class="link" onclick="go('year')">${t('year')}</button>`);
+}
+const __projects0 = PAGES.projects;
+PAGES.projects = function () { return __projects0.call(PAGES) + lkGoalProjectCard(); };
+
+/* ───────── الأفكار المنحّاة ↔ المعيقات ───────── */
+function lkParkedCard() {
+  const parked = (S.life.ideas || []).filter(x => S.ideaPark[x.id]);
+  if (!parked.length) return '';
+  return card(t('lkParked'), `<div class="chips">${parked.map(x => `<span class="chip done">${esc(x.title)}<button class="lm-x" onclick="togglePark('${x.id}')">↩</button></span>`).join('')}</div><p class="lm-note">${t('lkParkedSub')}</p>`,
+    `<button class="link" onclick="go('obstacles')">${t('lkManage')}</button>`);
+}
+const __ideas0 = PAGES.ideas;
+PAGES.ideas = function () { return __ideas0.call(PAGES) + lkParkedCard(); };
+
+/* ───────── روابط متبادلة داخل البطاقات الجديدة ───────── */
+const __reviewCard0 = reviewCard;
+reviewCard = function () { return __reviewCard0().replace('</section>', `<button class="link" onclick="go('timelog')">${t('lkLogHours')}</button></section>`); };
+const __keystoneCard0 = keystoneCard;
+keystoneCard = function () { return __keystoneCard0().replace('</section>', `<button class="link" onclick="go('habits')">${t('lkSeeHabits')}</button></section>`); };
+const __goalPlanCard0 = goalPlanCard;
+goalPlanCard = function () { return __goalPlanCard0().replace(/<span class="badge">([^<]*)<\/span>(?=\s*<button class="icon-btn" onclick="goalPlanForm)/g, `<button class="link" onclick="go('projects')">$1</button>`); };
 
 </script>
 </body>
