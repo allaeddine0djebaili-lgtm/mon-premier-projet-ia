@@ -549,6 +549,17 @@ tr.flash td, .chip.flash { animation: flash 1.8s ease-out; }
 @media (max-width: 900px) { .lk-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .lk-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>
+<style id="lifemap-3-style">
+/* ───────── Life Map · الدفعة الثالثة ───────── */
+.lk-tiles { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)) !important; }
+.pu-big { font-size: 19px; font-weight: 700; line-height: 1.85; background: var(--accent-soft); color: var(--accent); border-radius: var(--r2); padding: 18px 20px; text-align: center; }
+.lm-item.flip { border-color: var(--pink); border-style: solid; }
+.ef-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.ef-tile { display: flex; flex-direction: column; gap: 3px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r2); padding: 14px; }
+.ef-tile b { font-size: 26px; line-height: 1.1; }
+.ef-tile small { font-size: 11px; color: var(--faint); margin-bottom: 4px; }
+@media (max-width: 760px) { .ef-grid { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 <div id="auth" class="auth hidden"></div>
@@ -2651,6 +2662,322 @@ const __keystoneCard0 = keystoneCard;
 keystoneCard = function () { return __keystoneCard0().replace('</section>', `<button class="link" onclick="go('habits')">${t('lkSeeHabits')}</button></section>`); };
 const __goalPlanCard0 = goalPlanCard;
 goalPlanCard = function () { return __goalPlanCard0().replace(/<span class="badge">([^<]*)<\/span>(?=\s*<button class="icon-btn" onclick="goalPlanForm)/g, `<button class="link" onclick="go('projects')">$1</button>`); };
+
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   الدفعة الثالثة — الوسائل والغايات · الأساسيات · المعينات ·
+   السعي والنتيجة · قاعدة 20/80 · المساحات الزمنية
+   ═══════════════════════════════════════════════════════════════════ */
+const TX3 = {
+  purpose: ['الغاية والوسائل', 'Fin et moyens', 'End and means'],
+  basics: ['الأساسيات', 'Les essentiels', 'The essentials'],
+  puSub: ['غاية واحدة، وكل ما دونها وسيلة إليها', 'Une seule fin, tout le reste n\'est qu\'un moyen', 'One single end, everything else a means to it'],
+  puBig: ['الغاية الكبرى', 'La fin ultime', 'The ultimate end'],
+  puDefault: ['رضا الله سبحانه وتعالى، والفوز بالجنة، والنجاة من النار.', 'La satisfaction de Dieu, gagner le Paradis et être préservé du Feu.', 'The pleasure of God, winning Paradise and being saved from the Fire.'],
+  puEdit: ['تحرير الغاية', 'Modifier la fin', 'Edit the end'],
+  puMeans: ['وسائلي هذه السنة', 'Mes moyens cette année', 'My means this year'],
+  puMeansSub: ['كل هدف تحت الغاية وسيلة — اكتب كيف يخدمها', 'Chaque objectif est un moyen : écrivez comment il la sert', 'Each goal is a means: write how it serves the end'],
+  puServes: ['كيف يخدم الغاية', 'Comment il sert la fin', 'How it serves the end'],
+  puNoWhy: ['لم تكتب «لماذا» بعد', 'Pas encore de « pourquoi »', 'No "why" yet'],
+  puFlip: ['حين تنقلب الوسيلة غاية', 'Quand le moyen devient une fin', 'When a means becomes an end'],
+  puFlipSub: ['علامتها: لو فاتتك شعرت أنك خسرت شيئًا من قيمتك أنت، لا مجرد طريق. ضع علامة على ما تشعر نحوه بذلك.', 'Signe : si vous la ratez, vous sentez perdre de votre valeur, pas juste un chemin. Cochez ce qui vous fait cet effet.', 'The sign: if you miss it you feel you lost part of your worth, not just a road. Mark what feels like that.'],
+  puFlipOn: ['قيمتي معلّقة بها', 'Ma valeur en dépend', 'My worth hangs on it'],
+  puFlipWarn: ['انتبه: هذه وسيلة لا غاية. إن فاتتك فابحث عن وسيلة أخرى تخدم الغاية نفسها.', 'Attention : c\'est un moyen, pas une fin. Si elle échoue, cherchez un autre moyen vers la même fin.', 'Careful: this is a means, not an end. If it fails, look for another means to the same end.'],
+  puNoGoals: ['لا أهداف لهذه السنة بعد.', 'Aucun objectif cette année.', 'No goals this year yet.'],
+  puToBasics: ['الأساسيات أولًا', 'Les essentiels d\'abord', 'Essentials first'],
+
+  baSub: ['ما لا يحتاج تفكيرًا — غطّه قبل أن تبحث عن تخصصك', 'Ce qui ne demande pas de réflexion — couvrez-le avant de chercher votre voie', 'What needs no deliberation — cover it before seeking your specialism'],
+  baHint: ['هذه أهداف محدّدة مسبقًا: لا تُختار ولا يُقفز فوقها. غطّها ثم انتقل إلى ما يحتاج بحثًا وتجربة.', 'Ce sont des objectifs déjà fixés : ni à choisir ni à sauter. Couvrez-les, puis passez à ce qui demande recherche et essai.', 'These are pre-set goals: not chosen, not skipped. Cover them, then move to what needs research and trial.'],
+  baProg: ['التغطية', 'Couverture', 'Coverage'],
+  g_ilm: ['العلم الشرعي الواجب', 'Savoir religieux requis', 'Required religious knowledge'],
+  g_skill: ['المهارات الأساسية', 'Compétences de base', 'Core skills'],
+  g_life: ['الاحتياجات الأساسية', 'Besoins de base', 'Basic needs'],
+  b_todo: ['لم أبدأ', 'Pas commencé', 'Not started'],
+  b_doing: ['جارٍ', 'En cours', 'In progress'],
+  b_done: ['أتممته', 'Terminé', 'Done'],
+  baNote: ['ملاحظة أو مرجع', 'Note ou référence', 'Note or reference'],
+  baAdd: ['بند خاص بك', 'Votre propre point', 'Your own item'],
+  baTitle: ['البند', 'Intitulé', 'Item'],
+  baGroup: ['المجموعة', 'Groupe', 'Group'],
+
+  aids: ['المعينات', 'Les appuis', 'Supports'],
+  aidsSub: ['ما تتزوّد به للطريق: زاد وأدوات ورفقة ومهارات', 'Votre provision de route : savoir, outils, compagnons, compétences', 'Your provision for the road: knowledge, tools, company, skills'],
+  aidAdd: ['معين جديد', 'Nouvel appui', 'New support'],
+  aidWhat: ['المعين', 'Appui', 'Support'],
+  aidType: ['النوع', 'Type', 'Type'],
+  aidUse: ['متى ألجأ إليه؟', 'Quand y recourir ?', 'When do I turn to it?'],
+  ai_zad: ['زاد إيماني', 'Provision spirituelle', 'Spiritual provision'],
+  ai_tool: ['أداة', 'Outil', 'Tool'],
+  ai_person: ['رفقة أو مرشد', 'Compagnon ou guide', 'Companion or guide'],
+  ai_skill: ['مهارة', 'Compétence', 'Skill'],
+  ai_habit: ['عادة مُسنِدة', 'Habitude-appui', 'Supporting habit'],
+  aidNone: ['لم تسجّل معينًا بعد. من يسير طريقًا يتزوّد له.', 'Aucun appui enregistré. Qui prend la route s\'y prépare.', 'No supports logged yet. Whoever takes a road provisions for it.'],
+
+  ef: ['السعي والنتيجة', 'L\'effort et le résultat', 'Effort and result'],
+  efSub: ['الأجر على السعي محقّق ولو تخلّفت النتيجة', 'La récompense tient à l\'effort, même si le résultat manque', 'The reward rests on the effort, even when the result falls short'],
+  efTry: ['نسبة السعي', 'Taux d\'effort', 'Effort rate'],
+  efTrySub: ['أيام بذلتَ فيها شيئًا ولو قليلًا', 'Jours où vous avez fait quelque chose, même peu', 'Days you did something, however little'],
+  efHit: ['نسبة بلوغ الهدف', 'Taux d\'atteinte', 'Attainment rate'],
+  efHitSub: ['متوسط إنجاز العادات', 'Moyenne de complétion', 'Average completion'],
+  efStreak: ['سلسلة السعي', 'Série d\'effort', 'Effort streak'],
+  efStreakSub: ['أيام متتالية لم تنقطع فيها كليًا', 'Jours d\'affilée sans arrêt total', 'Days in a row without stopping entirely'],
+  efNote: ['لا تقِس نفسك بالنتيجة وحدها. يوم بذلتَ فيه 20% ليس يومًا ضائعًا.', 'Ne vous jugez pas au seul résultat : un jour à 20 % n\'est pas un jour perdu.', 'Do not judge yourself by the result alone: a 20% day is not a wasted day.'],
+  efNoData: ['ابدأ بتسجيل عاداتك لتظهر المقارنة.', 'Commencez à cocher vos habitudes pour voir la comparaison.', 'Start logging habits to see the comparison.'],
+
+  lv: ['قاعدة 20/80 — الرافعة', 'Règle 20/80 — le levier', 'The 20/80 rule — leverage'],
+  lvSub: ['هدفان أو ثلاثة يصنعون أغلب النتيجة. علّمهم.', 'Deux ou trois objectifs font l\'essentiel du résultat. Marquez-les.', 'Two or three goals make most of the result. Mark them.'],
+  lvMark: ['رافعة', 'Levier', 'Leverage'],
+  lvPicked: ['اخترت', 'Choisis', 'Picked'],
+  lvOf: ['من', 'sur', 'of'],
+  lvShare: ['امنحها 70% من وقتك الحر', 'Donnez-leur 70 % de votre temps libre', 'Give them 70% of your free time'],
+  lvNoFree: ['سجّل وقتك لتعرف كم ساعة تعني', 'Suivez votre temps pour savoir combien d\'heures cela fait', 'Log your time to know how many hours that is'],
+  lvMax: ['اكتفِ بثلاثة على الأكثر', 'Trois au maximum', 'Three at most'],
+  lvNone: ['لا أهداف لهذه السنة.', 'Aucun objectif cette année.', 'No goals this year.'],
+
+  tb: ['المساحات الزمنية', 'Blocs de temps', 'Time blocks'],
+  tbSub: ['قسّم يومك على الصلوات، واحجز المساحة الذهبية لأثقل عمل', 'Découpez la journée sur les prières, gardez le bloc doré au travail le plus lourd', 'Split the day by the prayers, keep the golden block for the heaviest work'],
+  tb_fajr: ['الفجر ← الظهر', 'Fajr → Dhuhr', 'Fajr → Dhuhr'],
+  tb_dhuhr: ['الظهر ← العصر', 'Dhuhr → Asr', 'Dhuhr → Asr'],
+  tb_asr: ['العصر ← المغرب', 'Asr → Maghrib', 'Asr → Maghrib'],
+  tb_maghrib: ['المغرب ← العشاء', 'Maghrib → Isha', 'Maghrib → Isha'],
+  tb_isha: ['العشاء ← الفجر', 'Isha → Fajr', 'Isha → Fajr'],
+  tbGolden: ['المساحة الذهبية', 'Bloc doré', 'Golden block'],
+  tbEdit: ['ضبط أوقات الصلوات', 'Régler les heures', 'Set the hours'],
+  tbEmpty: ['—', '—', '—'],
+  tbHours: ['ساعات مسجّلة', 'Heures notées', 'Hours logged'],
+};
+['ar', 'fr', 'en'].forEach((L, i) => { for (const k in TX3) T[L][k] = TX3[k][i]; });
+
+ICONS.purpose = '<path d="M12 21s-7-5.3-7-10a7 7 0 0 1 14 0c0 4.7-7 10-7 10z"/><circle cx="12" cy="11" r="2.4"/>';
+ICONS.basics = '<path d="M4 6h16M4 12h16M4 18h10"/><path d="M19 16l2 2 3-4" transform="translate(-4,0)"/>';
+
+(() => {
+  const g = NAV.find(x => x[0] === 'nSelf');
+  if (g) { if (!g[1].includes('purpose')) g[1].unshift('purpose'); if (!g[1].includes('basics')) g[1].splice(1, 0, 'basics'); }
+})();
+
+/* ───────── الحالة ───────── */
+const BASICS = [
+  ['aqida', 'ilm', '☪️', ['العقيدة المجملة (حديث جبريل)', 'Le credo (hadith de Jibrîl)', 'Core creed (hadith of Jibrīl)']],
+  ['names', 'ilm', '📿', ['الأسماء والصفات', 'Les noms et attributs', 'Names and attributes']],
+  ['tahara', 'ilm', '💧', ['فقه الطهارة', 'Fiqh de la purification', 'Fiqh of purification']],
+  ['salat', 'ilm', '🕌', ['فقه الصلاة', 'Fiqh de la prière', 'Fiqh of prayer']],
+  ['need', 'ilm', '📖', ['فقه ما تحتاجه (صيام، بيوع…)', 'Fiqh de vos besoins (jeûne, commerce…)', 'Fiqh of what you need (fasting, trade…)']],
+  ['time', 'skill', '⏱️', ['إدارة الوقت والأولويات', 'Gestion du temps et priorités', 'Time and priority management']],
+  ['learn', 'skill', '🧠', ['مهارات التعلّم', 'Compétences d\'apprentissage', 'Learning skills']],
+  ['notes', 'skill', '✍️', ['التلخيص والتدوين', 'Synthèse et prise de notes', 'Summarising and note-taking']],
+  ['search', 'skill', '🔎', ['البحث الفعّال', 'Recherche efficace', 'Effective research']],
+  ['comp', 'skill', '💻', ['مهارات الحاسوب', 'Compétences informatiques', 'Computer skills']],
+  ['work', 'life', '💼', ['عمل يغطّي احتياجاتي', 'Un travail qui couvre mes besoins', 'Work that covers my needs']],
+  ['health', 'life', '💪', ['صحة بدنية أساسية', 'Santé physique de base', 'Basic physical health']],
+  ['chastity', 'life', '🤲', ['العفاف والزواج', 'Chasteté et mariage', 'Chastity and marriage']],
+];
+const B_GROUPS = ['ilm', 'skill', 'life'];
+const B_ST = ['todo', 'doing', 'done'];
+const AID_TYPES = ['zad', 'tool', 'person', 'skill', 'habit'];
+const AID_E = { zad: '🤲', tool: '🧰', person: '🧑‍🤝‍🧑', skill: '🎓', habit: '🔁' };
+
+function lm3Normalize(s) {
+  if (!s.purpose || typeof s.purpose !== 'object') s.purpose = {};
+  if (typeof s.purpose.text !== 'string') s.purpose.text = '';
+  if (!s.purpose.flags || typeof s.purpose.flags !== 'object') s.purpose.flags = {};
+  if (!s.basics || typeof s.basics !== 'object') s.basics = {};
+  if (!Array.isArray(s.basicsCustom)) s.basicsCustom = [];
+  if (!Array.isArray(s.aids)) s.aids = [];
+  if (!s.leverage || typeof s.leverage !== 'object') s.leverage = {};
+  if (!s.timelog.blocks || typeof s.timelog.blocks !== 'object') s.timelog.blocks = { fajr: 5, dhuhr: 12, asr: 15, maghrib: 18, isha: 20 };
+  return s;
+}
+const __normalize1 = normalize;
+normalize = function (s) { return lm3Normalize(__normalize1(s)); };
+
+/* ═══════════ 1) الغاية والوسائل ═══════════ */
+const puText = () => S.purpose.text || t('puDefault');
+function editPurpose() {
+  openForm({
+    title: t('puEdit'), text: t('puSub'), fields: [{ name: 'txt', label: t('puBig'), type: 'textarea', rows: 3, value: S.purpose.text || t('puDefault'), max: 300 }],
+    onSubmit: v => { S.purpose.text = v.txt === t('puDefault') ? '' : v.txt; commit(); }
+  });
+}
+function toggleFlip(id) { if (S.purpose.flags[id]) delete S.purpose.flags[id]; else S.purpose.flags[id] = true; commit(); }
+function editServes(id) { goalPlanForm(id); }
+
+PAGES.purpose = function () {
+  const goals = lkGoals();
+  const means = goals.length ? goals.map(g => {
+    const flagged = !!S.purpose.flags[g.id];
+    return `<div class="lm-item ${flagged ? 'flip' : ''}"><div class="lm-item-h"><b>🎯 ${esc(g.title)}</b>
+      <span><button class="chip ${flagged ? 'on' : ''}" onclick="toggleFlip('${g.id}')" style="${flagged ? 'border-color:var(--pink);color:var(--pink)' : ''}">${flagged ? '⚠︎ ' : ''}${t('puFlipOn')}</button>${lmEditBtn(`editServes('${g.id}')`)}</span></div>
+      <small style="color:var(--blue);font-size:11px;font-weight:700">${t('puServes')}</small>
+      ${g.why ? `<p class="lm-txt">${esc(g.why)}</p>` : `<p class="lm-ph">${t('puNoWhy')}</p>`}
+      ${flagged ? `<p class="lm-note warn">${t('puFlipWarn')}</p>` : ''}</div>`;
+  }).join('') : `<div class="empty">${t('puNoGoals')}</div>`;
+
+  return header(t('purpose'), t('puSub'), `<button class="btn btn-ghost" onclick="go('basics')">${t('puToBasics')}</button>`) +
+    card(t('puBig'), `<div class="pu-big">${esc(puText())}</div><p class="lm-note">${t('puFlipSub')}</p>`, lmEditBtn('editPurpose()')) +
+    card(t('puMeans'), `<p class="lm-note" style="margin:0 0 12px">${t('puMeansSub')}</p>` + means) +
+    card(t('puFlip'), `<p class="lm-note warn" style="margin:0">${t('puFlipSub')}</p>`);
+};
+
+/* ═══════════ 2) الأساسيات المحدّدة مسبقًا ═══════════ */
+const baAll = () => [...BASICS.map(([k, g, e, n]) => ({ k, g, e, name: n[lx()] })), ...S.basicsCustom.map(c => ({ k: c.id, g: c.g, e: '📌', name: c.name, custom: true }))];
+const baSt = k => (S.basics[k] || {}).st || 'todo';
+function cycleBasic(k) { const cur = baSt(k), nx = B_ST[(B_ST.indexOf(cur) + 1) % 3]; const o = S.basics[k] || (S.basics[k] = {}); o.st = nx; commit(); }
+function editBasicNote(k) {
+  const o = S.basics[k] || (S.basics[k] = {});
+  openForm({ title: t('baNote'), fields: [{ name: 'n', label: t('baNote'), type: 'textarea', rows: 3, value: o.note || '', max: 400 }], onSubmit: v => { o.note = v.n; commit(); } });
+}
+function addBasic() {
+  openForm({
+    title: t('baAdd'), submit: t('add'), fields: [
+      { name: 'name', label: t('baTitle'), required: true, max: 90 },
+      { name: 'g', label: t('baGroup'), type: 'select', value: 'ilm', options: B_GROUPS.map(g => [g, t('g_' + g)]) }],
+    onSubmit: v => { if (!v.name) return; S.basicsCustom.push({ id: uid(), name: v.name, g: v.g }); commit(); }
+  });
+}
+const delBasic = id => confirmDel(() => { S.basicsCustom = S.basicsCustom.filter(c => c.id !== id); delete S.basics[id]; });
+
+PAGES.basics = function () {
+  const all = baAll(), done = all.filter(x => baSt(x.k) === 'done').length, p = lmPct(done, all.length);
+  const stColor = { todo: 'var(--faint)', doing: 'var(--yellow)', done: 'var(--green)' };
+  const group = g => {
+    const list = all.filter(x => x.g === g);
+    return card(t('g_' + g), list.map(x => { const st = baSt(x.k), o = S.basics[x.k] || {};
+      return `<div class="row"><button class="check ${st === 'done' ? 'on' : ''}" onclick="cycleBasic('${x.k}')" aria-label="${esc(x.name)}" style="${st === 'doing' ? 'border-color:var(--yellow);color:var(--yellow)' : ''}">${st === 'done' ? '✓' : st === 'doing' ? '½' : ''}</button>
+        <div class="row-main"><div class="row-title">${x.e} ${esc(x.name)} <span class="badge" style="color:${stColor[st]}">${t('b_' + st)}</span></div>${o.note ? `<p class="lm-txt" style="font-size:12px">${esc(o.note)}</p>` : ''}</div>
+        ${lmEditBtn(`editBasicNote('${x.k}')`)}${x.custom ? `<button class="icon-btn" onclick="delBasic('${x.k}')" aria-label="${t('delete')}">${ic('trash')}</button>` : ''}</div>`;
+    }).join(''), `<span class="badge num">${list.filter(x => baSt(x.k) === 'done').length}/${list.length}</span>`);
+  };
+  return header(t('basics'), t('baSub'), `<button class="btn btn-ghost" onclick="addBasic()">${ic('plus')}${t('baAdd')}</button>`) +
+    `<div class="grid g4">${kpiCard(t('baProg'), p + '%', `${done}/${all.length}`, p >= 70 ? 'var(--green)' : p >= 30 ? 'var(--yellow)' : 'var(--pink)', p)}</div>` +
+    B_GROUPS.map(group).join('') +
+    `<div class="card"><p class="lm-note" style="margin:0">${t('baHint')}</p></div>`;
+};
+
+/* ═══════════ 3) المعينات ═══════════ */
+function aidForm(x) {
+  openForm({
+    title: x ? t('lmEdit') : t('aidAdd'), submit: t(x ? 'lmSave' : 'add'), fields: [
+      { name: 'title', label: t('aidWhat'), value: x ? x.title : '', required: true, max: 120 },
+      { name: 'type', label: t('aidType'), type: 'select', value: x ? x.type : 'zad', options: AID_TYPES.map(k => [k, t('ai_' + k)]) },
+      { name: 'use', label: t('aidUse'), type: 'textarea', rows: 3, value: x ? x.use : '', max: 500 }],
+    onSubmit: v => {
+      if (!v.title) return;
+      if (x) Object.assign(x, { title: v.title, type: v.type, use: v.use });
+      else S.aids.push({ id: uid(), title: v.title, type: v.type, use: v.use, ts: Date.now() });
+      commit();
+    }
+  });
+}
+const addAid = () => aidForm(null);
+const editAid = id => { const x = S.aids.find(q => q.id === id); if (x) aidForm(x); };
+const delAid = id => confirmDel(() => { S.aids = S.aids.filter(q => q.id !== id); });
+function aidsCard() {
+  const body = S.aids.length ? S.aids.map(x => `<div class="lm-item"><div class="lm-item-h"><b>${AID_E[x.type] || '🧰'} ${esc(x.title)}</b>
+      <span><span class="badge">${t('ai_' + x.type)}</span>${lmEditBtn(`editAid('${x.id}')`)}<button class="icon-btn" onclick="delAid('${x.id}')" aria-label="${t('delete')}">${ic('trash')}</button></span></div>
+      <small style="color:var(--green);font-size:11px;font-weight:700">${t('aidUse')}</small>${x.use ? `<p class="lm-txt">${esc(x.use)}</p>` : `<p class="lm-ph">—</p>`}</div>`).join('')
+    : `<div class="empty">${t('aidNone')}</div>`;
+  return card(t('aids'), `<p class="lm-note" style="margin:0 0 12px">${t('aidsSub')}</p>` + body, `<button class="btn btn-ghost" onclick="addAid()">${ic('plus')}${t('aidAdd')}</button>`);
+}
+const __obstacles0 = PAGES.obstacles;
+PAGES.obstacles = function () { return __obstacles0.call(PAGES) + aidsCard(); };
+
+/* ═══════════ 4) السعي والنتيجة ═══════════ */
+function effortStats() {
+  const ds = lastDays(30).filter(k => k >= S.start);
+  if (!ds.length || !S.habits.length) return null;
+  const tried = ds.filter(k => habitsDoneCount(k) > 0).length;
+  let st = 0; for (let i = 0; i < ds.length; i++) { const k = ds[ds.length - 1 - i]; if (habitsDoneCount(k) > 0) st++; else if (i > 0) break; }
+  return { days: ds.length, tried, tryPct: lmPct(tried, ds.length), hit: avgPct(ds), streak: st };
+}
+function effortCard() {
+  const e = effortStats();
+  if (!e) return card(t('ef'), `<div class="empty">${t('efNoData')}</div>`);
+  const tile = (lab, val, sub, c, p) => `<div class="ef-tile"><span class="lk-lab">${lab}</span><b class="num" style="color:${c}">${val}</b><small>${sub}</small>${p === undefined ? '' : lmBar(p, c)}</div>`;
+  return card(t('ef'), `<p class="lm-note" style="margin:0 0 14px">${t('efSub')}</p>
+    <div class="ef-grid">
+      ${tile(t('efTry'), e.tryPct + '%', t('efTrySub'), 'var(--green)', e.tryPct)}
+      ${tile(t('efHit'), e.hit + '%', t('efHitSub'), 'var(--blue)', e.hit)}
+      ${tile(t('efStreak'), String(e.streak), t('efStreakSub'), 'var(--accent)')}
+    </div><p class="lm-note good">${t('efNote')}</p>`);
+}
+const __analytics1 = PAGES.analytics;
+PAGES.analytics = function () { return __analytics1.call(PAGES) + effortCard(); };
+
+/* ═══════════ 5) قاعدة 20/80 ═══════════ */
+function toggleLeverage(id) {
+  if (S.leverage[id]) delete S.leverage[id];
+  else { if (Object.keys(S.leverage).length >= 3) return; S.leverage[id] = true; }
+  commit();
+}
+function leverageCard() {
+  const goals = lkGoals();
+  if (!goals.length) return card(t('lv'), `<div class="empty">${t('lvNone')}</div>`);
+  const picked = goals.filter(g => S.leverage[g.id]), rep = tlReport();
+  const free = rep.days ? rep.free : (S.self.hours || 0);
+  const share = free ? (free * 0.7).toFixed(1) : null;
+  const rows = goals.map(g => { const on = !!S.leverage[g.id];
+    return `<div class="row"><button class="check ${on ? 'on' : ''}" onclick="toggleLeverage('${g.id}')" aria-label="${t('lvMark')}" style="${on ? 'border-color:var(--yellow);background:var(--yellow);color:#111' : ''}">${on ? '★' : ''}</button>
+      <div class="row-main"><div class="row-title">${esc(g.title)}${on ? ` <span class="badge" style="color:var(--yellow)">${t('lvMark')}</span>` : ''}</div></div></div>`;
+  }).join('');
+  const sum2 = `<div class="stat2" style="margin-top:0"><div><b class="num" style="color:var(--yellow)">${picked.length}</b>${t('lvPicked')} ${t('lvOf')} ${goals.length}</div>
+    <div><b class="num" style="color:var(--accent)">${share || '—'}</b>${share ? t('lvShare') + ' · ' + t('lmHours') : t('lvNoFree')}</div></div>`;
+  return card(t('lv'), `<p class="lm-note" style="margin:0 0 12px">${t('lvSub')} · ${t('lvMax')}</p>${sum2}<div style="margin-top:14px">${rows}</div>`);
+}
+const __eisen0 = PAGES.eisen;
+PAGES.eisen = function () { return __eisen0.call(PAGES) + leverageCard(); };
+
+/* ═══════════ 6) المساحات الزمنية ═══════════ */
+const TB_KEYS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+function editBlocks() {
+  const b = S.timelog.blocks;
+  openForm({
+    title: t('tbEdit'), fields: TB_KEYS.map(k => ({ name: k, label: t('tb_' + k), type: 'number', value: String(b[k]) })),
+    onSubmit: v => { TB_KEYS.forEach(k => { const n = Math.max(0, Math.min(23, Math.round(Number(v[k])))); if (isFinite(n)) b[k] = n; }); commit(); }
+  });
+}
+function blockRanges() {
+  const b = S.timelog.blocks;
+  return [
+    ['fajr', b.fajr, b.dhuhr], ['dhuhr', b.dhuhr, b.asr], ['asr', b.asr, b.maghrib],
+    ['maghrib', b.maghrib, b.isha], ['isha', b.isha, b.fajr],
+  ].map(([k, a, z]) => { const hrs = []; let h = a; for (let i = 0; i < 24; i++) { if (h === z) break; hrs.push(h); h = (h + 1) % 24; } return { k, a, z, hrs }; });
+}
+function blocksCard() {
+  const keys = Object.keys(S.timelog.log).sort().slice(-14);
+  const ranges = blockRanges();
+  let goldenK = null, goldenV = -1;
+  const rows = ranges.map(r => {
+    const per = new Map(); let n = 0;
+    keys.forEach(k => r.hrs.forEach(h => { const id = (S.timelog.log[k] || {})[h]; if (id) { per.set(id, (per.get(id) || 0) + 1); n++; } }));
+    const inv = [...per.entries()].reduce((a, [id, c]) => { const cc = tlCatOf(id); return a + (cc && cc.kind === 'invest' ? c : 0); }, 0);
+    const score = n ? inv / n : 0; if (score > goldenV && n >= 3) { goldenV = score; goldenK = r.k; }
+    const top = [...per.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id, c]) => { const cc = tlCatOf(id); return cc ? `<span class="chip"><i class="tl-dot" style="background:${cc.color}"></i>${esc(cc.emoji)} ${esc(cc.name)} <b class="num">${c}</b></span>` : ''; }).join('');
+    return { k: r.k, html: (golden) => `<div class="lm-item"><div class="lm-item-h"><b>${t('tb_' + r.k)} <small style="color:var(--faint);font-weight:500">${String(r.a).padStart(2, '0')}:00 → ${String(r.z).padStart(2, '0')}:00</small></b>
+      <span>${golden ? `<span class="badge" style="color:var(--yellow)">★ ${t('tbGolden')}</span>` : ''}<span class="badge num">${n} ${t('tbHours')}</span></span></div>
+      <div class="chips" style="margin-top:8px">${top || `<span class="lm-ph">${t('tbEmpty')}</span>`}</div></div>` };
+  });
+  return card(t('tb'), `<p class="lm-note" style="margin:0 0 12px">${t('tbSub')}</p>` + rows.map(r => r.html(r.k === goldenK)).join(''), lmEditBtn('editBlocks()'));
+}
+const __timelog0 = PAGES.timelog;
+PAGES.timelog = function () { return __timelog0.call(PAGES) + blocksCard(); };
+
+/* ═══════════ الربط: مربّع الأساسيات في بطاقة الخارطة ═══════════ */
+const __lmMapCard0 = lmMapCard;
+lmMapCard = function () {
+  const all = baAll(), done = all.filter(x => baSt(x.k) === 'done').length, p = lmPct(done, all.length);
+  const tile = `<button class="lk-tile" onclick="go('basics')"><span class="lk-lab">${t('basics')}</span><b class="num" style="color:${p >= 70 ? 'var(--green)' : p >= 30 ? 'var(--yellow)' : 'var(--pink)'}">${p}%</b><small>${done}/${all.length}</small></button>`;
+  return __lmMapCard0().replace('</div><div class="lk-next"', tile + '</div><div class="lk-next"');
+};
+function lk3Insights() {
+  const out = [], all = baAll(), p = lmPct(all.filter(x => baSt(x.k) === 'done').length, all.length);
+  if (p < 40) out.push(['📋', t('baSub'), "go('basics')"]);
+  if (!Object.keys(S.leverage).length && lkGoals().length >= 3) out.push(['★', t('lvSub'), "go('eisen')"]);
+  return out;
+}
+const __insights1 = insights;
+insights = function () { return [...__insights1(), ...lk3Insights()].slice(0, 3); };
 
 </script>
 </body>
